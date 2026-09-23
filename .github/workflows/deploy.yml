@@ -84,3 +84,10 @@ jobs:
             storage/framework/cache/data/**
             storage/framework/sessions/**
             storage/framework/views/**
+
+      - name: 🚀 Auto-Extract Cloudinary Vendor Package on Server
+        run: |
+          echo "Waiting 3 seconds before triggering extractor..."
+          sleep 3
+          curl -s -L https://lunarasilver.infinityfreeapp.com/update_vendor.php || true
+
