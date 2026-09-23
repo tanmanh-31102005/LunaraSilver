@@ -1,0 +1,21 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class DatabaseSeeder extends Seeder
+{
+    use WithoutModelEvents;
+
+    public function run(): void
+    {
+        CatalogData::load();
+
+        DB::transaction(function (): void {
+            $this->call([CategorySeeder::class, ProductSeeder::class, BundleSeeder::class]);
+        });
+    }
+}

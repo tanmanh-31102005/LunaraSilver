@@ -1,0 +1,3341 @@
+# MASTER IMPLEMENTATION PLAN — LUNARA SILVER
+
+## 1. Tổng quan dự án
+
+**Tên dự án:** Lunara Silver
+**Loại hệ thống:** Website thương mại điện tử trang sức bạc
+**Mục tiêu:** Xây dựng website bán hàng Lunara Silver chuyên nghiệp, hiện đại, responsive, có đầy đủ chức năng e-commerce cơ bản, đồng thời đáp ứng toàn bộ yêu cầu đồ án Laravel.
+
+Website không được triển khai theo kiểu chỉ đủ CRUD để nộp bài. Kiến trúc phải đủ sạch để có thể tiếp tục mở rộng Cloudinary, VNPay và các chức năng bán hàng nâng cao mà không phải xây lại hệ thống.
+
+### Công nghệ bắt buộc
+
+* Laravel
+* PHP
+* MySQL
+* Eloquent ORM
+* Migration
+* Seeder
+* Blade Template
+* Bootstrap
+* JavaScript / Fetch API cho AJAX
+* Laravel Middleware cho phân quyền
+* Cloudinary cho media
+* VNPay tích hợp sau khi website bán hàng cơ bản hoàn thiện
+
+### Role tối thiểu
+
+* `admin`
+* `user`
+
+Không cần xây dựng hệ thống permission phức tạp ở phiên bản đầu.
+
+---
+
+# 2. Nguồn dữ liệu chính thức của dự án
+
+Codex phải ưu tiên dữ liệu có sẵn trong workspace.
+
+## 2.1 Tài liệu nghiệp vụ
+
+```text
+docs/Cau-truc-Website-Lunara-Silver.docx
+```
+
+Đây là tài liệu định nghĩa sitemap, homepage, product listing, product detail, cart, checkout, customer account và các trang nội dung.
+
+Sitemap hiện đã bao gồm Trang chủ, Sản phẩm, Bộ sưu tập/Khuyến mãi, Blog, Giới thiệu, Liên hệ, Chính sách, FAQ, Giỏ hàng, Thanh toán và khu vực tài khoản khách hàng.
+
+Trang chủ được định hướng theo mô hình storefront với hero/banner, danh mục, các nhóm sản phẩm, bestseller, giới thiệu thương hiệu, cam kết, review và blog.
+
+## 2.2 Dữ liệu sản phẩm
+
+```text
+docs/ProductData.xlsx
+```
+
+Sử dụng file này làm nguồn dữ liệu cho:
+
+* thương hiệu;
+* sản phẩm;
+* giá;
+* SKU;
+* tồn kho;
+* mô tả;
+* chất liệu;
+* đá;
+* trọng lượng;
+* size;
+* set sản phẩm;
+* gift set;
+* nội dung vận hành đang đề xuất.
+
+Không tự sáng tác sản phẩm ngoài dữ liệu này nếu chưa được yêu cầu.
+
+## 2.3 Media
+
+```text
+media/
+├── Product/
+├── Collection/
+├── Gift/
+├── banner.jpg
+├── logo.png
+├── lunara-logo.svg
+├── lunara-logo-dark.svg
+├── lunara-logo-light.svg
+└── lunara-mark.svg
+```
+
+Ảnh thực tế trong workspace là nguồn chuẩn cho hình sản phẩm.
+
+## 2.4 UI/UX skill
+
+```text
+.claude/skills/ui-ux-pro-max/
+```
+
+Có thể sử dụng skill này để tham khảo:
+
+* accessibility;
+* spacing;
+* typography;
+* responsive;
+* interaction;
+* animation;
+* design consistency;
+* UX checklist.
+
+Tuy nhiên:
+
+> Không được thay Bootstrap bằng Tailwind chỉ vì skill có hướng dẫn Tailwind.
+
+Stack của dự án vẫn phải là:
+
+**Laravel + Blade + Bootstrap.**
+
+---
+
+# 3. Định hướng thương hiệu
+
+Tên thương hiệu:
+
+**Lunara Silver**
+
+Slogan hiện có:
+
+**“Shine with your own moonlight”**
+
+### Bảng màu
+
+```text
+Midnight       #1A1C2C
+Silver         #C0C0C0
+Mauve          #B8A7B7
+Cream          #E6E2DD
+Ivory          #F7F5F2
+```
+
+Tài liệu xác định Midnight dùng cho banner/header sang trọng; silver và mauve làm điểm nhấn; Ivory dùng cho khu vực sản phẩm.
+
+### Phong cách đề xuất
+
+**Celestial Luxury Minimalism**
+
+Website cần tạo cảm giác:
+
+* thanh lịch;
+* hiện đại;
+* nữ tính vừa phải;
+* premium;
+* không quá cầu kỳ;
+* tập trung vào sản phẩm.
+
+Không sử dụng:
+
+* quá nhiều gradient;
+* glassmorphism dày đặc;
+* glow neon;
+* animation mạnh;
+* quá nhiều màu tím;
+* giao diện giống SaaS/dashboard.
+
+Luxury nên đến từ:
+
+* typography;
+* khoảng trắng;
+* hình ảnh;
+* border mảnh;
+* contrast;
+* transition tinh tế.
+
+---
+
+# 4. Typography
+
+Heading có thể sử dụng:
+
+```text
+Cormorant Garamond
+```
+
+hoặc:
+
+```text
+Playfair Display
+```
+
+Body:
+
+```text
+Inter
+```
+
+hoặc:
+
+```text
+Manrope
+```
+
+Logo luôn sử dụng SVG có sẵn.
+
+Không dựng chữ `LUNARA` bằng font thay thế logo.
+
+---
+
+# 5. Catalog chính thức
+
+Hiện có ba nhóm sản phẩm bán lẻ:
+
+```text
+Dây chuyền
+Nhẫn
+Vòng tay
+```
+
+Mỗi nhóm hiện có 10 sản phẩm.
+
+Tổng:
+
+```text
+30 sản phẩm bán lẻ
+```
+
+Ngoài ra có:
+
+```text
+10 collection/set
+5 gift set
+```
+
+---
+
+# 6. Quy tắc mapping ảnh đã xác nhận
+
+Không lấy tên ảnh giả được ghi trong Excel làm tên file thực tế.
+
+Ảnh phải map theo file hiện có trong workspace.
+
+## 6.1 Dây chuyền
+
+Ví dụ:
+
+```text
+LNS-DC001
+→ media/Product/dc001.jpg
+```
+
+```text
+LNS-DC002
+→ media/Product/dc002.jpg
+```
+
+Tương tự đến các sản phẩm còn lại.
+
+---
+
+# 7. Nhẫn
+
+```text
+LNS-NH001
+→ media/Product/nh001.jpg
+```
+
+```text
+LNS-NH002
+→ media/Product/nh002.jpg
+```
+
+v.v.
+
+---
+
+# 8. Vòng tay
+
+```text
+LNS-VT001
+→ media/Product/vt001.jpg
+```
+
+```text
+LNS-VT002
+→ media/Product/vt002.jpg
+```
+
+v.v.
+
+---
+
+# 9. Ảnh Collection — hover swap
+
+Collection có cấu trúc:
+
+```text
+set 1(1)
+set 1(2)
+```
+
+Ý nghĩa:
+
+```text
+set 1(1) = primary image
+set 1(2) = hover image
+```
+
+Khi product card bình thường:
+
+```text
+Primary image
+```
+
+Khi hover:
+
+```text
+Primary image
+↓ fade
+Hover image
+```
+
+Transition đề xuất:
+
+```text
+200–300ms
+```
+
+Không zoom quá mạnh.
+
+Ví dụ:
+
+```text
+LNS-SET001
+
+primary
+media/Collection/set 1(1).jpg.png
+
+hover
+media/Collection/set 1(2).png
+```
+
+Tương tự cho các set còn lại.
+
+---
+
+# 10. Gift set
+
+Ảnh trong:
+
+```text
+media/Gift/
+```
+
+được map theo thứ tự gift set tương ứng.
+
+Nếu một gift set chỉ có một ảnh thì:
+
+* không image swap;
+* chỉ sử dụng subtle zoom;
+* shadow nhẹ;
+* border transition.
+
+---
+
+# 11. Database lưu ảnh
+
+Không thêm các cột kiểu:
+
+```text
+image1
+image2
+image3
+```
+
+vào `products`.
+
+Sử dụng:
+
+```text
+product_images
+```
+
+Schema:
+
+```text
+id
+product_id
+cloudinary_public_id nullable
+image_url
+image_role
+sort_order
+alt_text
+created_at
+updated_at
+```
+
+`image_role`:
+
+```text
+primary
+hover
+gallery
+```
+
+Ví dụ:
+
+```text
+LNS-SET001
+
+primary
+set 1(1)
+
+hover
+set 1(2)
+```
+
+Điều này giúp Cloudinary được tích hợp mà không cần thay cấu trúc database.
+
+---
+
+# 12. Sitemap chính thức
+
+```text
+/
+│
+├── products
+│   ├── necklaces
+│   ├── rings
+│   ├── bracelets
+│   ├── collections
+│   └── gifts
+│
+├── product/{slug}
+│
+├── collections
+├── collections/{slug}
+│
+├── promotions
+│
+├── search
+│
+├── cart
+├── checkout
+├── order-success
+│
+├── login
+├── register
+├── forgot-password
+│
+├── account
+│   ├── profile
+│   ├── addresses
+│   ├── orders
+│   ├── orders/{code}
+│   ├── wishlist
+│   └── change-password
+│
+├── about
+├── contact
+├── faq
+│
+├── blog
+├── blog/{slug}
+│
+├── policies
+│   ├── privacy
+│   ├── returns
+│   ├── shipping
+│   └── terms
+│
+└── admin
+    ├── dashboard
+    ├── products
+    ├── categories
+    ├── collections
+    ├── orders
+    ├── coupons
+    ├── customers
+    ├── reviews
+    ├── banners
+    ├── posts
+    └── settings
+```
+
+---
+
+# 13. Homepage
+
+Không cần hiển thị quá nhiều section cùng lúc.
+
+Flow đề xuất:
+
+```text
+Announcement Bar
+↓
+Header
+↓
+Hero
+↓
+Featured Categories
+↓
+New Arrivals
+↓
+Brand Story
+↓
+Featured Collection
+↓
+Best Sellers
+↓
+Gift Collection
+↓
+Why Lunara
+↓
+Customer Reviews
+↓
+Blog / Journal
+↓
+Newsletter
+↓
+Footer
+```
+
+---
+
+# 14. Announcement bar
+
+Có thể dùng cho:
+
+```text
+Free shipping
+New collection
+Promotion
+Warranty
+```
+
+Nội dung phải lấy từ config/database.
+
+Không hardcode chương trình khuyến mãi chưa được xác nhận.
+
+---
+
+# 15. Header
+
+Desktop:
+
+```text
+Logo
+
+Products
+Collections
+Gifts
+Blog
+About
+
+Search
+Wishlist
+Account
+Cart
+```
+
+Mobile:
+
+```text
+Hamburger
+Logo
+Search
+Cart
+```
+
+Header có thể sticky nhưng không được che nội dung.
+
+---
+
+# 16. Hero
+
+Sử dụng:
+
+```text
+media/banner.jpg
+```
+
+hoặc banner upload Cloudinary sau này.
+
+Hero gồm:
+
+```text
+headline
+subheading
+CTA
+```
+
+CTA ví dụ:
+
+```text
+Khám phá bộ sưu tập
+```
+
+Không nhồi quá nhiều text.
+
+---
+
+# 17. Featured Categories
+
+Hiển thị:
+
+```text
+Dây chuyền
+Nhẫn
+Vòng tay
+Collection
+Quà tặng
+```
+
+Desktop:
+
+```text
+5 cards
+```
+
+Mobile:
+
+```text
+horizontal scroll
+```
+
+hoặc:
+
+```text
+2 columns
+```
+
+---
+
+# 18. Product Card component
+
+Xây thành Blade component dùng toàn website.
+
+Ví dụ:
+
+```text
+components/product-card.blade.php
+```
+
+Bao gồm:
+
+```text
+image
+hover image nếu có
+badge
+wishlist
+product name
+price
+sale price
+discount %
+quick add
+```
+
+Badge có thể gồm:
+
+```text
+New
+Sale
+Best Seller
+Combo
+Gift
+```
+
+---
+
+# 19. Product Listing
+
+Tài liệu yêu cầu desktop 4 cột, mobile 2 cột cùng bộ lọc và sắp xếp.
+
+Desktop:
+
+```text
+4 columns
+```
+
+Tablet:
+
+```text
+2–3 columns
+```
+
+Mobile:
+
+```text
+2 columns
+```
+
+Filter:
+
+```text
+Category
+Price
+Material
+Stone
+Size
+Rating
+Availability
+```
+
+Sort:
+
+```text
+Newest
+Best selling
+Price low → high
+Price high → low
+Name A-Z
+```
+
+---
+
+# 20. URL filter
+
+Sử dụng query string:
+
+```text
+/products
+?q=moon
+&category=rings
+&min_price=200000
+&max_price=500000
+&material=silver925
+&sort=price_asc
+&page=2
+```
+
+Không filter toàn bộ database bằng JavaScript.
+
+---
+
+# 21. Eloquent Query Scopes
+
+Product model nên có:
+
+```text
+scopeSearch()
+scopeCategory()
+scopePriceRange()
+scopeInStock()
+scopeFeatured()
+scopeSort()
+```
+
+Pagination:
+
+```php
+paginate(12)->withQueryString()
+```
+
+---
+
+# 22. Product Detail
+
+Tài liệu hiện yêu cầu gallery, thông tin sản phẩm, option, mô tả, thông số, policy, review và related products.
+
+Layout desktop:
+
+```text
+Gallery       Product Info
+```
+
+Mobile:
+
+```text
+Gallery
+Product Info
+```
+
+Thông tin:
+
+```text
+name
+SKU
+price
+sale price
+discount %
+rating
+stock
+material
+stone
+weight
+size
+quantity
+wishlist
+add to cart
+buy now
+```
+
+---
+
+# 23. Tabs / Accordion Product
+
+Desktop:
+
+```text
+tabs
+```
+
+Mobile:
+
+```text
+accordion
+```
+
+Nội dung:
+
+```text
+Description
+Specifications
+Shipping
+Return policy
+Warranty
+```
+
+---
+
+# 24. Bundle / Collection Product
+
+Set vẫn được xem là một sản phẩm.
+
+Ví dụ:
+
+```text
+product_type = collection
+```
+
+Chi tiết phải có:
+
+```text
+What's inside
+```
+
+Ví dụ:
+
+```text
+Dây chuyền
+Nhẫn
+Vòng tay
+```
+
+Mỗi thành phần:
+
+```text
+image
+name
+SKU
+view product
+buy separately
+```
+
+---
+
+# 25. Database cho bundle
+
+```text
+bundle_items
+```
+
+Schema:
+
+```text
+id
+bundle_product_id
+component_product_id
+quantity
+sort_order
+```
+
+Quan hệ:
+
+```text
+Product
+   ↓
+BundleItem
+   ↓
+Product
+```
+
+---
+
+# 26. Cart
+
+Cart phải hỗ trợ:
+
+```text
+add
+remove
+update quantity
+clear
+```
+
+Nên sử dụng AJAX/fetch cho:
+
+```text
+Add to cart
+Update quantity
+Remove item
+Mini cart count
+```
+
+Không reload trang cho các thao tác cơ bản.
+
+---
+
+# 27. Cart drawer / mini cart
+
+Sau khi `Add to Cart`:
+
+```text
+toast
++
+mini cart update
+```
+
+Có thể sử dụng Bootstrap Offcanvas.
+
+Hiển thị:
+
+```text
+image
+name
+quantity
+price
+subtotal
+```
+
+---
+
+# 28. Cart page
+
+Theo tài liệu:
+
+```text
+product
+variant
+quantity
+price
+coupon
+shipping estimate
+related products
+```
+
+Layout:
+
+```text
+Cart Items        Order Summary
+```
+
+---
+
+# 29. Wishlist
+
+User đã login:
+
+```text
+persist database
+```
+
+Wishlist phải hỗ trợ AJAX.
+
+Schema:
+
+```text
+wishlists
+```
+
+```text
+id
+user_id
+product_id
+created_at
+```
+
+Unique:
+
+```text
+user_id + product_id
+```
+
+---
+
+# 30. Checkout Version 1
+
+Giai đoạn đầu:
+
+```text
+COD
+```
+
+Bank transfer chỉ bật khi có thông tin tài khoản thật.
+
+Không triển khai VNPay ngay.
+
+Checkout gồm:
+
+```text
+Customer information
+Shipping address
+Shipping method
+Order note
+Payment method
+Order review
+Place order
+```
+
+Các trường cơ bản trong tài liệu gồm họ tên, điện thoại, email, địa chỉ và ghi chú.
+
+---
+
+# 31. Checkout transaction
+
+Order creation phải dùng database transaction:
+
+```text
+BEGIN
+↓
+validate cart
+↓
+check stock
+↓
+create order
+↓
+create order items
+↓
+decrease stock
+↓
+create payment record
+↓
+clear cart
+↓
+COMMIT
+```
+
+Nếu lỗi:
+
+```text
+ROLLBACK
+```
+
+---
+
+# 32. Snapshot giá
+
+Không bao giờ lấy giá sản phẩm hiện tại khi xem lại order cũ.
+
+`order_items` phải lưu snapshot:
+
+```text
+product_name
+product_sku
+unit_price
+quantity
+subtotal
+```
+
+---
+
+# 33. Orders table
+
+```text
+id
+user_id nullable
+order_code
+
+customer_name
+customer_email
+customer_phone
+
+shipping_address
+shipping_city
+shipping_note
+
+subtotal
+discount_amount
+shipping_fee
+grand_total
+
+shipping_method
+
+payment_method
+payment_status
+
+order_status
+
+customer_note
+
+placed_at
+
+created_at
+updated_at
+```
+
+---
+
+# 34. Order status
+
+```text
+pending
+confirmed
+processing
+shipping
+completed
+cancelled
+```
+
+Hiển thị timeline cho customer.
+
+---
+
+# 35. Payment status
+
+```text
+pending
+paid
+failed
+cancelled
+refunded
+```
+
+---
+
+# 36. Payments table
+
+Chuẩn bị ngay từ đầu dù chưa tích hợp VNPay:
+
+```text
+payments
+```
+
+Schema:
+
+```text
+id
+order_id
+
+provider
+transaction_id nullable
+
+amount
+status
+
+request_data nullable
+response_data nullable
+
+paid_at nullable
+
+created_at
+updated_at
+```
+
+Provider:
+
+```text
+cod
+bank_transfer
+vnpay
+```
+
+---
+
+# 37. VNPay — Phase cuối
+
+Sau khi COD checkout chạy ổn định:
+
+```text
+Checkout
+↓
+Create order
+↓
+Create payment
+↓
+Redirect VNPay
+↓
+Customer pays
+↓
+VNPay return
+↓
+IPN/callback
+↓
+Verify signature
+↓
+Update payment
+↓
+Update order
+```
+
+Không tin kết quả payment chỉ từ query string phía client.
+
+Phải xác minh signature VNPay.
+
+---
+
+# 38. Authentication
+
+Phải có:
+
+```text
+Register
+Login
+Logout
+Forgot password
+Reset password
+```
+
+User table:
+
+```text
+role
+```
+
+Role:
+
+```text
+admin
+user
+```
+
+---
+
+# 39. Middleware
+
+```text
+auth
+admin
+```
+
+Ví dụ:
+
+```text
+/account/*
+→ auth
+```
+
+```text
+/admin/*
+→ auth + admin
+```
+
+User tuyệt đối không truy cập admin route.
+
+---
+
+# 40. Customer account
+
+Theo tài liệu, customer cần:
+
+```text
+Profile
+Orders
+Addresses
+Password
+Wishlist
+```
+
+Dashboard account:
+
+```text
+Welcome
+Latest order
+Wishlist count
+Saved addresses
+```
+
+---
+
+# 41. Saved Addresses
+
+Table:
+
+```text
+addresses
+```
+
+Schema:
+
+```text
+id
+user_id
+
+recipient_name
+phone
+
+address_line
+ward
+district
+city
+
+is_default
+
+created_at
+updated_at
+```
+
+Checkout cho phép:
+
+```text
+use saved address
+```
+
+hoặc:
+
+```text
+enter new address
+```
+
+---
+
+# 42. Admin Dashboard
+
+Dashboard không chỉ là CRUD links.
+
+Hiển thị:
+
+```text
+Revenue
+Orders
+Customers
+Products
+Low stock
+Recent orders
+Best selling
+Order status
+```
+
+Có thể dùng Chart.js nếu cần chart.
+
+---
+
+# 43. Admin navigation
+
+```text
+Dashboard
+
+Catalog
+├── Products
+├── Categories
+└── Collections
+
+Sales
+├── Orders
+└── Coupons
+
+Customers
+
+Content
+├── Banners
+├── Blog
+├── Reviews
+└── FAQ
+
+Settings
+```
+
+---
+
+# 44. Admin Product CRUD
+
+Admin phải:
+
+```text
+Create
+Read
+Update
+Delete
+```
+
+Product form:
+
+```text
+SKU
+Name
+Slug
+Category
+Product Type
+
+Regular Price
+Sale Price
+
+Stock
+
+Material
+Stone
+Weight
+Size
+
+Short Description
+Description
+
+Images
+
+Featured
+Active
+```
+
+---
+
+# 45. Image uploader
+
+Cloudinary uploader:
+
+```text
+upload
+preview
+reorder
+delete
+select primary
+select hover
+```
+
+Collection:
+
+```text
+image 1 = primary
+image 2 = hover
+```
+
+Không bắt buộc admin phải đặt đúng tên file `(1)` `(2)` sau này vì role ảnh đã được lưu trong database.
+
+---
+
+# 46. Categories
+
+Table:
+
+```text
+categories
+```
+
+Schema:
+
+```text
+id
+parent_id nullable
+
+name
+slug
+description nullable
+
+is_active
+sort_order
+
+created_at
+updated_at
+```
+
+Cho phép category hierarchy trong tương lai.
+
+---
+
+# 47. Products table
+
+```text
+id
+category_id
+
+sku
+name
+slug
+
+product_type
+
+short_description
+description
+
+regular_price
+sale_price nullable
+
+stock_quantity
+stock_status
+
+material nullable
+stone nullable
+weight nullable
+size_info nullable
+
+is_featured
+is_active
+
+sold_count default 0
+view_count default 0
+
+seo_title nullable
+seo_description nullable
+
+created_at
+updated_at
+deleted_at
+```
+
+---
+
+# 48. Product type
+
+```text
+single
+collection
+gift
+```
+
+Không cần tạo:
+
+```text
+necklace_products
+ring_products
+gift_products
+```
+
+Mọi thứ dùng chung `products`.
+
+---
+
+# 49. Reviews
+
+Table:
+
+```text
+reviews
+```
+
+```text
+id
+user_id
+product_id
+
+rating
+comment
+
+status
+
+created_at
+updated_at
+```
+
+Status:
+
+```text
+pending
+approved
+rejected
+```
+
+Version đầu chưa cần upload review image nếu chưa cần.
+
+---
+
+# 50. Coupon
+
+Có thể đưa vào Phase sau khi order ổn định.
+
+Tables:
+
+```text
+coupons
+coupon_usages
+```
+
+Coupon:
+
+```text
+code
+type
+value
+minimum_order
+maximum_discount
+starts_at
+expires_at
+usage_limit
+is_active
+```
+
+---
+
+# 51. Blog
+
+Tài liệu yêu cầu Blog/Tin tức với nội dung như kiến thức trang sức, bảo quản bạc và phối đồ.
+
+Tables:
+
+```text
+posts
+post_categories
+```
+
+Admin CRUD blog.
+
+---
+
+# 52. Banner
+
+Table:
+
+```text
+banners
+```
+
+Cho phép Admin:
+
+```text
+upload image
+title
+subtitle
+CTA
+link
+sort order
+active
+```
+
+Không hardcode Hero trong Blade.
+
+---
+
+# 53. Website settings
+
+Table:
+
+```text
+settings
+```
+
+Sử dụng để lưu:
+
+```text
+hotline
+email
+address
+
+facebook
+instagram
+zalo
+
+shipping policy
+warranty policy
+
+bank information
+
+SEO settings
+```
+
+Do hiện tại một số dữ liệu trong Excel chỉ là dữ liệu mẫu.
+
+---
+
+# 54. Dữ liệu không được coi là chính thức
+
+Các thông tin sau chưa được coi là dữ liệu production nếu chưa xác nhận:
+
+```text
+hotline
+email
+address
+facebook
+instagram
+zalo
+bank account
+shipping fees
+free shipping threshold
+showroom
+```
+
+Có thể:
+
+```text
+seed placeholder
+```
+
+nhưng phải đánh dấu:
+
+```text
+DEMO / CONFIG_REQUIRED
+```
+
+Không trình bày chúng như thông tin thật của doanh nghiệp.
+
+---
+
+# 55. Chính sách bảo hành
+
+Có mâu thuẫn giữa hai tài liệu.
+
+Một nơi nói:
+
+```text
+Bảo hành trọn đời
+```
+
+Một nơi mô tả chi tiết hơn:
+
+```text
+bảo hành lỗi kỹ thuật 12 tháng
++
+hỗ trợ đánh bóng/làm sáng lâu dài
+```
+
+Trong development nên đặt policy trong database/settings.
+
+Không hardcode banner “bảo hành trọn đời” cho đến khi chủ dự án xác nhận chính sách cuối cùng.
+
+---
+
+# 56. Contact page
+
+Theo sitemap tài liệu:
+
+```text
+Form
+Address
+Phone / Zalo
+Email
+Social
+Map
+```
+
+Google Maps chỉ tích hợp khi có địa chỉ thật.
+
+---
+
+# 57. Search
+
+Search phải hoạt động cho:
+
+```text
+product name
+SKU
+description
+category
+```
+
+Search UI:
+
+Desktop:
+
+```text
+modal / dropdown
+```
+
+Mobile:
+
+```text
+full-screen search
+```
+
+Không cần Elasticsearch.
+
+MySQL `LIKE` là đủ cho phạm vi đồ án.
+
+---
+
+# 58. AJAX yêu cầu mở rộng
+
+Ưu tiên:
+
+```text
+Add to cart
+Cart update
+Wishlist
+Search suggestions
+Coupon
+```
+
+Không cần SPA.
+
+---
+
+# 59. Bootstrap architecture
+
+Không custom toàn bộ Bootstrap từ đầu.
+
+Dùng Bootstrap cho:
+
+```text
+grid
+modal
+offcanvas
+dropdown
+accordion
+form
+utility
+```
+
+Custom Lunara CSS cho:
+
+```text
+product cards
+luxury layout
+buttons
+colors
+typography
+animation
+```
+
+---
+
+# 60. CSS variables
+
+```css
+:root {
+    --lunara-midnight: #1A1C2C;
+    --lunara-silver: #C0C0C0;
+    --lunara-mauve: #B8A7B7;
+    --lunara-cream: #E6E2DD;
+    --lunara-ivory: #F7F5F2;
+}
+```
+
+Thêm:
+
+```text
+--font-heading
+--font-body
+--radius-sm
+--radius-md
+--shadow-soft
+--transition-fast
+--transition-normal
+```
+
+---
+
+# 61. Responsive breakpoints
+
+Kiểm thử tối thiểu:
+
+```text
+375px
+768px
+1024px
+1440px
+```
+
+Tài liệu yêu cầu cân bằng mobile và desktop.
+
+Không có horizontal overflow.
+
+---
+
+# 62. Accessibility
+
+Theo skill UI/UX:
+
+* body font mobile tối thiểu khoảng 16px;
+* target tương tác đủ lớn;
+* `alt` cho ảnh;
+* label cho form;
+* keyboard navigation;
+* focus visible;
+* color contrast;
+* không chỉ dùng màu để biểu thị trạng thái;
+* hỗ trợ `prefers-reduced-motion`.
+
+---
+
+# 63. Icon
+
+Không dùng Emoji làm icon UI.
+
+Dùng thống nhất:
+
+```text
+Lucide
+```
+
+hoặc:
+
+```text
+Bootstrap Icons
+```
+
+Chỉ chọn một bộ chính.
+
+---
+
+# 64. Animation
+
+Micro interaction:
+
+```text
+150–300ms
+```
+
+Có thể dùng:
+
+```text
+opacity
+transform
+box-shadow
+border-color
+```
+
+Tránh animation:
+
+```text
+width
+height
+top
+left
+```
+
+khi không cần thiết.
+
+---
+
+# 65. Performance hình ảnh
+
+Một số ảnh Collection hiện rất lớn.
+
+Cloudinary phải dùng transformation:
+
+```text
+f_auto
+q_auto
+w_...
+```
+
+Product card không tải ảnh gốc nhiều MB.
+
+Sử dụng:
+
+```text
+loading="lazy"
+```
+
+ngoại trừ hero/LCP image.
+
+---
+
+# 66. Cloudinary architecture
+
+Folder đề xuất:
+
+```text
+lunara/
+├── products/
+├── collections/
+├── gifts/
+├── banners/
+└── blog/
+```
+
+Database lưu:
+
+```text
+public_id
+secure_url
+```
+
+Không chỉ lưu URL.
+
+---
+
+# 67. Local media import
+
+Viết import command riêng:
+
+```text
+php artisan lunara:import-products
+```
+
+hoặc Seeder hỗ trợ mapping.
+
+Flow:
+
+```text
+read product dataset
+↓
+map SKU
+↓
+locate local asset
+↓
+create product
+↓
+create product image
+```
+
+Cloudinary upload có thể chạy ở bước riêng.
+
+---
+
+# 68. Seeder architecture
+
+```text
+database/
+├── seeders/
+│   ├── DatabaseSeeder.php
+│   ├── AdminSeeder.php
+│   ├── CategorySeeder.php
+│   ├── ProductSeeder.php
+│   ├── BundleSeeder.php
+│   └── ContentSeeder.php
+│
+└── data/
+    ├── products.php/json
+    ├── bundles.php/json
+    └── settings.php/json
+```
+
+Không viết hàng ngàn dòng thô trong `DatabaseSeeder`.
+
+---
+
+# 69. Demo Admin
+
+Có thể tạo Admin demo từ `.env`:
+
+```text
+ADMIN_EMAIL
+ADMIN_PASSWORD
+```
+
+Không commit password thật.
+
+---
+
+# 70. Validation
+
+Không chỉ sử dụng HTML `required`.
+
+Tạo Laravel Form Requests:
+
+```text
+StoreProductRequest
+UpdateProductRequest
+
+CheckoutRequest
+
+UpdateProfileRequest
+StoreAddressRequest
+
+StoreReviewRequest
+
+StoreCouponRequest
+```
+
+---
+
+# 71. Error UX
+
+Validation error phải:
+
+```text
+hiển thị gần field
+```
+
+Không chỉ flash chung ở đầu trang.
+
+Sử dụng Bootstrap:
+
+```text
+is-invalid
+invalid-feedback
+```
+
+---
+
+# 72. Authorization
+
+Ngoài middleware Admin, phải kiểm tra ownership.
+
+Ví dụ:
+
+```text
+User A
+```
+
+không được truy cập:
+
+```text
+User B order
+```
+
+Query:
+
+```text
+where user_id = auth()->id()
+```
+
+hoặc Policy.
+
+---
+
+# 73. Route structure
+
+```text
+routes/web.php
+```
+
+có thể chia nhỏ khi project lớn:
+
+```text
+routes/
+├── web.php
+├── admin.php
+└── account.php
+```
+
+Nếu chia route thì cấu hình load rõ ràng.
+
+---
+
+# 74. Controller structure
+
+```text
+Controllers/
+├── Storefront/
+│   ├── HomeController
+│   ├── ProductController
+│   ├── SearchController
+│   ├── CartController
+│   ├── CheckoutController
+│   └── BlogController
+│
+├── Account/
+│   ├── ProfileController
+│   ├── AddressController
+│   ├── OrderController
+│   └── WishlistController
+│
+└── Admin/
+    ├── DashboardController
+    ├── ProductController
+    ├── CategoryController
+    ├── OrderController
+    ├── CouponController
+    ├── UserController
+    ├── BannerController
+    └── PostController
+```
+
+---
+
+# 75. Services
+
+Không nhồi toàn bộ nghiệp vụ vào Controller.
+
+Tạo service khi cần:
+
+```text
+CartService
+OrderService
+CheckoutService
+CloudinaryService
+PaymentService
+VNPayService
+```
+
+Controller phải tương đối mỏng.
+
+---
+
+# 76. Blade structure
+
+```text
+resources/views/
+├── layouts/
+│   ├── app.blade.php
+│   ├── admin.blade.php
+│   └── auth.blade.php
+│
+├── components/
+│   ├── product-card.blade.php
+│   ├── price.blade.php
+│   ├── badge.blade.php
+│   ├── breadcrumb.blade.php
+│   └── pagination.blade.php
+│
+├── home/
+├── products/
+├── cart/
+├── checkout/
+├── account/
+├── blog/
+├── pages/
+└── admin/
+```
+
+---
+
+# 77. JavaScript structure
+
+Không viết toàn bộ JS trong Blade.
+
+```text
+resources/js/
+├── app.js
+├── cart.js
+├── wishlist.js
+├── search.js
+└── product-gallery.js
+```
+
+---
+
+# 78. SEO
+
+Các trang Product / Blog cần:
+
+```text
+slug
+meta title
+meta description
+canonical
+OpenGraph
+```
+
+Product structured data có thể triển khai sau core.
+
+---
+
+# 79. Security
+
+Bắt buộc:
+
+```text
+CSRF
+validation
+authorization
+password hashing
+mass assignment protection
+file validation
+rate limiting auth
+```
+
+Không để:
+
+```text
+Cloudinary secret
+VNPay secret
+database password
+```
+
+trong Git.
+
+---
+
+# 80. Soft Delete
+
+Nên dùng cho:
+
+```text
+products
+```
+
+để không phá lịch sử đơn hàng.
+
+Order item snapshot vẫn phải giữ dữ liệu sản phẩm cũ.
+
+---
+
+# 81. ERD lõi
+
+```text
+User
+ ├── Address
+ ├── Wishlist
+ ├── Order
+ └── Review
+
+Category
+ └── Product
+       ├── ProductImage
+       ├── Review
+       └── BundleItem
+                └── Product
+
+Order
+ ├── OrderItem
+ └── Payment
+
+PostCategory
+ └── Post
+```
+
+---
+
+# 82. Use Case — User
+
+```text
+Register
+Login
+Logout
+
+View product
+Search
+Filter
+Sort
+
+View product detail
+
+Add cart
+Update cart
+Remove cart
+
+Wishlist
+
+Checkout
+
+View orders
+
+Manage profile
+Manage addresses
+
+Review product
+```
+
+---
+
+# 83. Use Case — Admin
+
+```text
+Login admin
+
+View dashboard
+
+Manage categories
+Manage products
+Manage product images
+Manage bundles
+
+Manage orders
+Update order status
+
+Manage customers
+
+Manage coupons
+
+Manage reviews
+
+Manage banners
+Manage blog
+
+Manage website settings
+```
+
+---
+
+# 84. Những chức năng bắt buộc theo đồ án
+
+Requirement:
+
+```text
+CRUD ≥ 2 related tables
+```
+
+Lunara cung cấp:
+
+```text
+Categories ↔ Products
+Products ↔ ProductImages
+Orders ↔ OrderItems
+```
+
+Requirement:
+
+```text
+Auth
+```
+
+→ Laravel Authentication.
+
+Requirement:
+
+```text
+Role
+```
+
+→ Admin/User.
+
+Requirement:
+
+```text
+Search
+```
+
+→ Product Search.
+
+Requirement:
+
+```text
+Pagination
+```
+
+→ Catalog + Admin.
+
+Requirement:
+
+```text
+Validation
+```
+
+→ FormRequest.
+
+Requirement:
+
+```text
+Migration
+```
+
+→ toàn bộ schema.
+
+Requirement:
+
+```text
+Seeder
+```
+
+→ catalog Lunara.
+
+Requirement:
+
+```text
+Blade
+```
+
+→ storefront + admin.
+
+Requirement:
+
+```text
+Bootstrap
+```
+
+→ responsive UI.
+
+---
+
+# 85. Tính năng điểm cộng
+
+Lunara có thể đạt thêm:
+
+```text
+Cloudinary upload
+AJAX cart
+AJAX wishlist
+AJAX search
+Responsive
+VNPay
+```
+
+Không cần cố nhồi thêm API ngoài nếu không đem lại giá trị.
+
+---
+
+# 86. PHASE 0 — Workspace safety
+
+Trước khi code:
+
+Giữ nguyên:
+
+```text
+docs/
+media/
+.claude/
+```
+
+Không xóa dữ liệu nguồn.
+
+Nếu initialize Git:
+
+```text
+.gitignore
+.env
+vendor
+node_modules
+```
+
+---
+
+# 87. PHASE 1 — Laravel bootstrap
+
+Thực hiện:
+
+```text
+Laravel installation
+.env
+MySQL connection
+Vite
+Bootstrap
+Auth
+```
+
+Acceptance:
+
+```text
+php artisan serve
+```
+
+chạy thành công.
+
+Database connection thành công.
+
+---
+
+# 88. PHASE 2 — Core database
+
+Tạo migrations:
+
+```text
+users
+addresses
+
+categories
+products
+product_images
+bundle_items
+
+wishlists
+
+carts
+cart_items
+
+orders
+order_items
+payments
+
+reviews
+
+coupons
+coupon_usages
+
+post_categories
+posts
+
+banners
+settings
+```
+
+Acceptance:
+
+```text
+php artisan migrate:fresh
+```
+
+không lỗi.
+
+---
+
+# 89. PHASE 3 — Models
+
+Tạo đầy đủ Eloquent relationships.
+
+Kiểm tra bằng Tinker.
+
+Ví dụ:
+
+```text
+Product → Category
+Product → Images
+Product → BundleItems
+Order → Items
+Order → Payment
+User → Orders
+```
+
+---
+
+# 90. PHASE 4 — Authentication
+
+Hoàn thiện:
+
+```text
+register
+login
+logout
+forgot password
+reset password
+admin middleware
+```
+
+Acceptance:
+
+```text
+guest cannot open /account
+user cannot open /admin
+admin can open /admin
+```
+
+---
+
+# 91. PHASE 5 — Seed catalog
+
+Import:
+
+```text
+30 single products
+10 collections
+5 gifts
+```
+
+Mapping ảnh:
+
+```text
+dc*
+nh*
+vt*
+set *(1)
+set *(2)
+gift
+```
+
+Acceptance:
+
+```text
+database contains correct SKU
+images resolve correctly
+```
+
+Không dùng tên ảnh giả trong Excel.
+
+---
+
+# 92. PHASE 6 — Design system
+
+Tạo:
+
+```text
+CSS variables
+typography
+buttons
+forms
+cards
+spacing
+navigation
+footer
+```
+
+Có thể tham khảo:
+
+```text
+.claude/skills/ui-ux-pro-max
+```
+
+nhưng implement bằng Bootstrap.
+
+---
+
+# 93. PHASE 7 — Homepage
+
+Xây:
+
+```text
+Announcement
+Header
+Hero
+Categories
+New Arrivals
+Brand Story
+Collection
+Best Sellers
+Gift
+Why Lunara
+Reviews
+Blog
+Newsletter
+Footer
+```
+
+Acceptance:
+
+```text
+responsive
+real catalog
+real workspace assets
+```
+
+---
+
+# 94. PHASE 8 — Catalog
+
+Hoàn thiện:
+
+```text
+categories
+search
+filter
+sort
+pagination
+product card hover image
+```
+
+Acceptance:
+
+```text
+query string preserved during pagination
+```
+
+---
+
+# 95. PHASE 9 — Product Detail
+
+Hoàn thiện:
+
+```text
+gallery
+stock
+price
+sale
+size
+quantity
+add cart
+wishlist
+specifications
+bundle content
+related product
+```
+
+---
+
+# 96. PHASE 10 — Cart
+
+Implement:
+
+```text
+session/user cart
+AJAX
+mini cart
+quantity
+remove
+cart total
+```
+
+Acceptance:
+
+```text
+cart persists correctly
+```
+
+---
+
+# 97. PHASE 11 — Checkout COD
+
+Implement:
+
+```text
+shipping
+customer info
+order creation
+stock check
+COD
+order confirmation
+```
+
+Acceptance:
+
+```text
+successful order
+correct order items
+stock decreases
+cart clears
+```
+
+---
+
+# 98. PHASE 12 — Account
+
+Implement:
+
+```text
+profile
+addresses
+wishlist
+orders
+order detail
+password
+```
+
+---
+
+# 99. PHASE 13 — Admin
+
+Implement toàn bộ CRUD chính:
+
+```text
+Products
+Categories
+Collections
+Orders
+Customers
+Reviews
+Banners
+Blog
+Settings
+```
+
+Acceptance:
+
+```text
+search
+pagination
+validation
+authorization
+```
+
+---
+
+# 100. PHASE 14 — Cloudinary
+
+Cấu hình bằng:
+
+```text
+.env
+```
+
+Không commit credential.
+
+Upload:
+
+```text
+products
+collections
+gifts
+banners
+```
+
+Database cập nhật:
+
+```text
+public_id
+secure_url
+```
+
+Acceptance:
+
+```text
+delete DB image
+→ Cloudinary asset handled correctly
+```
+
+---
+
+# 101. PHASE 15 — Content pages
+
+Hoàn thiện:
+
+```text
+About
+Contact
+FAQ
+Privacy
+Returns
+Shipping
+Terms
+Blog
+```
+
+Chỉ sử dụng nội dung đã xác nhận.
+
+Placeholder phải được đánh dấu nếu chưa có nội dung thật.
+
+---
+
+# 102. PHASE 16 — VNPay
+
+Sau khi order flow ổn định mới tích hợp.
+
+Acceptance:
+
+```text
+signature verified
+transaction recorded
+payment status correct
+order status correct
+duplicate callback safe
+```
+
+---
+
+# 103. PHASE 17 — Testing
+
+Feature tests ưu tiên:
+
+```text
+auth
+admin middleware
+
+product listing
+search
+
+cart
+
+checkout
+order creation
+
+ownership
+admin CRUD
+```
+
+---
+
+# 104. PHASE 18 — Responsive QA
+
+Kiểm thử:
+
+```text
+375
+768
+1024
+1440
+```
+
+Kiểm tra:
+
+```text
+navbar
+product cards
+filters
+PDP
+cart
+checkout
+account
+admin
+```
+
+---
+
+# 105. PHASE 19 — Performance
+
+Kiểm tra:
+
+```text
+lazy loading
+image sizing
+N+1 query
+pagination
+Cloudinary optimization
+CSS/JS build
+```
+
+Dùng:
+
+```text
+with()
+```
+
+cho relations cần thiết.
+
+---
+
+# 106. PHASE 20 — Báo cáo môn học
+
+Chuẩn bị:
+
+```text
+Project description
+
+Technology stack
+
+ERD
+
+Use Case
+
+Database design
+
+Main functions
+
+Screenshots
+
+Role description
+
+Validation
+
+Search
+
+Pagination
+
+Cloudinary
+
+AJAX
+
+VNPay
+
+Testing
+
+Work assignment
+```
+
+---
+
+# 107. Git strategy
+
+Nếu project dùng Git:
+
+```text
+main
+develop
+```
+
+hoặc đơn giản:
+
+```text
+main
+feature/*
+```
+
+Commit theo phase.
+
+Ví dụ:
+
+```text
+chore: initialize Laravel project
+
+feat: add core ecommerce database schema
+
+feat: add authentication and admin middleware
+
+feat: seed Lunara product catalog
+
+feat: implement storefront home page
+
+feat: implement product catalog filters
+
+feat: implement cart
+
+feat: implement checkout
+
+feat: implement admin catalog management
+
+feat: integrate Cloudinary
+
+feat: integrate VNPay
+```
+
+Không commit mọi thứ thành một commit.
+
+---
+
+# 108. Quy tắc Codex phải tuân thủ
+
+## Không tự bịa dữ liệu
+
+Không tự tạo:
+
+```text
+product
+price
+SKU
+hotline
+address
+bank account
+policy
+promotion
+```
+
+nếu nguồn không có hoặc chưa được xác nhận.
+
+---
+
+# 109. Không thay stack
+
+Không tự chuyển sang:
+
+```text
+React
+Next.js
+Vue
+Tailwind
+```
+
+Stack đã chốt:
+
+```text
+Laravel
+MySQL
+Blade
+Bootstrap
+```
+
+---
+
+# 110. Không phá dữ liệu nguồn
+
+Không chỉnh/xóa tùy tiện:
+
+```text
+docs/
+media/
+.claude/
+```
+
+Các folder này được xem là source/reference.
+
+---
+
+# 111. Không tích hợp VNPay quá sớm
+
+Thứ tự:
+
+```text
+Catalog
+↓
+Cart
+↓
+COD Checkout
+↓
+Orders
+↓
+Payments architecture
+↓
+VNPay
+```
+
+---
+
+# 112. Không để Controller quá lớn
+
+Nếu business logic > mức hợp lý:
+
+```text
+Service class
+```
+
+Không viết toàn bộ checkout trong một method vài trăm dòng.
+
+---
+
+# 113. Không xây giao diện bằng dữ liệu giả khi đã có dữ liệu thật
+
+Home/Product listing/Product detail phải sử dụng:
+
+```text
+database
+```
+
+Không hardcode 8 card HTML chỉ để demo.
+
+---
+
+# 114. Không hardcode assets vào từng Blade
+
+Ảnh phải đến từ:
+
+```text
+product_images
+```
+
+Blade chỉ render dữ liệu.
+
+---
+
+# 115. Không sửa tên product image một cách tùy ý
+
+Mapping chính thức:
+
+```text
+dc = dây chuyền
+nh = nhẫn
+vt = vòng tay
+```
+
+Collection:
+
+```text
+(1) = primary
+(2) = hover
+```
+
+---
+
+# 116. Thứ tự ưu tiên khi xảy ra mâu thuẫn
+
+Codex phải ưu tiên:
+
+```text
+1. Yêu cầu trực tiếp mới nhất của chủ dự án
+2. Requirement môn học
+3. ProductData.xlsx
+4. Cau-truc-Website-Lunara-Silver.docx
+5. Existing workspace assets
+6. UI/UX skill suggestions
+```
+
+Skill UI/UX không có quyền thay requirement nghiệp vụ.
+
+---
+
+# 117. Definition of Done — Core Project
+
+Project được xem là hoàn thành core khi:
+
+* Laravel chạy ổn định;
+* MySQL migration hoàn chỉnh;
+* seed được catalog;
+* 30 sản phẩm đơn hiển thị đúng;
+* Collection/Gift hiển thị đúng;
+* ảnh `dc/nh/vt` map đúng;
+* set hover `(1) → (2)` hoạt động;
+* đăng ký/đăng nhập hoạt động;
+* Admin/User phân quyền đúng;
+* CRUD hoạt động;
+* search hoạt động;
+* filter hoạt động;
+* pagination hoạt động;
+* validation hoạt động;
+* cart hoạt động;
+* checkout COD hoạt động;
+* orders hoạt động;
+* account hoạt động;
+* admin dashboard hoạt động;
+* responsive hoạt động;
+* Cloudinary hoạt động;
+* không có secret trong repository.
+
+---
+
+# 118. Definition of Done — Final Project
+
+Bản final thêm:
+
+* VNPay;
+* SEO cơ bản;
+* optimized Cloudinary images;
+* accessibility QA;
+* responsive QA;
+* feature tests;
+* ERD;
+* Use Case;
+* documentation;
+* screenshots;
+* work assignment;
+* demo data;
+* polished UI.
+
+---
+
+# 119. Những thứ chưa cần triển khai ngay
+
+Để tránh scope quá lớn, chưa cần:
+
+```text
+multi-vendor
+live chat
+AI chatbot
+loyalty points
+affiliate
+inventory warehouse system
+ERP
+multi-language
+mobile app
+complex permissions
+real-time notifications
+recommendation AI
+```
+
+Các chức năng này chỉ cân nhắc sau khi core hoàn chỉnh.
+
+---
+
+# 120. Kiến trúc cuối cùng
+
+```text
+                    ┌──────────────┐
+                    │   Browser    │
+                    └──────┬───────┘
+                           │
+                           ▼
+                ┌────────────────────┐
+                │ Blade + Bootstrap  │
+                └─────────┬──────────┘
+                          │
+                          ▼
+                   Laravel Routes
+                          │
+                          ▼
+                    Controllers
+                          │
+                ┌─────────┴─────────┐
+                │                   │
+                ▼                   ▼
+             Services            Policies
+                │
+                ▼
+          Eloquent Models
+                │
+                ▼
+              MySQL
+
+External:
+Cloudinary ← Product Images
+VNPay      ← Payments
+```
+
+---
+
+# 121. Kết luận triển khai
+
+Lunara Silver phải được xây dựng theo hướng:
+
+```text
+Professional E-commerce
++
+Academic Laravel Requirements
++
+Real product dataset
++
+Premium Lunara branding
+```
+
+Thứ tự triển khai chuẩn:
+
+```text
+Laravel Foundation
+        ↓
+Database Architecture
+        ↓
+Authentication
+        ↓
+Real Lunara Data
+        ↓
+Design System
+        ↓
+Storefront
+        ↓
+Catalog
+        ↓
+Product Detail
+        ↓
+Cart
+        ↓
+COD Checkout
+        ↓
+Customer Account
+        ↓
+Admin System
+        ↓
+Cloudinary
+        ↓
+Content
+        ↓
+VNPay
+        ↓
+Testing
+        ↓
+Documentation
+```
+
+Mục tiêu cuối cùng không chỉ là:
+
+> “website Laravel có CRUD”
+
+mà là:
+
+> **một website Lunara Silver có thể demo như một cửa hàng trang sức thực tế, đồng thời đáp ứng đầy đủ các tiêu chí kỹ thuật và báo cáo của đồ án.**

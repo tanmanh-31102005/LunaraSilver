@@ -1,0 +1,1328 @@
+{
+  "source": "docs/ProductData.xlsx (sheets 6.2 San pham, 6.3 Set va qua tang) and media/Product, media/Collection, media/Gift",
+  "categories": [
+    {
+      "name": "Dây chuyền",
+      "slug": "day-chuyen"
+    },
+    {
+      "name": "Nhẫn",
+      "slug": "nhan"
+    },
+    {
+      "name": "Vòng tay",
+      "slug": "vong-tay"
+    },
+    {
+      "name": "Bộ trang sức",
+      "slug": "bo-trang-suc"
+    },
+    {
+      "name": "Set quà tặng",
+      "slug": "set-qua-tang"
+    }
+  ],
+  "products": [
+    {
+      "source": "6.2 San pham!4",
+      "sku": "LNS-DC001",
+      "name": "Dây chuyền Lunara Thái Dương Lam",
+      "category_slug": "day-chuyen",
+      "product_type": "single",
+      "regular_price": "450000.00",
+      "sale_price": "390000.00",
+      "stock_quantity": 20,
+      "material": "Bạc 925 đính đá Sapphire xanh",
+      "stone": "Sapphire xanh",
+      "weight": "3.2g",
+      "size_info": "45cm",
+      "short_description": "Mặt trời và đá lam mạnh mẽ, chữa lành",
+      "description": "Tên gọi thể hiện sự kết hợp giữa mặt trời tỏa sáng rực rỡ và viên đá xanh lam (lam) làm tâm điểm, mang lại vẻ đẹp mạnh mẽ nhưng cũng đầy sự chữa lành của đại dương và bầu trời."
+    },
+    {
+      "source": "6.2 San pham!5",
+      "sku": "LNS-DC002",
+      "name": "Dây chuyền Lunara Tinh Tú Hoàn",
+      "category_slug": "day-chuyen",
+      "product_type": "single",
+      "regular_price": "400000.00",
+      "sale_price": "350000.00",
+      "stock_quantity": 25,
+      "material": "Bạc 925 đính đá kim cương nhân tạo (CZ)",
+      "stone": "CZ (mô phỏng kim cương)",
+      "weight": "2.6g",
+      "size_info": "42cm",
+      "short_description": "Vòng tròn đá nạm hoàn hảo, vĩnh cửu",
+      "description": "Một vòng tròn nạm đá kim cương hoàn hảo, tượng trưng cho một vòng tuần hoàn vĩnh cửu của các vì tinh tú trên bầu trời, tinh tế và không bao giờ kết thúc."
+    },
+    {
+      "source": "6.2 San pham!6",
+      "sku": "LNS-DC003",
+      "name": "Dây chuyền Lunara Ái Tinh Hồn",
+      "category_slug": "day-chuyen",
+      "product_type": "single",
+      "regular_price": "420000.00",
+      "sale_price": "370000.00",
+      "stock_quantity": 22,
+      "material": "Bạc 925 đính đá Moissanite",
+      "stone": "Moissanite",
+      "weight": "3.0g",
+      "size_info": "44cm",
+      "short_description": "Trái tim đính đá Moissanite rực rỡ",
+      "description": "Kết hợp hình ảnh trái tim nạm đá lấp lánh với viên đá moissanite lớn ở trung tâm, tượng trưng cho tâm hồn tinh khiết và tình yêu cháy bỏng, rực rỡ như một ngôi sao."
+    },
+    {
+      "source": "6.2 San pham!7",
+      "sku": "LNS-DC004",
+      "name": "Dây chuyền Lunara Tinh Quang Chuyển Động",
+      "category_slug": "day-chuyen",
+      "product_type": "single",
+      "regular_price": "520000.00",
+      "sale_price": "450000.00",
+      "stock_quantity": 15,
+      "material": "Bạc 925 đính đá Moissanite",
+      "stone": "Moissanite",
+      "weight": "3.5g",
+      "size_info": "45cm",
+      "short_description": "Xoắn ốc ánh sáng quanh đá trung tâm",
+      "description": "Tên gọi gợi tả sự xoắn ốc (swirl) nạm đá bao quanh viên đá moissanite trung tâm, như một dòng chảy ánh sáng (tinh quang) đang không ngừng chuyển động và tỏa sáng."
+    },
+    {
+      "source": "6.2 San pham!8",
+      "sku": "LNS-DC005",
+      "name": "Dây chuyền Lunara Thiên Vũ Chòm Sao",
+      "category_slug": "day-chuyen",
+      "product_type": "single",
+      "regular_price": "480000.00",
+      "sale_price": "420000.00",
+      "stock_quantity": 18,
+      "material": "Bạc 925 đính pha lê xanh",
+      "stone": "Pha lê xanh",
+      "weight": "3.8g",
+      "size_info": "46cm",
+      "short_description": "Vũ trụ thu nhỏ với nhiều charm sao",
+      "description": "Một thiết kế phức tạp với nhiều charm sao, hành tinh và viên đá pha lê màu xanh, tượng trưng cho cả một vũ trụ thu nhỏ, một thiên hà rực rỡ với các chòm sao kỳ vĩ ngự trị trên ngực người đeo."
+    },
+    {
+      "source": "6.2 San pham!9",
+      "sku": "LNS-DC006",
+      "name": "Dây chuyền Lunara Phấn Ngôi Sao Lấp Lánh",
+      "category_slug": "day-chuyen",
+      "product_type": "single",
+      "regular_price": "530000.00",
+      "sale_price": "460000.00",
+      "stock_quantity": 14,
+      "material": "Bạc 925 đính đá Moissanite hồng phấn",
+      "stone": "Moissanite hồng",
+      "weight": "3.4g",
+      "size_info": "44cm",
+      "short_description": "Đá hồng phấn giữa ngôi sao lấp lánh",
+      "description": "Nổi bật với viên đá moissanite màu hồng phấn ở tâm của một ngôi sao lấp lánh phức tạp, mang lại vẻ đẹp mềm mại, nữ tính và lãng mạn nhất."
+    },
+    {
+      "source": "6.2 San pham!10",
+      "sku": "LNS-DC007",
+      "name": "Dây chuyền Lunara Hạo Nguyệt Ôm Hừng",
+      "category_slug": "day-chuyen",
+      "product_type": "single",
+      "regular_price": "460000.00",
+      "sale_price": "400000.00",
+      "stock_quantity": 20,
+      "material": "Bạc 925 đính đá Moissanite cabochon",
+      "stone": "Moissanite trắng mờ",
+      "weight": "2.9g",
+      "size_info": "43cm",
+      "short_description": "Trăng khuyết ôm lấy ánh sáng hừng đông",
+      "description": "\"Mặt trăng ôm lấy ánh sáng hừng đông\". Thiết kế vầng trăng khuyết nạm đá ôm lấy một viên đá moissanite cabochon lớn màu trắng mờ, gợi nhớ đến ánh trăng dịu dàng và tinh khiết như sương."
+    },
+    {
+      "source": "6.2 San pham!11",
+      "sku": "LNS-DC008",
+      "name": "Dây chuyền Lunara Băng Tinh Nguyệt Khuyết",
+      "category_slug": "day-chuyen",
+      "product_type": "single",
+      "regular_price": "440000.00",
+      "sale_price": "380000.00",
+      "stock_quantity": 24,
+      "material": "Bạc 925 đính đá Moissanite",
+      "stone": "Moissanite",
+      "weight": "2.7g",
+      "size_info": "42cm",
+      "short_description": "Trăng khuyết với tinh thể đá trong như băng",
+      "description": "Vầng trăng khuyết nạm đá với một cụm đá nhỏ ở một góc, tượng trưng cho một vầng trăng được hình thành từ các tinh thể đá moissanite trong suốt và sắc sảo như băng."
+    },
+    {
+      "source": "6.2 San pham!12",
+      "sku": "LNS-DC009",
+      "name": "Dây chuyền Lunara Thanh Nguyệt Sao Tinh",
+      "category_slug": "day-chuyen",
+      "product_type": "single",
+      "regular_price": "540000.00",
+      "sale_price": "470000.00",
+      "stock_quantity": 12,
+      "material": "Bạc 925 đánh bóng, đính đá nhỏ",
+      "stone": "Đá nhỏ (CZ)",
+      "weight": "3.6g",
+      "size_info": "45cm",
+      "short_description": "Trăng khuyết trơn cùng ngôi sao nạm đá",
+      "description": "\"Mặt trăng trơn và các ngôi sao đôi\". Thiết kế mặt trăng khuyết trơn đánh bóng với một ngôi sao nhỏ nạm đá treo trong lòng, thể hiện nét đẹp cổ điển, thanh lịch và thanh khiết."
+    },
+    {
+      "source": "6.2 San pham!13",
+      "sku": "LNS-DC010",
+      "name": "Dây chuyền Lunara Lưu Tinh Tuyến Cong",
+      "category_slug": "day-chuyen",
+      "product_type": "single",
+      "regular_price": "490000.00",
+      "sale_price": "430000.00",
+      "stock_quantity": 17,
+      "material": "Bạc 925 đính đá Moissanite",
+      "stone": "Moissanite",
+      "weight": "3.3g",
+      "size_info": "44cm",
+      "short_description": "Dải sao chổi cong lấp lánh đá và sao",
+      "description": "Một cụm gồm nhiều viên đá moissanite và ngôi sao xếp thành một dải cong tinh xảo, tựa như một dải sao chổi hoặc dải thiên hà (lưu tinh tuyến) đang chuyển động trên bầu trời đêm."
+    },
+    {
+      "source": "6.2 San pham!14",
+      "sku": "LNS-NH001",
+      "name": "Nhẫn Lunara Nguyệt Tinh",
+      "category_slug": "nhan",
+      "product_type": "single",
+      "regular_price": "290000.00",
+      "sale_price": "250000.00",
+      "stock_quantity": 35,
+      "material": "Bạc 925",
+      "stone": "-",
+      "weight": "1.8g",
+      "size_info": "6-9 (điều chỉnh được)",
+      "short_description": "Trăng khuyết và vì sao trơn tinh tế",
+      "description": "Sự kết hợp nguyên bản và tinh tế nhất giữa trăng khuyết và một vì sao. Thiết kế trơn đơn giản mang vẻ đẹp thanh lịch, nguyên sơ của bầu trời đêm."
+    },
+    {
+      "source": "6.2 San pham!15",
+      "sku": "LNS-NH002",
+      "name": "Nhẫn Lunara Song Tinh",
+      "category_slug": "nhan",
+      "product_type": "single",
+      "regular_price": "400000.00",
+      "sale_price": "350000.00",
+      "stock_quantity": 20,
+      "material": "Bạc 925 (một bên đính đá)",
+      "stone": "CZ nhỏ (1 bên)",
+      "weight": "2.2g",
+      "size_info": "6-9",
+      "short_description": "Nhẫn hở hai ngôi sao gắn kết",
+      "description": "Thiết kế nhẫn hở với hai ngôi sao (một đính đá lấp lánh, một tinh giản rỗng ruột) tượng trưng cho sự gắn kết, đồng hành tỏa sáng."
+    },
+    {
+      "source": "6.2 San pham!16",
+      "sku": "LNS-NH003",
+      "name": "Nhẫn Lunara Lam Dạ",
+      "category_slug": "nhan",
+      "product_type": "single",
+      "regular_price": "300000.00",
+      "sale_price": "260000.00",
+      "stock_quantity": 30,
+      "material": "Bạc 925 đính đá Sapphire xanh",
+      "stone": "Sapphire xanh",
+      "weight": "1.9g",
+      "size_info": "6-9",
+      "short_description": "Đá Sapphire xanh thẳm bí ẩn quyến rũ",
+      "description": "\"Đêm xanh mờ ảo\". Điểm nhấn viên đá sapphire xanh thẳm đặt trong lòng vì sao, e ấp bên mặt trăng nạm đá lấp lánh, mang lại vẻ đẹp bí ẩn và quyến rũ."
+    },
+    {
+      "source": "6.2 San pham!17",
+      "sku": "LNS-NH004",
+      "name": "Nhẫn Lunara Vũ Trụ",
+      "category_slug": "nhan",
+      "product_type": "single",
+      "regular_price": "310000.00",
+      "sale_price": "270000.00",
+      "stock_quantity": 28,
+      "material": "Bạc 925 đính đá + charm sao nhỏ",
+      "stone": "CZ",
+      "weight": "1.7g",
+      "size_info": "6-9",
+      "short_description": "Dải sáng quanh đá như hành tinh thu nhỏ",
+      "description": "Thiết kế có họa tiết dải sáng bao quanh viên đá (giống như sao Thổ/hành tinh) cùng các vì sao nhỏ, tượng trưng cho một vũ trụ thu nhỏ ngự trị trên ngón tay người đeo."
+    },
+    {
+      "source": "6.2 San pham!18",
+      "sku": "LNS-NH005",
+      "name": "Nhẫn Lunara Tinh Thủy",
+      "category_slug": "nhan",
+      "product_type": "single",
+      "regular_price": "320000.00",
+      "sale_price": "280000.00",
+      "stock_quantity": 26,
+      "material": "Bạc 925 đính đá Ngọc bích (Jade)",
+      "stone": "Ngọc bích xanh",
+      "weight": "2.0g",
+      "size_info": "6-9",
+      "short_description": "Đá ngọc bích trong trẻo cùng vì sao",
+      "description": "Sự kết hợp giữa viên đá màu xanh ngọc bích trong trẻo như giọt nước (thủy) và các vì sao (tinh). Cảm giác mang lại sự chữa lành, thanh khiết và rạng rỡ."
+    },
+    {
+      "source": "6.2 San pham!19",
+      "sku": "LNS-NH006",
+      "name": "Nhẫn Lunara Quỹ Đạo",
+      "category_slug": "nhan",
+      "product_type": "single",
+      "regular_price": "280000.00",
+      "sale_price": "240000.00",
+      "stock_quantity": 32,
+      "material": "Bạc 925",
+      "stone": "-",
+      "weight": "2.1g",
+      "size_info": "Free size",
+      "short_description": "Đai kép vắt chéo như quỹ đạo sao",
+      "description": "Thiết kế nhẫn đai kép vắt chéo nhau tựa như quỹ đạo của các vì sao xoay quanh mặt trăng, thể hiện một nét đẹp hiện đại và độc đáo."
+    },
+    {
+      "source": "6.2 San pham!20",
+      "sku": "LNS-NH007",
+      "name": "Nhẫn Lunara Bạch Nguyệt",
+      "category_slug": "nhan",
+      "product_type": "single",
+      "regular_price": "370000.00",
+      "sale_price": "320000.00",
+      "stock_quantity": 15,
+      "material": "Bạc 925 đính đá cabochon",
+      "stone": "Đá trắng (cabochon)",
+      "weight": "1.6g",
+      "size_info": "6-9",
+      "short_description": "Đá cabochon tròn như trăng rằm dịu dàng",
+      "description": "\"Mặt trăng trắng\". Điểm nhấn là viên đá to bản bo tròn (cabochon) gợi nhớ đến vầng trăng rằm tỏa sáng dịu dàng, được che chở bởi vầng trăng khuyết phía trên."
+    },
+    {
+      "source": "6.2 San pham!21",
+      "sku": "LNS-NH008",
+      "name": "Nhẫn Lunara Dạ Khúc",
+      "category_slug": "nhan",
+      "product_type": "single",
+      "regular_price": "270000.00",
+      "sale_price": "230000.00",
+      "stock_quantity": 33,
+      "material": "Bạc 925 đính 3 đá nhỏ + sao",
+      "stone": "CZ nhỏ",
+      "weight": "1.5g",
+      "size_info": "6-9",
+      "short_description": "Trăng khuyết to bản nạm 3 đá nhỏ",
+      "description": "Khúc hát của đêm. Vầng trăng khuyết to bản được nạm thêm 3 viên đá nhỏ, đi kèm ngôi sao lấp lánh tạo nên sự mềm mại, sắc sảo nhưng không kém phần thơ mộng."
+    },
+    {
+      "source": "6.2 San pham!22",
+      "sku": "LNS-NH009",
+      "name": "Nhẫn Lunara Ngân Hà",
+      "category_slug": "nhan",
+      "product_type": "single",
+      "regular_price": "330000.00",
+      "sale_price": "290000.00",
+      "stock_quantity": 26,
+      "material": "Bạc 925 đính nhiều đá nhỏ (dải ngôi sao)",
+      "stone": "CZ nhỏ (dải sao)",
+      "weight": "2.0g",
+      "size_info": "6-9 (điều chỉnh được)",
+      "short_description": "Nhẫn đính dải ngôi sao lấp lánh như ngân hà",
+      "description": "Chiếc nhẫn đính hàng loạt ngôi sao lớn nhỏ lấp lánh dọc thân, tựa như bạn đang mang trọn một dải ngân hà rực rỡ trên tay."
+    },
+    {
+      "source": "6.2 San pham!23",
+      "sku": "LNS-NH010",
+      "name": "Nhẫn Lunara Bắc Đẩu",
+      "category_slug": "nhan",
+      "product_type": "single",
+      "regular_price": "340000.00",
+      "sale_price": "300000.00",
+      "stock_quantity": 24,
+      "material": "Bạc 925",
+      "stone": "-",
+      "weight": "2.0g",
+      "size_info": "6-9",
+      "short_description": "Ngôi sao 8 cánh dẫn đường, kiên định",
+      "description": "Ngôi sao 8 cánh mang hình dáng của la bàn hay sao Bắc Đẩu - ngôi sao sáng nhất và có nhiệm vụ dẫn đường. Mang thông điệp về sự kiên định và ánh sáng rực rỡ nhất của người đeo."
+    },
+    {
+      "source": "6.2 San pham!24",
+      "sku": "LNS-VT001",
+      "name": "Vòng Lunara Nguyệt Hồng",
+      "category_slug": "vong-tay",
+      "product_type": "single",
+      "regular_price": "390000.00",
+      "sale_price": "340000.00",
+      "stock_quantity": 22,
+      "material": "Bạc 925 đính đá cabochon hồng",
+      "stone": "Đá hồng (cabochon)",
+      "weight": "3.8g",
+      "size_info": "17cm",
+      "short_description": "Đá hồng cabochon trong lòng trăng khuyết",
+      "description": "Nổi bật với viên đá hồng cabochon trong lòng vầng trăng khuyết, tượng trưng cho ánh trăng hồng dịu dàng và tình yêu nồng thắm."
+    },
+    {
+      "source": "6.2 San pham!25",
+      "sku": "LNS-VT002",
+      "name": "Vòng Lunara Hành Tinh",
+      "category_slug": "vong-tay",
+      "product_type": "single",
+      "regular_price": "350000.00",
+      "sale_price": "300000.00",
+      "stock_quantity": 26,
+      "material": "Bạc 925 đính đá, charm hành tinh",
+      "stone": "CZ nhỏ",
+      "weight": "4.0g",
+      "size_info": "16-18cm",
+      "short_description": "Hình ảnh hành tinh có vành đai bao quanh",
+      "description": "Chiếc vòng mang hình ảnh một hành tinh chi tiết với vành đai bao quanh (như Sao Thổ), được bao quanh bởi nhiều ngôi sao nhỏ, tượng trưng cho vẻ đẹp bí ẩn và bao la của vũ trụ."
+    },
+    {
+      "source": "6.2 San pham!26",
+      "sku": "LNS-VT003",
+      "name": "Vòng Lunara Song Nguyệt",
+      "category_slug": "vong-tay",
+      "product_type": "single",
+      "regular_price": "410000.00",
+      "sale_price": "360000.00",
+      "stock_quantity": 19,
+      "material": "Bạc 925 nhiều charm trăng khuyết & sao",
+      "stone": "-",
+      "weight": "4.2g",
+      "size_info": "17cm",
+      "short_description": "Charm trăng khuyết và sao đan xen",
+      "description": "\"Hai Mặt Trăng\". Thiết kế vòng với nhiều charm hình trăng khuyết và sao đan xen dọc theo chuỗi, thể hiện sự lặp lại và kết nối của các chu kỳ thiên thể."
+    },
+    {
+      "source": "6.2 San pham!27",
+      "sku": "LNS-VT004",
+      "name": "Vòng Lunara Tinh Tú",
+      "category_slug": "vong-tay",
+      "product_type": "single",
+      "regular_price": "330000.00",
+      "sale_price": "280000.00",
+      "stock_quantity": 24,
+      "material": "Bạc 925 đính đá charm sao lớn",
+      "stone": "CZ",
+      "weight": "3.5g",
+      "size_info": "16-18cm",
+      "short_description": "Một ngôi sao lớn làm tâm điểm",
+      "description": "Tập trung vào một ngôi sao lớn, sắc nét làm tâm điểm, tỏa sáng rực rỡ và duy nhất, giống như ngôi sao dẫn đường Bắc Đẩu."
+    },
+    {
+      "source": "6.2 San pham!28",
+      "sku": "LNS-VT005",
+      "name": "Vòng Lunara Nhật Nguyệt",
+      "category_slug": "vong-tay",
+      "product_type": "single",
+      "regular_price": "400000.00",
+      "sale_price": "350000.00",
+      "stock_quantity": 21,
+      "material": "Bạc 925 nhiều charm (mặt trời/sao/trăng)",
+      "stone": "Đá trong suốt (CZ)",
+      "weight": "4.1g",
+      "size_info": "17cm",
+      "short_description": "Đủ charm mặt trời, sao chổi, trăng khuyết",
+      "description": "\"Mặt Trời và Mặt Trăng\". Chiếc vòng tuyệt đẹp tập hợp đầy đủ các charm: Mặt Trời tỏa sáng, một viên đá trong suốt (như Sao chổi), ngôi sao, và vầng trăng khuyết nhỏ, biểu thị sự hài hòa của trời đất."
+    },
+    {
+      "source": "6.2 San pham!29",
+      "sku": "LNS-VT006",
+      "name": "Vòng Lunara Nguyệt Lam",
+      "category_slug": "vong-tay",
+      "product_type": "single",
+      "regular_price": "420000.00",
+      "sale_price": "370000.00",
+      "stock_quantity": 16,
+      "material": "Bạc 925 đính đá cabochon xanh lam",
+      "stone": "Đá xanh lam (cabochon)",
+      "weight": "4.8g",
+      "size_info": "16-18cm",
+      "short_description": "Đá cabochon xanh lam trong trăng khuyết",
+      "description": "\"Mặt Trăng Xanh\". Điểm nhấn là viên đá cabochon màu xanh lam độc đáo trong lòng trăng khuyết nạm đá, gợi cảm giác về một đêm trăng xanh hiếm có và huyền ảo."
+    },
+    {
+      "source": "6.2 San pham!30",
+      "sku": "LNS-VT007",
+      "name": "Vòng Lunara Thiên Hà",
+      "category_slug": "vong-tay",
+      "product_type": "single",
+      "regular_price": "360000.00",
+      "sale_price": "310000.00",
+      "stock_quantity": 23,
+      "material": "Bạc 925 chuỗi hạt + charm sao trăng",
+      "stone": "-",
+      "weight": "3.6g",
+      "size_info": "17cm",
+      "short_description": "Chuỗi hạt bạc đan xen charm sao trăng",
+      "description": "\"Con đường Thiên hà\". Thiết kế vòng với chuỗi hạt bạc rải rác đan xen các charm sao và trăng nhỏ, tựa như một con đường lấp lánh băng qua các vì sao."
+    },
+    {
+      "source": "6.2 San pham!31",
+      "sku": "LNS-VT008",
+      "name": "Vòng Lunara Đa Tinh",
+      "category_slug": "vong-tay",
+      "product_type": "single",
+      "regular_price": "340000.00",
+      "sale_price": "290000.00",
+      "stock_quantity": 27,
+      "material": "Bạc 925 nhiều charm sao đính đá",
+      "stone": "CZ",
+      "weight": "3.9g",
+      "size_info": "16-18cm",
+      "short_description": "Hàng loạt charm sao với đá trung tâm",
+      "description": "\"Nhiều Ngôi Sao\". Vòng có hàng loạt các charm sao lấp lánh (với một viên đá trung tâm lớn hơn) dọc theo chuỗi, tượng trưng cho một bầu trời đêm dày đặc sao."
+    },
+    {
+      "source": "6.2 San pham!32",
+      "sku": "LNS-VT009",
+      "name": "Vòng Lunara Thiên Đàng",
+      "category_slug": "vong-tay",
+      "product_type": "single",
+      "regular_price": "460000.00",
+      "sale_price": "400000.00",
+      "stock_quantity": 14,
+      "material": "Bạc 925 nhiều charm nạm đá",
+      "stone": "CZ nhỏ",
+      "weight": "5.0g",
+      "size_info": "17cm",
+      "short_description": "Charm trăng khuyết và sao lộng lẫy",
+      "description": "\"Cung điện Thiên đàng\". Chiếc vòng với các charm vầng trăng khuyết và sao lấp lánh (nạm đá) được sắp xếp vui tươi và lộng lẫy, tựa như các vì tinh tú nơi thiên đường."
+    },
+    {
+      "source": "6.2 San pham!33",
+      "sku": "LNS-VT010",
+      "name": "Vòng Lunara Thiên Cơ",
+      "category_slug": "vong-tay",
+      "product_type": "single",
+      "regular_price": "440000.00",
+      "sale_price": "380000.00",
+      "stock_quantity": 16,
+      "material": "Bạc 925 đính đá cabochon lớn + charm",
+      "stone": "Đá cabochon lớn",
+      "weight": "4.6g",
+      "size_info": "16-18cm",
+      "short_description": "Charm hành tinh cơ khí cùng vành đai và sao",
+      "description": "\"Kỳ quan Thiên thể\". Charm trung tâm phức tạp, kết hợp một viên đá cabochon lớn làm hành tinh với các vành đai và ngôi sao xung quanh, như một kỳ quan cơ khí của vũ trụ."
+    },
+    {
+      "source": "6.3 Set va qua tang!4",
+      "sku": "LNS-SET001",
+      "name": "Bản Giao Hưởng Vũ Trụ",
+      "category_slug": "bo-trang-suc",
+      "product_type": "collection",
+      "regular_price": "840000.00",
+      "sale_price": null,
+      "stock_quantity": 0,
+      "material": null,
+      "stone": null,
+      "weight": null,
+      "size_info": null,
+      "short_description": "LNS-DC005 (Thiên Vũ Chòm Sao); LNS-NH004 (Vũ Trụ); LNS-VT002 (Hành Tinh)",
+      "description": "Chủ đề: Vũ Trụ Vô Tận"
+    },
+    {
+      "source": "6.3 Set va qua tang!5",
+      "sku": "LNS-SET002",
+      "name": "Ánh Trăng Tinh Khôi",
+      "category_slug": "bo-trang-suc",
+      "product_type": "collection",
+      "regular_price": "920000.00",
+      "sale_price": null,
+      "stock_quantity": 0,
+      "material": null,
+      "stone": null,
+      "weight": null,
+      "size_info": null,
+      "short_description": "LNS-DC007 (Hạo Nguyệt Ôm Hừng); LNS-NH007 (Bạch Nguyệt Cabochon); LNS-VT003 (Song Nguyệt)",
+      "description": "Chủ đề: Dịu Dàng Đá Trắng Moonstone"
+    },
+    {
+      "source": "6.3 Set va qua tang!6",
+      "sku": "LNS-SET003",
+      "name": "Giọt Ngân Hà",
+      "category_slug": "bo-trang-suc",
+      "product_type": "collection",
+      "regular_price": "880000.00",
+      "sale_price": null,
+      "stock_quantity": 0,
+      "material": null,
+      "stone": null,
+      "weight": null,
+      "size_info": null,
+      "short_description": "LNS-DC008 (Băng Tinh Nguyệt Khuyết); LNS-NH005 (Tinh Thủy); LNS-VT010 (Thiên Cơ)",
+      "description": "Chủ đề: Xanh Ngọc Bích & Cabochon"
+    },
+    {
+      "source": "6.3 Set va qua tang!7",
+      "sku": "LNS-SET004",
+      "name": "Lam Dạ Bí Ẩn",
+      "category_slug": "bo-trang-suc",
+      "product_type": "collection",
+      "regular_price": "870000.00",
+      "sale_price": null,
+      "stock_quantity": 0,
+      "material": null,
+      "stone": null,
+      "weight": null,
+      "size_info": null,
+      "short_description": "LNS-DC001 (Thái Dương Lam); LNS-NH003 (Lam Dạ); LNS-VT006 (Nguyệt Lam)",
+      "description": "Chủ đề: Sang Trọng Sapphire"
+    },
+    {
+      "source": "6.3 Set va qua tang!8",
+      "sku": "LNS-SET005",
+      "name": "Giấc Mơ Hồng",
+      "category_slug": "bo-trang-suc",
+      "product_type": "collection",
+      "regular_price": "980000.00",
+      "sale_price": null,
+      "stock_quantity": 0,
+      "material": null,
+      "stone": null,
+      "weight": null,
+      "size_info": null,
+      "short_description": "LNS-DC006 (Phấn Ngôi Sao); LNS-NH002 (Song Tinh Bạc); LNS-VT001 (Nguyệt Hồng)",
+      "description": "Chủ đề: Ngọt Ngào Đá Hồng Phấn"
+    },
+    {
+      "source": "6.3 Set va qua tang!9",
+      "sku": "LNS-SET006",
+      "name": "Bắc Đẩu Tỏa Sáng",
+      "category_slug": "bo-trang-suc",
+      "product_type": "collection",
+      "regular_price": "860000.00",
+      "sale_price": null,
+      "stock_quantity": 0,
+      "material": null,
+      "stone": null,
+      "weight": null,
+      "size_info": null,
+      "short_description": "LNS-DC010 (Lưu Tinh Tuyến Cong); LNS-NH010 (Bắc Đẩu); LNS-VT004 (Tinh Tú)",
+      "description": "Chủ đề: Sức Mạnh Ngôi Sao"
+    },
+    {
+      "source": "6.3 Set va qua tang!10",
+      "sku": "LNS-SET007",
+      "name": "Nguyên Bản Cổ Điển",
+      "category_slug": "bo-trang-suc",
+      "product_type": "collection",
+      "regular_price": "950000.00",
+      "sale_price": null,
+      "stock_quantity": 0,
+      "material": null,
+      "stone": null,
+      "weight": null,
+      "size_info": null,
+      "short_description": "LNS-DC009 (Thanh Nguyệt Sao Tinh); LNS-NH001 (Nguyệt Tinh Bạc Trơn); LNS-VT009 (Thiên Đàng)",
+      "description": "Chủ đề: Thiên Đàng Đa Dạng"
+    },
+    {
+      "source": "6.3 Set va qua tang!11",
+      "sku": "LNS-SET008",
+      "name": "Nhật Nguyệt Giao Hòa",
+      "category_slug": "bo-trang-suc",
+      "product_type": "collection",
+      "regular_price": "880000.00",
+      "sale_price": null,
+      "stock_quantity": 0,
+      "material": null,
+      "stone": null,
+      "weight": null,
+      "size_info": null,
+      "short_description": "LNS-DC004 (Tinh Quang Chuyển Động); LNS-NH006 (Quỹ Đạo); LNS-VT005 (Nhật Nguyệt)",
+      "description": "Chủ đề: Hài Hòa Trời Đất"
+    },
+    {
+      "source": "6.3 Set va qua tang!12",
+      "sku": "LNS-SET009",
+      "name": "Dải Tinh Không",
+      "category_slug": "bo-trang-suc",
+      "product_type": "collection",
+      "regular_price": "740000.00",
+      "sale_price": null,
+      "stock_quantity": 0,
+      "material": null,
+      "stone": null,
+      "weight": null,
+      "size_info": null,
+      "short_description": "LNS-DC002 (Tinh Tú Hoàn); LNS-NH008 (Dạ Khúc bản to); LNS-VT008 (Đa Tinh)",
+      "description": "Chủ đề: Lộng Lẫy Moissanite"
+    },
+    {
+      "source": "6.3 Set va qua tang!13",
+      "sku": "LNS-SET010",
+      "name": "Khúc Tình Ca Bầu Trời",
+      "category_slug": "bo-trang-suc",
+      "product_type": "collection",
+      "regular_price": "850000.00",
+      "sale_price": null,
+      "stock_quantity": 0,
+      "material": null,
+      "stone": null,
+      "weight": null,
+      "size_info": null,
+      "short_description": "LNS-DC003 (Ái Tinh Hồn); LNS-NH007 (Bạch Nguyệt); LNS-VT007 (Thiên Hà Trơn)",
+      "description": "Chủ đề: Tình Yêu & Moonstone"
+    },
+    {
+      "source": "6.3 Set va qua tang!19",
+      "sku": "LNS-GIFT001",
+      "name": "Lunara Gift Box – Dịu Dàng",
+      "category_slug": "set-qua-tang",
+      "product_type": "gift",
+      "regular_price": "600000.00",
+      "sale_price": null,
+      "stock_quantity": 0,
+      "material": null,
+      "stone": null,
+      "weight": null,
+      "size_info": null,
+      "short_description": "LNS-DC001 (Thái Dương Lam); LNS-NH005 (Tinh Thủy)",
+      "description": "Giá đã gồm chiết khấu ~10% + hộp quà, túi vải, thiệp chúc tặng kèm"
+    },
+    {
+      "source": "6.3 Set va qua tang!20",
+      "sku": "LNS-GIFT002",
+      "name": "Lunara Gift Box – Tỏa Sáng",
+      "category_slug": "set-qua-tang",
+      "product_type": "gift",
+      "regular_price": "590000.00",
+      "sale_price": null,
+      "stock_quantity": 0,
+      "material": null,
+      "stone": null,
+      "weight": null,
+      "size_info": null,
+      "short_description": "LNS-VT007 (Thiên Hà); LNS-NH002 (Song Tinh)",
+      "description": "Giá đã gồm chiết khấu ~10% + hộp quà cao cấp"
+    },
+    {
+      "source": "6.3 Set va qua tang!21",
+      "sku": "LNS-GIFT003",
+      "name": "Lunara Gift Box – Trọn Vẹn Yêu Thương",
+      "category_slug": "set-qua-tang",
+      "product_type": "gift",
+      "regular_price": "1050000.00",
+      "sale_price": null,
+      "stock_quantity": 0,
+      "material": null,
+      "stone": null,
+      "weight": null,
+      "size_info": null,
+      "short_description": "LNS-DC009 (Thanh Nguyệt Sao Tinh); LNS-VT009 (Thiên Đàng); LNS-NH010 (Bắc Đẩu)",
+      "description": "Set quà tặng cao cấp nhất — giá đã gồm chiết khấu ~10%"
+    },
+    {
+      "source": "6.3 Set va qua tang!22",
+      "sku": "LNS-GIFT004",
+      "name": "Lunara Gift Box – Sinh Nhật Lấp Lánh",
+      "category_slug": "set-qua-tang",
+      "product_type": "gift",
+      "regular_price": "340000.00",
+      "sale_price": null,
+      "stock_quantity": 0,
+      "material": null,
+      "stone": null,
+      "weight": null,
+      "size_info": null,
+      "short_description": "LNS-DC008 (Băng Tinh Nguyệt Khuyết) + charm mini (không bán lẻ) + nến thơm mini (không bán lẻ)",
+      "description": "Giá thấp hơn giá lẻ dây chuyền gốc dù tặng kèm charm mini + nến thơm"
+    },
+    {
+      "source": "6.3 Set va qua tang!23",
+      "sku": "LNS-GIFT005",
+      "name": "Lunara Gift Box – Đôi Ta",
+      "category_slug": "set-qua-tang",
+      "product_type": "gift",
+      "regular_price": "450000.00",
+      "sale_price": null,
+      "stock_quantity": 0,
+      "material": null,
+      "stone": null,
+      "weight": null,
+      "size_info": null,
+      "short_description": "2 × LNS-NH001 (Nhẫn Nguyệt Tinh) — mỗi người 1 chiếc, thiết kế trơn tối giản phù hợp làm nhẫn đôi",
+      "description": "Giá đã gồm chiết khấu ~10% + hộp đôi thiết kế riêng"
+    }
+  ],
+  "images": [
+    {
+      "sku": "LNS-DC001",
+      "role": "primary",
+      "path": "media/Product/dc001.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-DC002",
+      "role": "primary",
+      "path": "media/Product/dc002.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-DC003",
+      "role": "primary",
+      "path": "media/Product/dc003.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-DC004",
+      "role": "primary",
+      "path": "media/Product/dc004.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-DC005",
+      "role": "primary",
+      "path": "media/Product/dc005.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-DC006",
+      "role": "primary",
+      "path": "media/Product/dc006.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-DC007",
+      "role": "primary",
+      "path": "media/Product/dc007.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-DC008",
+      "role": "primary",
+      "path": "media/Product/dc008.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-DC009",
+      "role": "primary",
+      "path": "media/Product/dc009.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-DC010",
+      "role": "primary",
+      "path": "media/Product/dc0010.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-NH001",
+      "role": "primary",
+      "path": "media/Product/nh001.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-NH002",
+      "role": "primary",
+      "path": "media/Product/nh002.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-NH003",
+      "role": "primary",
+      "path": "media/Product/nh003.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-NH004",
+      "role": "primary",
+      "path": "media/Product/nh004.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-NH005",
+      "role": "primary",
+      "path": "media/Product/nh005.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-NH006",
+      "role": "primary",
+      "path": "media/Product/nh006.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-NH007",
+      "role": "primary",
+      "path": "media/Product/nh007.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-NH008",
+      "role": "primary",
+      "path": "media/Product/nh008.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-NH009",
+      "role": "primary",
+      "path": "media/Product/nh009.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-NH010",
+      "role": "primary",
+      "path": "media/Product/nh0010.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-VT001",
+      "role": "primary",
+      "path": "media/Product/vt001.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-VT002",
+      "role": "primary",
+      "path": "media/Product/vt002.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-VT003",
+      "role": "primary",
+      "path": "media/Product/vt003.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-VT004",
+      "role": "primary",
+      "path": "media/Product/vt004.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-VT005",
+      "role": "primary",
+      "path": "media/Product/vt005.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-VT006",
+      "role": "primary",
+      "path": "media/Product/vt006.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-VT007",
+      "role": "primary",
+      "path": "media/Product/vt007.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-VT008",
+      "role": "primary",
+      "path": "media/Product/vt008.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-VT009",
+      "role": "primary",
+      "path": "media/Product/vt009.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-VT010",
+      "role": "primary",
+      "path": "media/Product/vt0010.jpg",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-SET001",
+      "role": "primary",
+      "path": "media/Collection/set 1(1).jpg.png",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-SET001",
+      "role": "hover",
+      "path": "media/Collection/set 1(2).png",
+      "sort_order": 1
+    },
+    {
+      "sku": "LNS-SET002",
+      "role": "primary",
+      "path": "media/Collection/set 2(1).jpg.png",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-SET002",
+      "role": "hover",
+      "path": "media/Collection/set 2(2).jpg.png",
+      "sort_order": 1
+    },
+    {
+      "sku": "LNS-SET003",
+      "role": "primary",
+      "path": "media/Collection/set 3(1).jpg.png",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-SET003",
+      "role": "hover",
+      "path": "media/Collection/set 3(2).jpg.png",
+      "sort_order": 1
+    },
+    {
+      "sku": "LNS-SET004",
+      "role": "primary",
+      "path": "media/Collection/set 4(1).jpg.png",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-SET004",
+      "role": "hover",
+      "path": "media/Collection/set 4(2).jpg.png",
+      "sort_order": 1
+    },
+    {
+      "sku": "LNS-SET005",
+      "role": "primary",
+      "path": "media/Collection/set 5(1).jpg.png",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-SET005",
+      "role": "hover",
+      "path": "media/Collection/set 5(2).jpg.png",
+      "sort_order": 1
+    },
+    {
+      "sku": "LNS-SET006",
+      "role": "primary",
+      "path": "media/Collection/set 6(1).jpg.png",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-SET006",
+      "role": "hover",
+      "path": "media/Collection/set 6(2).jpg.png",
+      "sort_order": 1
+    },
+    {
+      "sku": "LNS-SET007",
+      "role": "primary",
+      "path": "media/Collection/set 7(1).jpg.png",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-SET007",
+      "role": "hover",
+      "path": "media/Collection/set 7(2).jpg.png",
+      "sort_order": 1
+    },
+    {
+      "sku": "LNS-SET008",
+      "role": "primary",
+      "path": "media/Collection/set 8(1).jpg.png",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-SET008",
+      "role": "hover",
+      "path": "media/Collection/set 8(2).jpg.png",
+      "sort_order": 1
+    },
+    {
+      "sku": "LNS-SET009",
+      "role": "primary",
+      "path": "media/Collection/set 9(1).jpg.png",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-SET009",
+      "role": "hover",
+      "path": "media/Collection/set 9(2).jpg.png",
+      "sort_order": 1
+    },
+    {
+      "sku": "LNS-SET010",
+      "role": "primary",
+      "path": "media/Collection/set 10(1).jpg.png",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-SET010",
+      "role": "hover",
+      "path": "media/Collection/set 10(2).jpg.png",
+      "sort_order": 1
+    },
+    {
+      "sku": "LNS-GIFT001",
+      "role": "primary",
+      "path": "media/Gift/set qua 1.jpg.png",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-GIFT002",
+      "role": "primary",
+      "path": "media/Gift/set qua 2.jpg.png",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-GIFT003",
+      "role": "primary",
+      "path": "media/Gift/set qua 3.jpg.png",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-GIFT004",
+      "role": "primary",
+      "path": "media/Gift/set qua 4.jpg.png",
+      "sort_order": 0
+    },
+    {
+      "sku": "LNS-GIFT005",
+      "role": "primary",
+      "path": "media/Gift/set qua 5.jpg.png",
+      "sort_order": 0
+    }
+  ],
+  "bundles": [
+    {
+      "source": "6.3 Set va qua tang!4",
+      "sku": "LNS-SET001",
+      "components": [
+        {
+          "sku": "LNS-DC005",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-NH004",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-VT002",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "source": "6.3 Set va qua tang!5",
+      "sku": "LNS-SET002",
+      "components": [
+        {
+          "sku": "LNS-DC007",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-NH007",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-VT003",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "source": "6.3 Set va qua tang!6",
+      "sku": "LNS-SET003",
+      "components": [
+        {
+          "sku": "LNS-DC008",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-NH005",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-VT010",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "source": "6.3 Set va qua tang!7",
+      "sku": "LNS-SET004",
+      "components": [
+        {
+          "sku": "LNS-DC001",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-NH003",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-VT006",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "source": "6.3 Set va qua tang!8",
+      "sku": "LNS-SET005",
+      "components": [
+        {
+          "sku": "LNS-DC006",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-NH002",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-VT001",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "source": "6.3 Set va qua tang!9",
+      "sku": "LNS-SET006",
+      "components": [
+        {
+          "sku": "LNS-DC010",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-NH010",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-VT004",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "source": "6.3 Set va qua tang!10",
+      "sku": "LNS-SET007",
+      "components": [
+        {
+          "sku": "LNS-DC009",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-NH001",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-VT009",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "source": "6.3 Set va qua tang!11",
+      "sku": "LNS-SET008",
+      "components": [
+        {
+          "sku": "LNS-DC004",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-NH006",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-VT005",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "source": "6.3 Set va qua tang!12",
+      "sku": "LNS-SET009",
+      "components": [
+        {
+          "sku": "LNS-DC002",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-NH008",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-VT008",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "source": "6.3 Set va qua tang!13",
+      "sku": "LNS-SET010",
+      "components": [
+        {
+          "sku": "LNS-DC003",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-NH007",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-VT007",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "source": "6.3 Set va qua tang!19",
+      "sku": "LNS-GIFT001",
+      "components": [
+        {
+          "sku": "LNS-DC001",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-NH005",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "source": "6.3 Set va qua tang!20",
+      "sku": "LNS-GIFT002",
+      "components": [
+        {
+          "sku": "LNS-VT007",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-NH002",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "source": "6.3 Set va qua tang!21",
+      "sku": "LNS-GIFT003",
+      "components": [
+        {
+          "sku": "LNS-DC009",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-VT009",
+          "quantity": 1
+        },
+        {
+          "sku": "LNS-NH010",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "source": "6.3 Set va qua tang!22",
+      "sku": "LNS-GIFT004",
+      "components": [
+        {
+          "sku": "LNS-DC008",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "source": "6.3 Set va qua tang!23",
+      "sku": "LNS-GIFT005",
+      "components": [
+        {
+          "sku": "LNS-NH001",
+          "quantity": 2
+        }
+      ]
+    }
+  ],
+  "missing_images": []
+}
