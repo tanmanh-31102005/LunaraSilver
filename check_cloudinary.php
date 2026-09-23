@@ -1,11 +1,12 @@
 <?php
+header('Content-Type: text/plain');
 
-require __DIR__ . '/vendor/autoload.php';
-
-header('Content-Type: text/html; charset=utf-8');
+if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+    require_once __DIR__ . '/vendor/autoload.php';
+}
 
 if (class_exists('Cloudinary\Cloudinary')) {
-    echo "SUCCESS: Class Cloudinary\\Cloudinary is loaded successfully!";
+    echo "SUCCESS: Class Cloudinary\\Cloudinary is loaded successfully!\n";
 } else {
-    echo "ERROR: Class Cloudinary\\Cloudinary not found.";
+    echo "ERROR: Class Cloudinary\\Cloudinary not found.\n";
 }
