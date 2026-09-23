@@ -26,26 +26,6 @@ jobs:
           fi
           echo "✓ Đã tìm thấy FTP Secrets!"
 
-      - name: 🐘 Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, bcmath, fileinfo, zip, curl
-          coverage: none
-          tools: composer:v2
-
-      - name: 📦 Cache Composer Dependencies
-        uses: actions/cache@v4
-        with:
-          path: vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-
-      - name: 📦 Install PHP Composer Dependencies
-        run: |
-          composer install --no-dev --prefer-dist --optimize-autoloader --no-progress --no-interaction
-
       - name: 📦 Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -66,11 +46,12 @@ jobs:
           server-dir: htdocs/
           protocol: ftp
           port: 21
-          timeout: 600000
+          timeout: 120000
           exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
+            **/vendor/**
             tests/**
             phpunit.xml
             README.md
@@ -90,4 +71,3 @@ jobs:
           echo "Waiting 3 seconds before triggering extractor..."
           sleep 3
           curl -s -L https://lunarasilver.infinityfreeapp.com/update_vendor.php || true
-
