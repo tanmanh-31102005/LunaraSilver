@@ -1,0 +1,52 @@
+name: 🚀 Auto Deploy to InfinityFree via FTP
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  web-deploy:
+    name: 🎉 Build & Deploy to InfinityFree
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚚 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 🔨 Install Dependencies & Build Frontend
+        run: |
+          npm ci
+          npm run build
+
+      - name: 📂 Deploy Changes via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: htdocs/
+          protocol: ftp
+          port: 21
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            tests/**
+            phpunit.xml
+            README.md
+            docs/**
+            scripts/**
+            .env*
+            .phpunit.result.cache
+            diag.php
+            test.php
