@@ -97,10 +97,11 @@
         </table>
     </div>
 
-    @if ($categories->hasPages())
-        <div class="p-3 border-top d-flex justify-content-between align-items-center flex-wrap gap-2">
-            <div class="text-muted small">
-                Hiển thị <strong>{{ $categories->firstItem() ?? 0 }}</strong> – <strong>{{ $categories->lastItem() ?? 0 }}</strong> / <strong>{{ $categories->total() }}</strong> danh mục
+    @if ($categories->hasPages() || $categories->total() > 0)
+        <div class="admin-card-footer px-3 py-3 border-top d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-2 text-muted small">
+                <i class="bi bi-tags text-secondary"></i>
+                <span>Hiển thị <strong class="text-dark fw-semibold">{{ $categories->firstItem() ?? 0 }} – {{ $categories->lastItem() ?? 0 }}</strong> trên tổng số <strong class="text-dark fw-semibold">{{ $categories->total() }}</strong> danh mục</span>
             </div>
             <div>
                 {{ $categories->links() }}

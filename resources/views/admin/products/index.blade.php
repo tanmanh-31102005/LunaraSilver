@@ -330,9 +330,10 @@
 
     {{-- Compact Pagination Footer --}}
     @if ($products->hasPages() || $products->total() > 0)
-        <div class="p-3 border-top d-flex justify-content-between align-items-center flex-wrap gap-2">
-            <div class="text-muted small">
-                Hiển thị <strong>{{ $products->firstItem() ?? 0 }}</strong> – <strong>{{ $products->lastItem() ?? 0 }}</strong> / <strong>{{ $products->total() }}</strong> sản phẩm
+        <div class="admin-card-footer px-3 py-3 border-top d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-2 text-muted small">
+                <i class="bi bi-box-seam text-secondary"></i>
+                <span>Hiển thị <strong class="text-dark fw-semibold">{{ $products->firstItem() ?? 0 }} – {{ $products->lastItem() ?? 0 }}</strong> trên tổng số <strong class="text-dark fw-semibold">{{ $products->total() }}</strong> sản phẩm</span>
             </div>
             <div>
                 {{ $products->links() }}

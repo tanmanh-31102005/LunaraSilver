@@ -913,15 +913,71 @@ body.admin-body .form-select:focus {
     box-shadow: 0 0 0 2px rgba(17, 19, 24, 0.08);
 }
 
-body.admin-body .page-link {
+/* ==========================================================================
+   LUNARA ADMIN — PAGINATION & CARD FOOTER
+   ========================================================================== */
+.admin-card-footer {
+    background-color: #ffffff;
+    border-bottom-left-radius: var(--radius-lg, 12px);
+    border-bottom-right-radius: var(--radius-lg, 12px);
+}
+
+body.admin-body .pagination {
+    margin-bottom: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    list-style: none;
+    padding-left: 0;
+}
+
+body.admin-body .page-item .page-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 34px;
+    padding: 0 10px;
+    font-size: 0.85rem;
+    font-weight: 500;
     color: #374151;
-    border-color: #e5e7eb;
+    background-color: #ffffff;
+    border: 1px solid #E5E7EB;
+    border-radius: var(--radius-sm, 6px) !important;
+    text-decoration: none;
+    transition: all 0.15s ease-in-out;
+}
+
+body.admin-body .page-item .page-link:hover {
+    background-color: var(--admin-bg, #F6F7F8);
+    border-color: #D1D5DB;
+    color: #111318;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
 body.admin-body .page-item.active .page-link {
     background-color: #111318;
     border-color: #111318;
     color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(17, 19, 24, 0.18);
+    transform: none;
+}
+
+body.admin-body .page-item.disabled .page-link {
+    background-color: #F9FAFB;
+    border-color: #E5E7EB;
+    color: #9CA3AF;
+    cursor: not-allowed;
+    opacity: 0.65;
+    transform: none;
+    box-shadow: none;
+}
+
+body.admin-body .page-link:focus {
+    box-shadow: 0 0 0 2px rgba(180, 154, 115, 0.25);
+    border-color: #B49A73;
 }
 
 body.admin-body .nav-tabs .nav-link {

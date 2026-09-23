@@ -218,13 +218,14 @@
             </table>
         </div>
 
-        @if ($orders->hasPages())
-            <div class="px-3 py-3 border-top d-flex align-items-center justify-content-between flex-wrap gap-2">
-                <div class="text-muted small">
-                    Hiển thị {{ $orders->firstItem() }} – {{ $orders->lastItem() }} trên tổng số {{ $orders->total() }} đơn hàng
+        @if ($orders->hasPages() || $orders->total() > 0)
+            <div class="admin-card-footer px-3 py-3 border-top d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div class="d-flex align-items-center gap-2 text-muted small">
+                    <i class="bi bi-receipt text-secondary"></i>
+                    <span>Hiển thị <strong class="text-dark fw-semibold">{{ $orders->firstItem() ?? 0 }} – {{ $orders->lastItem() ?? 0 }}</strong> trên tổng số <strong class="text-dark fw-semibold">{{ $orders->total() }}</strong> đơn hàng</span>
                 </div>
                 <div>
-                    {{ $orders->links('pagination::bootstrap-5') }}
+                    {{ $orders->links() }}
                 </div>
             </div>
         @endif
