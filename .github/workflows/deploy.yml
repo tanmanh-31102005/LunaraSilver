@@ -17,10 +17,19 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: 🔍 Check Secrets Configuration
+        run: |
+          if [ -z "${{ secrets.FTP_PASSWORD }}" ]; then
+            echo "❌ CHƯA CÀI ĐẶT MẬT KHẨU FTP!"
+            echo "👉 Hãy vào: Settings -> Secrets and variables -> Actions -> Thêm Secret 'FTP_PASSWORD'"
+            exit 1
+          fi
+          echo "✓ Đã tìm thấy FTP Secrets!"
+
       - name: 📦 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
 
       - name: 🔨 Install Dependencies & Build Frontend
@@ -31,8 +40,8 @@ jobs:
       - name: 📂 Deploy Changes via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
+          server: ${{ secrets.FTP_SERVER || 'ftpupload.net' }}
+          username: ${{ secrets.FTP_USERNAME || 'if0_42986888' }}
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: htdocs/
           protocol: ftp
