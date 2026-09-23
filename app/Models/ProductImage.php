@@ -28,17 +28,45 @@ class ProductImage extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public function displayUrl(): string
+    /**
+     * Determine if this image is hosted on Cloudinary.
+     */
+    public function isCloudinary(): bool
     {
-        if (str_starts_with($this->image_url, 'https://') || str_starts_with($this->image_url, 'http://')) {
+        return ! empty($this->cloudinary_public_id);
+    }
+
+    /**
+     * Return the best available URL for this image.
+     * Priority: Cloudinary secure URL -> local preview -> local media route -> placeholder.
+     */
+    public function displayUrl(?string $transformation = null): string
+    {
+        // 1. Cloudinary or absolute external URL
+        if ($this->isCloudinary() || str_starts_with($this->image_url, 'https://') || str_starts_with($this->image_url, 'http://')) {
+            if ($this->isCloudinary() && $transformation !== null && str_contains($this->image_url, '/upload/')) {
+                return str_replace('/upload/', "/upload/{$transformation}/", $this->image_url);
+            }
+
             return $this->image_url;
         }
 
+        // 2. Local optimized preview (WebP)
         $preview = 'media-previews/'.sha1($this->image_url).'.webp';
         if (is_file(public_path($preview))) {
             return asset($preview);
         }
 
-        return route('media.show', ['path' => substr($this->image_url, strlen('media/'))]);
+        // 3. Legacy local media route
+        if (str_starts_with($this->image_url, 'media/')) {
+            return route('media.show', ['path' => substr($this->image_url, strlen('media/'))]);
+        }
+
+        if (! empty($this->image_url)) {
+            return route('media.show', ['path' => $this->image_url]);
+        }
+
+        // 4. Default placeholder fallback
+        return route('media.show', ['path' => 'placeholder.png']);
     }
 }

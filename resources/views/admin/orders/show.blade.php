@@ -133,7 +133,7 @@
                                 <tr>
                                     <td>
                                         @if ($item->product && $item->product->primaryImage)
-                                            <img src="{{ route('media.show', ['path' => $item->product->primaryImage->image_url]) }}"
+                                            <img src="{{ $item->product->primaryImage->displayUrl() }}"
                                                  alt="{{ $item->product_name }}"
                                                  class="rounded border"
                                                  style="width: 48px; height: 48px; object-fit: cover;">

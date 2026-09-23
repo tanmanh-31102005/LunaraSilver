@@ -70,6 +70,16 @@ class Product extends Model
         return $this->hasOne(ProductImage::class)->where('image_role', 'primary');
     }
 
+    public function hoverImage(): HasOne
+    {
+        return $this->hasOne(ProductImage::class)->where('image_role', 'hover');
+    }
+
+    public function galleryImages(): HasMany
+    {
+        return $this->hasMany(ProductImage::class)->where('image_role', 'gallery')->orderBy('sort_order');
+    }
+
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);

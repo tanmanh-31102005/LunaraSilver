@@ -196,6 +196,9 @@
                     </div>
                 </div>
             </div>
+
+            {{-- Section 5: Product Images (Cloudinary & Local Media) --}}
+            @include('admin.products.partials.image-manager', ['product' => $product])
         </div>
 
         {{-- Right Column: Status & SEO --}}
@@ -443,69 +446,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         recalculateBundleAvailability();
-    }
-
-    // --- Image Manager (Move Up/Down, Preview) ---
-    const btnAddImage = document.getElementById('btnAddImageRow');
-    const imagesContainer = document.getElementById('imagesContainer');
-    const imageTemplate = document.getElementById('imageRowTemplate');
-    let imageIndex = {{ count(old('images', $product->images)) + 20 }};
-
-    function reindexImages() {
-        const rows = imagesContainer.querySelectorAll('.image-row');
-        rows.forEach((row, idx) => {
-            const orderInput = row.querySelector('.image-sort-order');
-            if (orderInput) orderInput.value = idx;
-        });
-    }
-
-    if (btnAddImage && imagesContainer && imageTemplate) {
-        btnAddImage.addEventListener('click', function () {
-            const emptyRow = document.getElementById('emptyImagesRow');
-            if (emptyRow) emptyRow.remove();
-
-            const html = imageTemplate.innerHTML.replace(/__INDEX__/g, imageIndex++);
-            imagesContainer.insertAdjacentHTML('beforeend', html);
-            reindexImages();
-        });
-
-        imagesContainer.addEventListener('click', function (e) {
-            const btnRemove = e.target.closest('.btn-remove-image-row');
-            const btnUp = e.target.closest('.btn-move-img-up');
-            const btnDown = e.target.closest('.btn-move-img-down');
-
-            if (btnRemove) {
-                const row = btnRemove.closest('.image-row');
-                if (row) row.remove();
-                reindexImages();
-            } else if (btnUp) {
-                const row = btnUp.closest('.image-row');
-                const prev = row.previousElementSibling;
-                if (prev && prev.classList.contains('image-row')) {
-                    imagesContainer.insertBefore(row, prev);
-                    reindexImages();
-                }
-            } else if (btnDown) {
-                const row = btnDown.closest('.image-row');
-                const next = row.nextElementSibling;
-                if (next && next.classList.contains('image-row')) {
-                    imagesContainer.insertBefore(next, row);
-                    reindexImages();
-                }
-            }
-        });
-
-        imagesContainer.addEventListener('input', function (e) {
-            if (e.target.classList.contains('image-url-input')) {
-                const row = e.target.closest('.image-row');
-                const previewBox = row.querySelector('.image-preview-box');
-                const val = e.target.value.trim();
-                if (val && previewBox) {
-                    const src = val.startsWith('http') ? val : '/media/' + encodeURIComponent(val);
-                    previewBox.innerHTML = '<img src="' + src + '" alt="Preview" style="object-fit: cover; width: 100%; height: 100%;">';
-                }
-            }
-        });
     }
 });
 </script>

@@ -200,7 +200,7 @@
                             {{-- Thumbnail --}}
                             <td>
                                 @if ($product->primaryImage)
-                                    <img src="{{ route('media.show', ['path' => $product->primaryImage->image_url]) }}" alt="{{ $product->name }}" class="rounded border" style="width: 44px; height: 44px; object-fit: cover;">
+                                    <img src="{{ $product->primaryImage->displayUrl() }}" alt="{{ $product->name }}" class="rounded border" style="width: 44px; height: 44px; object-fit: cover;">
                                 @else
                                     <div class="rounded border bg-light text-muted d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; font-size: 0.75rem;">
                                         <i class="bi bi-image"></i>

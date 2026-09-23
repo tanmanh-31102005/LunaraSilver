@@ -129,7 +129,7 @@
                                 <tr>
                                     <td>
                                         @if ($lp->primaryImage)
-                                            <img src="{{ route('media.show', ['path' => $lp->primaryImage->image_url]) }}" alt="{{ $lp->name }}" class="rounded border" style="width: 38px; height: 38px; object-fit: cover;">
+                                            <img src="{{ $lp->primaryImage->displayUrl() }}" alt="{{ $lp->name }}" class="rounded border" style="width: 38px; height: 38px; object-fit: cover;">
                                         @else
                                             <div class="rounded border bg-light text-muted d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; font-size: 0.75rem;">
                                                 <i class="bi bi-image"></i>
@@ -191,7 +191,7 @@
                                 <tr>
                                     <td>
                                         @if ($op->primaryImage)
-                                            <img src="{{ route('media.show', ['path' => $op->primaryImage->image_url]) }}" alt="{{ $op->name }}" class="rounded border" style="width: 38px; height: 38px; object-fit: cover;">
+                                            <img src="{{ $op->primaryImage->displayUrl() }}" alt="{{ $op->name }}" class="rounded border" style="width: 38px; height: 38px; object-fit: cover;">
                                         @else
                                             <div class="rounded border bg-light text-muted d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; font-size: 0.75rem;">
                                                 <i class="bi bi-image"></i>
@@ -251,7 +251,7 @@
                                 <tr>
                                     <td>
                                         @if ($product->primaryImage)
-                                            <img src="{{ route('media.show', ['path' => $product->primaryImage->image_url]) }}" alt="{{ $product->name }}" class="rounded border" style="width: 38px; height: 38px; object-fit: cover;">
+                                            <img src="{{ $product->primaryImage->displayUrl() }}" alt="{{ $product->name }}" class="rounded border" style="width: 38px; height: 38px; object-fit: cover;">
                                         @else
                                             <div class="rounded border bg-light text-muted d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; font-size: 0.75rem;">
                                                 <i class="bi bi-image"></i>

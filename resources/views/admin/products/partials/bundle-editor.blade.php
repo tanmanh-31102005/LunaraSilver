@@ -36,7 +36,7 @@
                     @forelse ($existingItems as $idx => $item)
                         @php
                             $selectedSp = $singleProducts->firstWhere('id', (int)($item['product_id'] ?? 0));
-                            $imgUrl = $selectedSp?->primaryImage ? route('media.show', ['path' => $selectedSp->primaryImage->image_url]) : null;
+                            $imgUrl = $selectedSp?->primaryImage?->displayUrl();
                         @endphp
                         <tr class="bundle-row">
                             <td class="text-center">
@@ -53,7 +53,7 @@
                                     <option value="">-- Chọn sản phẩm thành phần --</option>
                                     @foreach ($singleProducts as $sp)
                                         @php
-                                            $spImg = $sp->primaryImage ? route('media.show', ['path' => $sp->primaryImage->image_url]) : '';
+                                            $spImg = $sp->primaryImage?->displayUrl() ?? '';
                                         @endphp
                                         <option value="{{ $sp->id }}" 
                                             data-stock="{{ $sp->stock_quantity }}" 
@@ -114,7 +114,7 @@
                 <option value="">-- Chọn sản phẩm thành phần --</option>
                 @foreach ($singleProducts as $sp)
                     @php
-                        $spImg = $sp->primaryImage ? route('media.show', ['path' => $sp->primaryImage->image_url]) : '';
+                        $spImg = $sp->primaryImage?->displayUrl() ?? '';
                     @endphp
                     <option value="{{ $sp->id }}" 
                         data-stock="{{ $sp->stock_quantity }}" 

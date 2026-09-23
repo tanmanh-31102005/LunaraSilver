@@ -1,4 +1,25 @@
 @php
+if (!isset($slides)) {
+    $dbBanners = \App\Models\Banner::query()->active()->ordered()->get();
+    if ($dbBanners->isNotEmpty()) {
+        $slides = $dbBanners->map(function ($banner, $index) {
+            return [
+                'id' => 'hero-slide-db-' . $banner->id,
+                'overline' => $banner->subtitle ?: 'LUNARA SILVER',
+                'title' => $banner->title ?: 'Tỏa sáng cùng nhịp điệu riêng của bạn',
+                'description' => $banner->subtitle ?: '',
+                'cta_label' => $banner->button_text ?: 'Khám phá bộ sưu tập',
+                'cta_url' => $banner->link ?: route('products.index'),
+                'image' => $banner->displayUrl(),
+                'image_alt' => $banner->title ?: 'Banner Lunara Silver',
+                'position' => '72% center',
+                'mobile_position' => '72% center',
+                'preload' => $index === 0,
+            ];
+        })->toArray();
+    }
+}
+
 $slides = $slides ?? [
     [
         'id' => 'hero-slide-1',
