@@ -153,7 +153,9 @@ class VNPayService
             );
         }
 
-        $requestId = (string) Str::uuid();
+        // VNPay WebAPI requires alphanumeric unique RequestId (max 32 chars, typically date + random digits)
+        $requestId = date('YmdHis') . str_pad((string) random_int(1, 999999), 6, '0', STR_PAD_LEFT);
+        $cleanIp = filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? $ipAddress : '127.0.0.1';
         $version = config('vnpay.version', '2.1.0');
         $command = 'querydr';
         $txnRef = (string) $payment->txn_ref;
@@ -163,7 +165,7 @@ class VNPayService
 
         // Checksum data format according to VNPay QueryDr 2.1.0:
         // $vnp_RequestId . '|' . $vnp_Version . '|' . $vnp_Command . '|' . $vnp_TmnCode . '|' . $vnp_TxnRef . '|' . $vnp_TransactionDate . '|' . $vnp_CreateDate . '|' . $vnp_IpAddr . '|' . $vnp_OrderInfo
-        $hashData = $requestId . '|' . $version . '|' . $command . '|' . $tmnCode . '|' . $txnRef . '|' . $transactionDate . '|' . $createDate . '|' . $ipAddress . '|' . $orderInfo;
+        $hashData = $requestId . '|' . $version . '|' . $command . '|' . $tmnCode . '|' . $txnRef . '|' . $transactionDate . '|' . $createDate . '|' . $cleanIp . '|' . $orderInfo;
         $secureHash = hash_hmac('sha512', $hashData, $hashSecret);
 
         $payload = [
@@ -175,7 +177,7 @@ class VNPayService
             'vnp_OrderInfo' => $orderInfo,
             'vnp_TransactionDate' => $transactionDate,
             'vnp_CreateDate' => $createDate,
-            'vnp_IpAddr' => $ipAddress,
+            'vnp_IpAddr' => $cleanIp,
             'vnp_SecureHash' => $secureHash,
         ];
 
@@ -274,7 +276,9 @@ class VNPayService
             );
         }
 
-        $requestId = (string) Str::uuid();
+        // VNPay WebAPI requires alphanumeric unique RequestId (max 32 chars)
+        $requestId = date('YmdHis') . str_pad((string) random_int(1, 999999), 6, '0', STR_PAD_LEFT);
+        $cleanIp = filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? $ipAddress : '127.0.0.1';
         $version = config('vnpay.version', '2.1.0');
         $command = 'refund';
         $vnpTransactionType = ($refundType === 'full') ? '02' : '03';
@@ -286,7 +290,7 @@ class VNPayService
 
         // Checksum data format according to VNPay Refund 2.1.0:
         // $vnp_RequestId . '|' . $vnp_Version . '|' . $vnp_Command . '|' . $vnp_TmnCode . '|' . $vnp_TransactionType . '|' . $vnp_TxnRef . '|' . $vnp_Amount . '|' . $vnp_TransactionNo . '|' . $vnp_TransactionDate . '|' . $vnp_CreateBy . '|' . $vnp_CreateDate . '|' . $vnp_IpAddr . '|' . $vnp_OrderInfo
-        $hashData = $requestId . '|' . $version . '|' . $command . '|' . $tmnCode . '|' . $vnpTransactionType . '|' . $txnRef . '|' . $vnpAmount . '|' . $transactionNo . '|' . $transactionDate . '|' . $createBy . '|' . $createDate . '|' . $ipAddress . '|' . $reason;
+        $hashData = $requestId . '|' . $version . '|' . $command . '|' . $tmnCode . '|' . $vnpTransactionType . '|' . $txnRef . '|' . $vnpAmount . '|' . $transactionNo . '|' . $transactionDate . '|' . $createBy . '|' . $createDate . '|' . $cleanIp . '|' . $reason;
         $secureHash = hash_hmac('sha512', $hashData, $hashSecret);
 
         $payload = [
@@ -302,7 +306,7 @@ class VNPayService
             'vnp_TransactionDate' => $transactionDate,
             'vnp_CreateBy' => $createBy,
             'vnp_CreateDate' => $createDate,
-            'vnp_IpAddr' => $ipAddress,
+            'vnp_IpAddr' => $cleanIp,
             'vnp_SecureHash' => $secureHash,
         ];
 

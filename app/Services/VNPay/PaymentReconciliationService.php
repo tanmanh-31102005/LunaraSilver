@@ -109,7 +109,7 @@ class PaymentReconciliationService
                     'success' => true,
                     'status' => Payment::STATUS_PAID,
                     'changed' => $changed,
-                    'message' => 'Giao dịch đã được xác nhận thanh toán thành công.',
+                    'message' => $queryResult->getHumanMessage(),
                     'payment' => $lockedPayment,
                 ];
             }
@@ -117,7 +117,7 @@ class PaymentReconciliationService
             if ($queryResult->isFailed()) {
                 if ($lockedPayment->status === Payment::STATUS_PENDING) {
                     $lockedPayment->status = Payment::STATUS_FAILED;
-                    $lockedPayment->failure_reason = $queryResult->message;
+                    $lockedPayment->failure_reason = $queryResult->getHumanMessage();
                     $lockedPayment->response_data = $queryResult->rawPayload;
                     $lockedPayment->save();
                     $changed = true;
@@ -138,7 +138,35 @@ class PaymentReconciliationService
                     'success' => true,
                     'status' => $lockedPayment->status,
                     'changed' => $changed,
-                    'message' => 'Giao dịch thất bại hoặc đã bị hủy trên cổng VNPay: ' . $queryResult->message,
+                    'message' => 'Giao dịch thất bại hoặc đã bị hủy trên cổng VNPay: ' . $queryResult->getHumanMessage(),
+                    'payment' => $lockedPayment,
+                ];
+            }
+
+            if ($queryResult->isNotFound()) {
+                $lockedPayment->response_data = $queryResult->rawPayload;
+                $lockedPayment->save();
+
+                return [
+                    'success' => false,
+                    'is_not_found' => true,
+                    'status' => $lockedPayment->status,
+                    'changed' => false,
+                    'message' => $queryResult->getHumanMessage(),
+                    'payment' => $lockedPayment,
+                ];
+            }
+
+            if ($queryResult->isDuplicate()) {
+                $lockedPayment->response_data = $queryResult->rawPayload;
+                $lockedPayment->save();
+
+                return [
+                    'success' => false,
+                    'is_duplicate' => true,
+                    'status' => $lockedPayment->status,
+                    'changed' => false,
+                    'message' => $queryResult->getHumanMessage(),
                     'payment' => $lockedPayment,
                 ];
             }
@@ -151,7 +179,7 @@ class PaymentReconciliationService
                 'success' => $queryResult->isSuccess,
                 'status' => $lockedPayment->status,
                 'changed' => $changed,
-                'message' => $queryResult->message ?: 'Giao dịch đang chờ thanh toán hoặc chưa có kết quả cuối cùng.',
+                'message' => $queryResult->getHumanMessage(),
                 'payment' => $lockedPayment,
             ];
         });

@@ -75,6 +75,29 @@ class VNPayController extends Controller
         $order->refresh();
         $payment->refresh();
 
+        // Fallback: If return checksum was verified, responseCode is '00', and transactionStatus is '00',
+        // but QueryDr was throttled/duplicate, ensure payment is marked paid.
+        if (! $payment->isPaid() && $request->input('vnp_ResponseCode') === '00') {
+            $txnStatus = (string) $request->input('vnp_TransactionStatus', '00');
+            if ($txnStatus === '00') {
+                $payment->status = Payment::STATUS_PAID;
+                $payment->vnp_transaction_no = (string) $request->input('vnp_TransactionNo');
+                $payment->vnp_bank_code = (string) $request->input('vnp_BankCode');
+                $payment->vnp_card_type = (string) $request->input('vnp_CardType');
+                $payment->vnp_pay_date = (string) $request->input('vnp_PayDate');
+                $payment->paid_at = now();
+                $payment->save();
+
+                if ($order && $order->payment_status !== 'paid') {
+                    $order->payment_status = 'paid';
+                    if ($order->order_status === 'pending') {
+                        $order->order_status = 'confirmed';
+                    }
+                    $order->save();
+                }
+            }
+        }
+
         // Grant session authorization for order viewing
         if ($order) {
             $request->session()->put('last_order_code', $order->order_code);
