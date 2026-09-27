@@ -2239,9 +2239,14 @@ textarea.form-control {
 
 .detail-gallery {
     min-width: 0;
-    position: sticky;
-    top: 96px;
     align-self: start;
+}
+
+@media (min-width: 992px) {
+    .detail-gallery {
+        position: sticky;
+        top: 96px;
+    }
 }
 
 .detail-info {
@@ -2256,6 +2261,7 @@ textarea.form-control {
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-subtle);
     overflow: hidden;
+    touch-action: pan-y;
 }
 
 .detail-gallery--bundle .carousel-inner {
@@ -3793,6 +3799,11 @@ textarea.form-control {
     .detail-hero {
         gap: 34px;
     }
+    .detail-gallery {
+        position: static !important;
+        top: auto !important;
+        align-self: auto !important;
+    }
     .bundle-items {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -3870,6 +3881,27 @@ textarea.form-control {
         color: var(--lunara-muted);
         font-size: 0.74rem;
         content: attr(data-label);
+    }
+    .detail-thumbnails {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        padding-bottom: 6px;
+        margin-top: 10px;
+        gap: 8px;
+    }
+    .detail-thumbnails::-webkit-scrollbar {
+        height: 4px;
+    }
+    .detail-thumbnails::-webkit-scrollbar-thumb {
+        background: var(--lunara-line);
+        border-radius: 4px;
+    }
+    .detail-thumbnails .detail-thumbnail {
+        width: 64px;
+        height: 78px;
+        flex-shrink: 0;
     }
 }
 
@@ -3979,19 +4011,111 @@ textarea.form-control {
         grid-template-columns: 1fr;
     }
     .detail-hero {
-        margin-top: 22px;
+        margin-top: 18px;
+        gap: 24px;
+    }
+    .detail-gallery {
+        position: static !important;
+        top: auto !important;
+        align-self: auto !important;
     }
     .detail-info {
         padding-top: 0;
     }
+    .detail-title,
     .detail-info h1 {
-        font-size: 3rem;
+        font-size: clamp(1.65rem, 5.5vw, 2.15rem);
+        line-height: 1.2;
+        margin: 6px 0 12px;
+    }
+    .detail-pricing-stock {
+        padding: 12px 14px;
+        gap: 10px;
+        margin-bottom: 16px;
     }
     .detail-price {
-        font-size: 1.4rem;
+        font-size: 1.45rem;
+    }
+    .curated-inclusions-card {
+        padding: 14px;
+        margin-bottom: 18px;
+    }
+    .curated-inclusions-chips {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    .detail-cta {
+        margin-bottom: 20px;
+        padding-top: 4px;
+    }
+    .detail-cta__control-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    .detail-quantity-box {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        background: #faf8f5;
+        border: 1px solid var(--lunara-line);
+        border-radius: var(--radius-sm);
+        padding: 6px 12px;
+    }
+    .detail-quantity-label {
+        margin: 0;
+        font-size: 0.78rem;
+    }
+    .stepper-widget {
+        height: 40px;
+    }
+    .detail-cta__actions {
+        width: 100%;
+        min-width: 0;
+        gap: 8px;
+    }
+    .detail-cta__cart-btn,
+    .detail-cta__buynow-btn {
+        flex: 1;
+        min-width: 0;
+        height: 48px;
+        font-size: 0.82rem;
+        padding-inline: 8px;
+        border-radius: var(--radius-sm);
+    }
+    .detail-trust-strip {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding: 12px 14px;
+        margin-bottom: 18px;
+    }
+    .detail-unboxing-card {
+        margin-top: 0;
+        margin-bottom: 20px;
+        padding: 14px 16px;
+    }
+    .detail-unboxing-card__grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px 12px;
+    }
+    .detail-accordions {
+        gap: 6px;
+    }
+    .detail-accordion__summary {
+        padding: 12px 14px;
+        font-size: 0.82rem;
+    }
+    .detail-accordion__body {
+        padding: 12px 14px 16px;
+    }
+    .detail-specifications > div {
+        grid-template-columns: 105px minmax(0, 1fr);
+        gap: 8px;
+        padding: 10px 0;
+        font-size: 0.82rem;
     }
     .detail-section {
-        margin-top: 60px;
+        margin-top: 48px;
     }
     .bundle-items {
         grid-template-columns: 1fr;
@@ -4082,6 +4206,14 @@ textarea.form-control {
     }
     .product-price {
         gap: 2px 6px;
+    }
+    .detail-trust-strip {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    .detail-unboxing-card__grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
     }
 }
 

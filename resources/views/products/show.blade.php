@@ -37,50 +37,6 @@
                     </div>
                 @else
                     <div class="detail-gallery__empty" role="img" aria-label="Chưa có ảnh sản phẩm"><i class="bi bi-image" aria-hidden="true"></i></div>
-                @endif
-
-                <div class="detail-unboxing-card">
-                    <div class="detail-unboxing-card__head">
-                        <i class="bi bi-box2-heart text-champagne"></i>
-                        <span>Đặc quyền đóng gói & Quà tặng Lunara</span>
-                    </div>
-                    <div class="detail-unboxing-card__grid">
-                        <div class="unboxing-perk">
-                            <i class="bi bi-gift"></i>
-                            <div>
-                                <strong>Hộp quà nhung Ánh Trăng</strong>
-                                <p>Tặng kèm miễn phí cho mọi đơn hàng</p>
-                            </div>
-                        </div>
-                        <div class="unboxing-perk">
-                            <i class="bi bi-patch-check"></i>
-                            <div>
-                                <strong>Thẻ kiểm định Bạc Ý S925</strong>
-                                <p>Cam kết chuẩn tuổi & bảo hành trọn đời</p>
-                            </div>
-                        </div>
-                        <div class="unboxing-perk">
-                            <i class="bi bi-stars"></i>
-                            <div>
-                                <strong>Khăn lau bạc Nano chuyên dụng</strong>
-                                <p>Giúp trang sức luôn sáng bóng lấp lánh</p>
-                            </div>
-                        </div>
-                        <div class="unboxing-perk">
-                            <i class="bi bi-envelope-paper-heart"></i>
-                            <div>
-                                <strong>Thiệp chúc viết tay cao cấp</strong>
-                                <p>Gửi trọn lời yêu thương ý nghĩa</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="detail-unboxing-card__footer">
-                        <span class="unboxing-support">
-                            <i class="bi bi-chat-dots me-1"></i> Cần tư vấn nhanh về mẫu mã & kích cỡ? 
-                            <a href="{{ route('home') }}#story" class="unboxing-link">Hỗ trợ 24/7 <i class="bi bi-arrow-right-short"></i></a>
-                        </span>
-                    </div>
-                </div>
             </section>
 
             <section class="detail-info" aria-labelledby="product-name">
@@ -216,6 +172,49 @@
                             <strong>Đổi Trả 7 Ngày</strong>
                             <span>Đánh sáng trọn đời miễn phí</span>
                         </div>
+                    </div>
+                </div>
+
+                <div class="detail-unboxing-card">
+                    <div class="detail-unboxing-card__head">
+                        <i class="bi bi-box2-heart text-champagne"></i>
+                        <span>Đặc quyền đóng gói & Quà tặng Lunara</span>
+                    </div>
+                    <div class="detail-unboxing-card__grid">
+                        <div class="unboxing-perk">
+                            <i class="bi bi-gift"></i>
+                            <div>
+                                <strong>Hộp quà nhung Ánh Trăng</strong>
+                                <p>Tặng kèm miễn phí cho mọi đơn hàng</p>
+                            </div>
+                        </div>
+                        <div class="unboxing-perk">
+                            <i class="bi bi-patch-check"></i>
+                            <div>
+                                <strong>Thẻ kiểm định Bạc Ý S925</strong>
+                                <p>Cam kết chuẩn tuổi & bảo hành trọn đời</p>
+                            </div>
+                        </div>
+                        <div class="unboxing-perk">
+                            <i class="bi bi-stars"></i>
+                            <div>
+                                <strong>Khăn lau bạc Nano chuyên dụng</strong>
+                                <p>Giúp trang sức luôn sáng bóng lấp lánh</p>
+                            </div>
+                        </div>
+                        <div class="unboxing-perk">
+                            <i class="bi bi-envelope-paper-heart"></i>
+                            <div>
+                                <strong>Thiệp chúc viết tay cao cấp</strong>
+                                <p>Gửi trọn lời yêu thương ý nghĩa</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detail-unboxing-card__footer">
+                        <span class="unboxing-support">
+                            <i class="bi bi-chat-dots me-1"></i> Cần tư vấn nhanh về mẫu mã & kích cỡ? 
+                            <a href="{{ route('home') }}#story" class="unboxing-link">Hỗ trợ 24/7 <i class="bi bi-arrow-right-short"></i></a>
+                        </span>
                     </div>
                 </div>
 
