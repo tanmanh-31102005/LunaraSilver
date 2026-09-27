@@ -70,6 +70,39 @@ try {
     echo "<pre style='background:#1e293b;color:#f8fafc;padding:1rem;border-radius:8px;font-size:0.85rem;overflow:auto;'>" . htmlspecialchars($clearOutput) . "</pre>";
     echo "<p style='color:#16a34a;'>✅ Đã làm mới cache hệ thống.</p>";
 
+    echo "<h3>🔍 Kiểm tra dữ liệu Orders & Payments trên Live Host...</h3>";
+    $latestOrders = \App\Models\Order::query()->latest('id')->take(5)->get();
+    echo "<table border='1' cellpadding='8' style='border-collapse:collapse;width:100%;font-size:0.85rem;background:#fff;margin-bottom:1rem;'>";
+    echo "<tr style='background:#f1f5f9;'><th>ID</th><th>Mã Đơn Hàng</th><th>PT Thanh Toán</th><th>Trạng Thái TT</th><th>Trạng Thái Đơn</th><th>Thời Gian Tạo</th><th>Chi Tiết Payments Attempt</th></tr>";
+    if ($latestOrders->isEmpty()) {
+        echo "<tr><td colspan='7' style='text-align:center;'>Chưa có đơn hàng nào trong database.</td></tr>";
+    } else {
+        foreach ($latestOrders as $ord) {
+            $pmtHtml = "";
+            foreach ($ord->payments as $pmt) {
+                $pmtHtml .= "ID: {$pmt->id} | TxnRef: <code>{$pmt->txn_ref}</code> | Trạng thái: <b>{$pmt->status}</b> | GD VNPay: <code>{$pmt->vnp_transaction_no}</code> | Ngân hàng: {$pmt->vnp_bank_code}<br>";
+            }
+            echo "<tr>
+                <td>{$ord->id}</td>
+                <td><b>{$ord->order_code}</b></td>
+                <td>{$ord->payment_method}</td>
+                <td><span style='color:green;'>{$ord->payment_status}</span></td>
+                <td>{$ord->order_status}</td>
+                <td>{$ord->created_at}</td>
+                <td>" . ($pmtHtml ?: 'Chưa có payment') . "</td>
+            </tr>";
+        }
+    }
+    echo "</table>";
+
+    echo "<h4>Cấu trúc cột bảng <code>payments</code>:</h4>";
+    $paymentCols = collect(\Illuminate\Support\Facades\DB::select("SHOW COLUMNS FROM payments"))->pluck('Field')->implode(', ');
+    echo "<p style='font-family:monospace;font-size:0.8rem;background:#e2e8f0;padding:0.5rem;border-radius:4px;'>{$paymentCols}</p>";
+
+    echo "<h4>Cấu trúc cột bảng <code>orders</code>:</h4>";
+    $orderCols = collect(\Illuminate\Support\Facades\DB::select("SHOW COLUMNS FROM orders"))->pluck('Field')->implode(', ');
+    echo "<p style='font-family:monospace;font-size:0.8rem;background:#e2e8f0;padding:0.5rem;border-radius:4px;'>{$orderCols}</p>";
+
     echo "<hr style='border:0;border-top:1px solid #cbd5e1;margin:1.5rem 0;'>";
     echo "<h3 style='color:#16a34a;'>🎉 PHASE 13 đã sẵn sàng trên InfinityFree!</h3>";
     echo "<p><a href='/' style='display:inline-block;padding:0.6rem 1.2rem;background:#0f172a;color:#fff;text-decoration:none;border-radius:6px;font-weight:600;'>👉 Xem trang chủ Lunara Silver</a></p>";
