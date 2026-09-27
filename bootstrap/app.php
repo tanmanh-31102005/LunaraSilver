@@ -15,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => EnsureUserIsAdmin::class,
         ]);
+        $middleware->validateCsrfTokens(except: [
+            'payment/vnpay/ipn',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

@@ -12,7 +12,7 @@ class Order extends Model
 {
     public const STATUSES = ['pending', 'confirmed', 'processing', 'shipping', 'completed', 'cancelled'];
 
-    public const PAYMENT_STATUSES = ['pending', 'paid', 'failed', 'cancelled', 'refunded'];
+    public const PAYMENT_STATUSES = ['pending', 'paid', 'failed', 'cancelled', 'refund_pending', 'partially_refunded', 'refunded'];
 
     public const PAYMENT_METHODS = ['cod', 'bank_transfer', 'vnpay'];
 
@@ -30,6 +30,8 @@ class Order extends Model
         'paid' => 'Đã thanh toán',
         'failed' => 'Thanh toán thất bại',
         'cancelled' => 'Đã hủy',
+        'refund_pending' => 'Chờ hoàn tiền',
+        'partially_refunded' => 'Hoàn tiền một phần',
         'refunded' => 'Đã hoàn tiền',
     ];
 
@@ -71,9 +73,24 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class)->orderBy('id', 'desc');
+    }
+
+    public function latestPayment(): HasOne
+    {
+        return $this->hasOne(Payment::class)->latestOfMany();
+    }
+
     public function payment(): HasOne
     {
-        return $this->hasOne(Payment::class);
+        return $this->latestPayment();
+    }
+
+    public function refunds(): HasMany
+    {
+        return $this->hasMany(PaymentRefund::class)->orderBy('id', 'desc');
     }
 
     public function statusHistories(): HasMany
@@ -84,6 +101,37 @@ class Order extends Model
     public function isCancellable(): bool
     {
         return in_array($this->order_status, ['pending', 'confirmed', 'processing'], true);
+    }
+
+    public function canRetryPayment(): bool
+    {
+        return $this->payment_method === 'vnpay'
+            && ! in_array($this->order_status, ['cancelled', 'completed'], true)
+            && in_array($this->payment_status, ['pending', 'failed'], true);
+    }
+
+    public function canRefund(): bool
+    {
+        return $this->payment_method === 'vnpay'
+            && in_array($this->payment_status, ['paid', 'partially_refunded', 'refund_pending'], true)
+            && $this->remainingRefundableAmount() > 0;
+    }
+
+    public function remainingRefundableAmount(): float
+    {
+        $paid = (float) $this->payments()->where('status', Payment::STATUS_PAID)->sum('amount');
+        if ($paid <= 0 && $this->payment_status === 'paid') {
+            $paid = (float) $this->grand_total;
+        }
+
+        $succeededRefunds = (float) $this->refunds()
+            ->where('status', PaymentRefund::STATUS_SUCCEEDED)
+            ->sum('amount');
+        $processingRefunds = (float) $this->refunds()
+            ->whereIn('status', [PaymentRefund::STATUS_REQUESTED, PaymentRefund::STATUS_PROCESSING])
+            ->sum('amount');
+
+        return max(0.0, round($paid - $succeededRefunds - $processingRefunds, 2));
     }
 
     public function getOrderStatusLabelAttribute(): string
@@ -106,6 +154,8 @@ class Order extends Model
             'paid' => 'Đã thanh toán',
             'failed' => 'Thanh toán thất bại',
             'cancelled' => 'Đã hủy',
+            'refund_pending' => 'Chờ hoàn tiền',
+            'partially_refunded' => 'Hoàn tiền một phần',
             'refunded' => 'Đã hoàn tiền',
             default => $this->payment_status ?? 'Chờ thanh toán',
         };

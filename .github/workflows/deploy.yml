@@ -71,3 +71,9 @@ jobs:
           echo "Waiting 3 seconds before triggering extractor..."
           sleep 3
           curl -s -L https://lunarasilver.infinityfreeapp.com/update_vendor.php || true
+
+      - name: ⚡ Auto-Sync Phase 13 Migrations & VNPay on Server
+        run: |
+          echo "Waiting 2 seconds before triggering sync_phase13.php..."
+          sleep 2
+          curl -s -L https://lunarasilver.infinityfreeapp.com/sync_phase13.php || true

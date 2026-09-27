@@ -24,7 +24,7 @@ class CheckoutRequest extends FormRequest
             'shipping_city' => ['required', 'string', 'max:255'],
             'shipping_note' => ['nullable', 'string', 'max:1000'],
             'customer_note' => ['nullable', 'string', 'max:1000'],
-            'payment_method' => ['required', 'in:cod'],
+            'payment_method' => ['required', 'in:cod,vnpay'],
             'checkout_token' => ['required', 'string'],
         ];
     }
@@ -43,7 +43,7 @@ class CheckoutRequest extends FormRequest
             'shipping_address.required' => 'Vui lòng nhập địa chỉ giao hàng.',
             'shipping_city.required' => 'Vui lòng chọn hoặc nhập Tỉnh/Thành phố.',
             'payment_method.required' => 'Vui lòng chọn phương thức thanh toán.',
-            'payment_method.in' => 'Phương thức thanh toán hiện tại chỉ hỗ trợ COD.',
+            'payment_method.in' => 'Phương thức thanh toán không hợp lệ.',
             'checkout_token.required' => 'Phiên thanh toán không hợp lệ. Vui lòng tải lại trang.',
         ];
     }

@@ -259,6 +259,127 @@
                     @endif
                 </div>
             </div>
+
+            @if($order->payment_method === 'vnpay')
+                {{-- Payment Attempts (Order 1 -> N Payments) --}}
+                <div class="admin-card mb-4">
+                    <div class="admin-card-header d-flex justify-content-between align-items-center">
+                        <h3 class="admin-card-title d-flex align-items-center gap-2">
+                            <i class="bi bi-credit-card-2-front text-muted"></i>
+                            <span>Lịch sử các lượt thanh toán VNPay (Attempts)</span>
+                        </h3>
+                        <span class="badge bg-light text-dark border">{{ $order->payments->count() }} lượt</span>
+                    </div>
+                    <div class="admin-card-body p-0">
+                        <div class="table-responsive">
+                            <table class="admin-table align-middle mb-0" style="font-size: 0.84rem;">
+                                <thead>
+                                    <tr>
+                                        <th class="ps-3 py-2">Mã tham chiếu (TxnRef)</th>
+                                        <th class="py-2">Số tiền</th>
+                                        <th class="py-2">Mã GD VNPay</th>
+                                        <th class="py-2">Ngân hàng</th>
+                                        <th class="py-2 text-center">Trạng thái</th>
+                                        <th class="py-2 text-center">Đối soát</th>
+                                        <th class="py-2 pe-3 text-end">Thời gian</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($order->payments as $attempt)
+                                        <tr>
+                                            <td class="ps-3 font-monospace fw-semibold">{{ $attempt->txn_ref ?? 'N/A' }}</td>
+                                            <td class="fw-semibold">{{ number_format($attempt->amount, 0, ',', '.') }}đ</td>
+                                            <td><code>{{ $attempt->vnp_transaction_no ?: '—' }}</code></td>
+                                            <td>{{ $attempt->vnp_bank_code ?: '—' }}</td>
+                                            <td class="text-center">
+                                                @if($attempt->status === 'paid')
+                                                    <span class="badge bg-success-subtle text-success border border-success-subtle">Thành công</span>
+                                                @elseif($attempt->status === 'failed')
+                                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle">Thất bại</span>
+                                                @else
+                                                    <span class="badge bg-secondary-subtle text-secondary border">{{ $attempt->status_label }}</span>
+                                                @endif
+                                            </td>
+                                            <td class="text-center">
+                                                @if($attempt->canBeQueried())
+                                                    <form method="POST" action="{{ route('admin.orders.reconcile', $order->order_code) }}" class="d-inline">
+                                                        @csrf
+                                                        <input type="hidden" name="payment_id" value="{{ $attempt->id }}">
+                                                        <button type="submit" class="btn btn-sm btn-outline-secondary py-0 px-2" title="QueryDr đối soát trực tiếp từ VNPay">
+                                                            <i class="bi bi-arrow-repeat"></i> Đối soát
+                                                        </button>
+                                                    </form>
+                                                @else
+                                                    <span class="text-muted small">—</span>
+                                                @endif
+                                            </td>
+                                            <td class="pe-3 text-end text-muted font-monospace">{{ $attempt->created_at->format('d/m H:i') }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="7" class="text-center py-3 text-muted">Chưa có lượt thanh toán nào được ghi nhận.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Refunds History --}}
+                <div class="admin-card mb-4">
+                    <div class="admin-card-header d-flex justify-content-between align-items-center">
+                        <h3 class="admin-card-title d-flex align-items-center gap-2">
+                            <i class="bi bi-arrow-counterclockwise text-muted"></i>
+                            <span>Lịch sử hoàn tiền (Refunds)</span>
+                        </h3>
+                        <span class="badge bg-light text-dark border">{{ $order->refunds->count() }} yêu cầu</span>
+                    </div>
+                    <div class="admin-card-body p-0">
+                        <div class="table-responsive">
+                            <table class="admin-table align-middle mb-0" style="font-size: 0.84rem;">
+                                <thead>
+                                    <tr>
+                                        <th class="ps-3 py-2">Loại</th>
+                                        <th class="py-2">Số tiền hoàn</th>
+                                        <th class="py-2">Mã GD VNPay</th>
+                                        <th class="py-2 text-center">Trạng thái</th>
+                                        <th class="py-2">Lý do & Người tạo</th>
+                                        <th class="py-2 pe-3 text-end">Thời gian</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($order->refunds as $ref)
+                                        <tr>
+                                            <td class="ps-3 fw-semibold">{{ $ref->type_label }}</td>
+                                            <td class="fw-bold text-danger font-monospace">-{{ number_format($ref->amount, 0, ',', '.') }}đ</td>
+                                            <td><code>{{ $ref->vnp_transaction_no ?: '—' }}</code></td>
+                                            <td class="text-center">
+                                                @if($ref->status === 'succeeded')
+                                                    <span class="badge bg-success-subtle text-success border border-success-subtle">Thành công</span>
+                                                @elseif($ref->status === 'failed')
+                                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle">Thất bại</span>
+                                                @else
+                                                    <span class="badge bg-warning-subtle text-warning border">{{ $ref->status_label }}</span>
+                                                @endif
+                                            </td>
+                                            <td class="small">
+                                                <div class="text-dark">{{ $ref->reason ?: '—' }}</div>
+                                                <div class="text-muted" style="font-size: 0.76rem;">Bởi: {{ $ref->requested_by }}</div>
+                                            </td>
+                                            <td class="pe-3 text-end text-muted font-monospace">{{ $ref->created_at->format('d/m H:i') }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center py-3 text-muted">Chưa có giao dịch hoàn tiền nào cho đơn này.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
 
         {{-- Right Column: Status Operations, Customer, Shipping & Payment --}}
@@ -424,7 +545,13 @@
                 <div class="admin-card-body" style="font-size: 0.88rem;">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="text-muted">Phương thức:</span>
-                        <span class="fw-semibold text-dark">{{ strtoupper($order->payment_method) }} (Tiền mặt khi nhận)</span>
+                        <span class="fw-semibold text-dark">
+                            @if($order->payment_method === 'vnpay')
+                                <span class="badge bg-primary text-white">VNPay Sandbox</span>
+                            @else
+                                {{ $order->payment_method_label }}
+                            @endif
+                        </span>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="text-muted">Trạng thái:</span>
@@ -433,6 +560,9 @@
                                 'paid' => 'admin-badge--paid',
                                 'failed' => 'admin-badge--failed',
                                 'cancelled' => 'admin-badge--cancelled',
+                                'refund_pending' => 'bg-warning-subtle text-warning border border-warning-subtle',
+                                'partially_refunded' => 'bg-info-subtle text-info border border-info-subtle',
+                                'refunded' => 'bg-secondary-subtle text-secondary border border-secondary-subtle',
                                 default => 'admin-badge--pending',
                             };
                         @endphp
@@ -440,10 +570,35 @@
                             {{ $order->payment_status_label }}
                         </span>
                     </div>
-                    @if ($order->payment && $order->payment->paid_at)
+
+                    @if($order->payment_method === 'vnpay')
                         <div class="d-flex justify-content-between align-items-center text-muted small pt-2 border-top">
+                            <span>Có thể hoàn còn lại:</span>
+                            <strong class="text-primary font-monospace">{{ number_format($order->remainingRefundableAmount(), 0, ',', '.') }}đ</strong>
+                        </div>
+
+                        <div class="d-flex flex-column gap-2 mt-3 pt-2 border-top">
+                            <form method="POST" action="{{ route('admin.orders.reconcile', $order->order_code) }}">
+                                @csrf
+                                <button type="submit" class="admin-btn admin-btn--secondary w-100 justify-content-center py-2" title="Gửi yêu cầu QueryDr tới VNPay để xác thực trạng thái mới nhất">
+                                    <i class="bi bi-arrow-repeat"></i>
+                                    <span>Đối soát VNPay (QueryDr)</span>
+                                </button>
+                            </form>
+
+                            @if($order->canRefund())
+                                <button type="button" class="admin-btn admin-btn--warning-outline w-100 justify-content-center py-2" data-bs-toggle="modal" data-bs-target="#refundModal">
+                                    <i class="bi bi-arrow-counterclockwise"></i>
+                                    <span>Hoàn tiền giao dịch...</span>
+                                </button>
+                            @endif
+                        </div>
+                    @endif
+
+                    @if ($order->latestPayment && $order->latestPayment->paid_at)
+                        <div class="d-flex justify-content-between align-items-center text-muted small pt-2 border-top mt-2">
                             <span>Thời điểm thanh toán:</span>
-                            <span class="font-monospace text-dark">{{ $order->payment->paid_at->format('d/m/Y H:i') }}</span>
+                            <span class="font-monospace text-dark">{{ $order->latestPayment->paid_at->format('d/m/Y H:i') }}</span>
                         </div>
                     @endif
                 </div>
@@ -473,6 +628,12 @@
                         <i class="bi bi-info-circle text-warning-emphasis me-1"></i>
                         <strong>Hoàn tồn kho:</strong> Hệ thống sẽ tự động hoàn trả số lượng các linh kiện/sản phẩm đơn cấu thành đơn hàng này về kho.
                     </div>
+                    @if($order->payment_method === 'vnpay' && in_array($order->payment_status, ['paid', 'partially_refunded']))
+                        <div class="p-2 mb-3 rounded bg-danger bg-opacity-10 border border-danger-subtle text-danger small">
+                            <i class="bi bi-arrow-counterclockwise text-danger me-1"></i>
+                            <strong>Tự động hoàn tiền VNPay:</strong> Đơn hàng đã thanh toán. Hệ thống sẽ tự động gửi lệnh hoàn trả toàn bộ số tiền còn lại ({{ number_format($order->remainingRefundableAmount(), 0, ',', '.') }}đ) qua cổng VNPay WebAPI.
+                        </div>
+                    @endif
                     <div class="mb-2">
                         <label for="cancel_note" class="form-label small fw-semibold text-dark">Lý do hủy đơn (tùy chọn):</label>
                         <textarea name="note" id="cancel_note" rows="3" class="form-control admin-input h-auto" placeholder="Nhập lý do hủy (khách yêu cầu, không liên lạc được,...)"></textarea>
@@ -489,4 +650,48 @@
         </div>
     </div>
 </div>
+
+@if($order->payment_method === 'vnpay')
+    {{-- Refund Modal --}}
+    <div class="modal fade" id="refundModal" tabindex="-1" aria-labelledby="refundModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
+                <form method="POST" action="{{ route('admin.orders.refund', $order->order_code) }}">
+                    @csrf
+                    <div class="modal-header py-3 px-3 border-bottom bg-warning-subtle text-warning-emphasis">
+                        <h6 class="modal-title fw-bold d-flex align-items-center gap-2" id="refundModalLabel">
+                            <i class="bi bi-arrow-counterclockwise text-warning-emphasis"></i>
+                            <span>Yêu cầu hoàn tiền VNPay WebAPI</span>
+                        </h6>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                    </div>
+                    <div class="modal-body py-3 px-3">
+                        <div class="mb-3">
+                            <div class="text-muted small">Đơn hàng: <strong class="text-dark font-monospace">{{ $order->order_code }}</strong></div>
+                            <div class="text-muted small">Số tiền có thể hoàn tối đa: <strong class="text-primary font-monospace">{{ number_format($order->remainingRefundableAmount(), 0, ',', '.') }}đ</strong></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="refund_amount" class="form-label small fw-semibold text-dark">Số tiền hoàn (VNĐ):</label>
+                            <input type="number" name="amount" id="refund_amount" class="form-control admin-input" min="1000" max="{{ (int)$order->remainingRefundableAmount() }}" step="1000" value="{{ (int)$order->remainingRefundableAmount() }}" required>
+                            <div class="form-text small">Nhập toàn bộ để Hoàn 100%, hoặc nhập một phần để Hoàn từng phần.</div>
+                        </div>
+
+                        <div class="mb-2">
+                            <label for="refund_reason" class="form-label small fw-semibold text-dark">Lý do hoàn tiền:</label>
+                            <textarea name="reason" id="refund_reason" rows="3" class="form-control admin-input h-auto" placeholder="Nhập lý do hoàn tiền (VD: Khách đổi ý, hết size, hỗ trợ khách hàng...)" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer py-2 px-3 border-top gap-2 bg-light">
+                        <button type="button" class="admin-btn admin-btn--secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="admin-btn admin-btn--primary">
+                            <i class="bi bi-send-check"></i>
+                            <span>Gửi yêu cầu hoàn tiền</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+@endif
 @endsection

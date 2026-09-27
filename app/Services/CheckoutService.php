@@ -86,6 +86,8 @@ class CheckoutService
             // Generate unique, readable order code
             $orderCode = $this->generateOrderCode();
 
+            $paymentMethod = $customerData['payment_method'] ?? 'cod';
+
             // Create Order record
             $order = Order::create([
                 'user_id' => $user->id,
@@ -101,7 +103,7 @@ class CheckoutService
                 'discount_amount' => $discountDecimal,
                 'shipping_fee' => $shippingFeeDecimal,
                 'grand_total' => $grandTotalDecimal,
-                'payment_method' => 'cod',
+                'payment_method' => $paymentMethod,
                 'payment_status' => 'pending',
                 'order_status' => 'pending',
                 'customer_note' => $customerData['customer_note'] ?? null,
@@ -109,12 +111,16 @@ class CheckoutService
             ]);
 
             // Record initial order status history
+            $initNote = $paymentMethod === 'vnpay'
+                ? 'Đơn hàng được khởi tạo thành công qua cổng thanh toán VNPay Sandbox.'
+                : 'Đơn hàng được khởi tạo thành công qua checkout COD.';
+
             OrderStatusHistory::create([
                 'order_id' => $order->id,
                 'from_status' => null,
                 'to_status' => 'pending',
                 'changed_by' => null,
-                'note' => 'Đơn hàng được khởi tạo thành công qua checkout COD.',
+                'note' => $initNote,
             ]);
 
             // Create OrderItem snapshots and detailed component snapshots
@@ -157,17 +163,34 @@ class CheckoutService
                 }
             }
 
-            // Create COD Payment record
-            Payment::create([
-                'order_id' => $order->id,
-                'provider' => 'cod',
-                'transaction_id' => null,
-                'amount' => $grandTotalDecimal,
-                'status' => 'pending',
-                'request_data' => null,
-                'response_data' => null,
-                'paid_at' => null,
-            ]);
+            // Create Payment record
+            if ($paymentMethod === 'vnpay') {
+                $txnRef = $order->order_code . '-1';
+                Payment::create([
+                    'order_id' => $order->id,
+                    'provider' => 'vnpay',
+                    'txn_ref' => $txnRef,
+                    'vnp_create_date' => now()->format('YmdHis'),
+                    'transaction_id' => null,
+                    'amount' => $grandTotalDecimal,
+                    'status' => 'pending',
+                    'request_data' => null,
+                    'response_data' => null,
+                    'paid_at' => null,
+                    'query_count' => 0,
+                ]);
+            } else {
+                Payment::create([
+                    'order_id' => $order->id,
+                    'provider' => 'cod',
+                    'transaction_id' => null,
+                    'amount' => $grandTotalDecimal,
+                    'status' => 'pending',
+                    'request_data' => null,
+                    'response_data' => null,
+                    'paid_at' => null,
+                ]);
+            }
 
             // Decrement aggregate component stocks and update single stock_status
             // Note: collections & gifts have virtual inventory and their stock_quantity is NEVER touched

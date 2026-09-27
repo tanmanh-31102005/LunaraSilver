@@ -45,7 +45,7 @@ return new class extends Migration
 
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->unique()->constrained()->restrictOnDelete();
+            $table->foreignId('order_id')->constrained()->restrictOnDelete();
             $table->string('provider', 30);
             $table->string('transaction_id')->nullable();
             $table->decimal('amount', 15, 2);

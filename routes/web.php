@@ -18,6 +18,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\VNPayController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
@@ -32,6 +33,10 @@ Route::delete('/cart/items/{item}', [CartController::class, 'destroy'])->whereNu
 Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
 Route::get('/order-success/{orderCode}', [CheckoutController::class, 'success'])->name('orders.success');
 Route::get('/media/{path}', MediaController::class)->where('path', '.*')->name('media.show');
+
+// VNPay gateway callback routes
+Route::get('/payment/vnpay/return', [VNPayController::class, 'return'])->name('payment.vnpay.return');
+Route::match(['get', 'post'], '/payment/vnpay/ipn', [VNPayController::class, 'ipn'])->name('payment.vnpay.ipn');
 
 Route::middleware('guest')->group(function () {
     Route::view('/login', 'auth.login')->name('login');
@@ -49,6 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout.show');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/payment/vnpay/retry/{orderCode}', [VNPayController::class, 'retry'])->name('payment.vnpay.retry');
 
     Route::prefix('account')->name('account.')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -88,4 +94,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('orders/{orderCode}', [AdminOrderController::class, 'show'])->name('orders.show');
     Route::patch('orders/{orderCode}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.status');
     Route::post('orders/{orderCode}/cancel', [AdminOrderController::class, 'cancel'])->name('orders.cancel');
+    Route::post('orders/{orderCode}/reconcile', [AdminOrderController::class, 'reconcile'])->name('orders.reconcile');
+    Route::post('orders/{orderCode}/refund', [AdminOrderController::class, 'refund'])->name('orders.refund');
 });

@@ -246,7 +246,7 @@ class CheckoutTest extends TestCase
             'customer_phone' => 'abc',
             'shipping_address' => '',
             'shipping_city' => '',
-            'payment_method' => 'vnpay', // Only COD is allowed in Phase 8
+            'payment_method' => 'invalid_method', // COD and VNPay are valid; test invalid method
         ]);
 
         $response->assertSessionHasErrors(['customer_name', 'customer_email', 'customer_phone', 'shipping_address', 'shipping_city', 'payment_method']);

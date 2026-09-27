@@ -19,7 +19,8 @@ class CheckoutController extends Controller
 
     public function __construct(
         private CartService $cartService,
-        private CheckoutService $checkoutService
+        private CheckoutService $checkoutService,
+        private \App\Services\VNPay\VNPayService $vnpayService
     ) {}
 
     public function show(Request $request): View|RedirectResponse
@@ -95,6 +96,14 @@ class CheckoutController extends Controller
         $authorized = (array) $request->session()->get('authorized_orders', []);
         $authorized[] = $order->id;
         $request->session()->put('authorized_orders', array_values(array_unique($authorized)));
+
+        if ($order->payment_method === 'vnpay') {
+            $payment = $order->latestPayment;
+            if ($payment) {
+                $paymentUrl = $this->vnpayService->createPaymentUrl($payment, $request->ip() ?? '127.0.0.1');
+                return redirect()->away($paymentUrl);
+            }
+        }
 
         return redirect()->route('orders.success', $order->order_code);
     }

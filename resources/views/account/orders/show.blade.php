@@ -97,6 +97,21 @@
         </div>
     </div>
 
+    @if($order->canRetryPayment())
+        <div class="alert alert-warning d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 p-3 mb-4 rounded-3 shadow-sm border-warning">
+            <div>
+                <strong class="d-block text-dark"><i class="bi bi-clock-history me-1 text-warning"></i> Đơn hàng chưa hoàn tất thanh toán</strong>
+                <span class="small text-muted">Vui lòng thanh toán để Lunara Silver chuẩn bị đơn và gửi hàng sớm nhất cho bạn.</span>
+            </div>
+            <form action="{{ route('payment.vnpay.retry', $order->order_code) }}" method="POST">
+                @csrf
+                <button type="submit" class="btn btn-primary btn-sm px-3 py-2 fw-semibold text-nowrap">
+                    <i class="bi bi-arrow-repeat me-1"></i> Thanh toán ngay (VNPay)
+                </button>
+            </form>
+        </div>
+    @endif
+
     <!-- Items Snapshot -->
     <div class="card border-0 shadow-sm rounded-3 bg-white mb-4 overflow-hidden">
         <div class="card-header bg-transparent border-bottom py-3">
@@ -184,5 +199,91 @@
             </div>
         </div>
     </div>
+
+    @if($order->payment_method === 'vnpay' && $order->payments->isNotEmpty())
+        <!-- Payment Attempts & Refunds History -->
+        <div class="card border-0 shadow-sm rounded-3 bg-white mb-4 overflow-hidden">
+            <div class="card-header bg-transparent border-bottom py-3">
+                <h3 class="h6 mb-0 fw-bold"><i class="bi bi-clock-history me-2 text-primary"></i> Lịch sử lượt thanh toán (VNPay)</h3>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 small">
+                        <thead class="table-light text-muted text-uppercase">
+                            <tr>
+                                <th class="px-3 py-2">Mã tham chiếu</th>
+                                <th class="py-2">Số tiền</th>
+                                <th class="py-2">Mã GD VNPay</th>
+                                <th class="py-2 text-center">Trạng thái</th>
+                                <th class="py-2 text-end px-3">Thời gian</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($order->payments as $paymentAttempt)
+                                <tr>
+                                    <td class="px-3 font-monospace fw-semibold">{{ $paymentAttempt->txn_ref ?? 'COD-' . $paymentAttempt->id }}</td>
+                                    <td>{{ number_format($paymentAttempt->amount, 0, ',', '.') }} ₫</td>
+                                    <td><code>{{ $paymentAttempt->vnp_transaction_no ?: '—' }}</code></td>
+                                    <td class="text-center">
+                                        @if($paymentAttempt->status === 'paid')
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle">Thành công</span>
+                                        @elseif($paymentAttempt->status === 'failed')
+                                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle">Thất bại</span>
+                                        @else
+                                            <span class="badge bg-secondary-subtle text-secondary border">{{ $paymentAttempt->status_label }}</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-end px-3 text-muted">{{ $paymentAttempt->created_at->format('H:i d/m/Y') }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if($order->refunds->isNotEmpty())
+        <!-- Refunds History -->
+        <div class="card border-0 shadow-sm rounded-3 bg-white mb-4 overflow-hidden">
+            <div class="card-header bg-transparent border-bottom py-3">
+                <h3 class="h6 mb-0 fw-bold"><i class="bi bi-arrow-counterclockwise me-2 text-primary"></i> Lịch sử hoàn tiền</h3>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 small">
+                        <thead class="table-light text-muted text-uppercase">
+                            <tr>
+                                <th class="px-3 py-2">Loại hoàn tiền</th>
+                                <th class="py-2">Số tiền</th>
+                                <th class="py-2">Mã GD VNPay</th>
+                                <th class="py-2 text-center">Trạng thái</th>
+                                <th class="py-2 text-end px-3">Thời gian</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($order->refunds as $ref)
+                                <tr>
+                                    <td class="px-3">{{ $ref->type_label }}</td>
+                                    <td class="fw-bold text-danger">-{{ number_format($ref->amount, 0, ',', '.') }} ₫</td>
+                                    <td><code>{{ $ref->vnp_transaction_no ?: '—' }}</code></td>
+                                    <td class="text-center">
+                                        @if($ref->status === 'succeeded')
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle">Thành công</span>
+                                        @elseif($ref->status === 'failed')
+                                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle">Thất bại</span>
+                                        @else
+                                            <span class="badge bg-warning-subtle text-warning border">{{ $ref->status_label }}</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-end px-3 text-muted">{{ $ref->created_at->format('H:i d/m/Y') }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>
 @endsection

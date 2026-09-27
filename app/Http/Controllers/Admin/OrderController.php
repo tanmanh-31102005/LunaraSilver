@@ -13,7 +13,11 @@ use Illuminate\Validation\ValidationException;
 
 class OrderController extends Controller
 {
-    public function __construct(private OrderStatusService $statusService) {}
+    public function __construct(
+        private OrderStatusService $statusService,
+        private \App\Services\VNPay\PaymentReconciliationService $reconciliationService,
+        private \App\Services\VNPay\RefundService $refundService
+    ) {}
 
     public function index(Request $request): View
     {
@@ -102,7 +106,8 @@ class OrderController extends Controller
                 'user',
                 'items.product.primaryImage',
                 'items.components.product.primaryImage',
-                'payment',
+                'payments.refunds',
+                'refunds',
                 'statusHistories.changedBy',
             ])
             ->firstOrFail();
@@ -151,11 +156,20 @@ class OrderController extends Controller
         $order = Order::query()->where('order_code', $orderCode)->firstOrFail();
 
         try {
-            $result = $this->statusService->cancelOrder(
-                $order,
-                $request->user(),
-                $validated['note'] ?? null
-            );
+            if ($order->payment_method === 'vnpay' && in_array($order->payment_status, ['paid', 'partially_refunded'], true)) {
+                $result = $this->refundService->cancelOrderWithRefund(
+                    $order,
+                    $validated['note'] ?? 'Admin hủy đơn hàng.',
+                    $request->user(),
+                    $request->ip() ?? '127.0.0.1'
+                );
+            } else {
+                $result = $this->statusService->cancelOrder(
+                    $order,
+                    $request->user(),
+                    $validated['note'] ?? null
+                );
+            }
 
             $redirect = redirect()
                 ->route('admin.orders.show', $orderCode)
@@ -166,6 +180,79 @@ class OrderController extends Controller
             }
 
             return $redirect;
+        } catch (ValidationException $e) {
+            return redirect()
+                ->route('admin.orders.show', $orderCode)
+                ->withErrors($e->errors());
+        }
+    }
+
+    /**
+     * Manual QueryDr reconciliation for a specific payment attempt or latest payment.
+     */
+    public function reconcile(Request $request, string $orderCode): RedirectResponse
+    {
+        $order = Order::query()->where('order_code', $orderCode)->firstOrFail();
+
+        $paymentId = $request->input('payment_id');
+        $payment = $paymentId
+            ? $order->payments()->where('id', $paymentId)->first()
+            : $order->latestPayment;
+
+        if (! $payment || ! $payment->canBeQueried()) {
+            return redirect()
+                ->route('admin.orders.show', $orderCode)
+                ->with('error', 'Không tìm thấy lượt thanh toán VNPay có thể đối soát cho đơn hàng này.');
+        }
+
+        $result = $this->reconciliationService->reconcileVNPayPayment(
+            payment: $payment,
+            ipAddress: $request->ip() ?? '127.0.0.1',
+            force: true
+        );
+
+        $msgType = $result['success'] ? 'success' : 'warning';
+        return redirect()
+            ->route('admin.orders.show', $orderCode)
+            ->with($msgType, 'Kết quả đối soát VNPay QueryDr: ' . $result['message']);
+    }
+
+    /**
+     * Process full or partial refund for a paid VNPay order.
+     */
+    public function refund(Request $request, string $orderCode): RedirectResponse
+    {
+        $validated = $request->validate([
+            'amount' => ['required', 'numeric', 'min:1000'],
+            'reason' => ['required', 'string', 'max:500'],
+        ]);
+
+        $order = Order::query()->where('order_code', $orderCode)->firstOrFail();
+
+        if (! $order->canRefund()) {
+            return redirect()
+                ->route('admin.orders.show', $orderCode)
+                ->with('error', 'Đơn hàng này không đủ điều kiện hoàn tiền (cần phương thức VNPay và trạng thái Đã thanh toán).');
+        }
+
+        try {
+            $refund = $this->refundService->processRefund(
+                order: $order,
+                amount: (float) $validated['amount'],
+                reason: $validated['reason'],
+                requestedBy: $request->user()?->name ?? 'Admin',
+                ipAddress: $request->ip() ?? '127.0.0.1'
+            );
+
+            if ($refund->isSuccessful()) {
+                return redirect()
+                    ->route('admin.orders.show', $orderCode)
+                    ->with('success', 'Yêu cầu hoàn tiền đã được VNPay chấp nhận thành công (' . number_format($refund->amount) . ' đ).');
+            }
+
+            return redirect()
+                ->route('admin.orders.show', $orderCode)
+                ->with('error', 'Yêu cầu hoàn tiền thất bại từ phía VNPay: ' . ($refund->response_payload['vnp_Message'] ?? 'Lỗi không xác định'));
         } catch (ValidationException $e) {
             return redirect()
                 ->route('admin.orders.show', $orderCode)

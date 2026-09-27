@@ -120,12 +120,31 @@
 
                     <section class="checkout-section mt-4" aria-labelledby="payment-heading">
                         <h2 id="payment-heading"><span class="checkout-step-badge">3</span> Phương thức thanh toán</h2>
-                        <div class="payment-option selected">
+                        <div class="payment-option mb-3 {{ old('payment_method', 'cod') === 'cod' ? 'selected' : '' }}" id="opt_payment_cod">
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment_method" id="payment_cod" value="cod" checked required>
+                                <input class="form-check-input" type="radio" name="payment_method" id="payment_cod" value="cod" {{ old('payment_method', 'cod') === 'cod' ? 'checked' : '' }} required>
                                 <label class="form-check-label w-100" for="payment_cod">
-                                    <strong>Thanh toán khi nhận hàng (COD)</strong>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <strong>Thanh toán khi nhận hàng (COD)</strong>
+                                        <span class="badge bg-light text-dark border"><i class="bi bi-cash"></i> Tiền mặt</span>
+                                    </div>
                                     <p class="text-muted small mb-0 mt-1">Quý khách nhận hàng, kiểm tra sản phẩm và thanh toán tiền mặt trực tiếp cho nhân viên vận chuyển.</p>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="payment-option {{ old('payment_method') === 'vnpay' ? 'selected' : '' }}" id="opt_payment_vnpay">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="payment_method" id="payment_vnpay" value="vnpay" {{ old('payment_method') === 'vnpay' ? 'checked' : '' }} required>
+                                <label class="form-check-label w-100" for="payment_vnpay">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <strong class="text-primary">Cổng thanh toán VNPay Sandbox</strong>
+                                            <span class="badge bg-primary text-white" style="font-size: 0.72rem;">Demo Sandbox</span>
+                                        </div>
+                                        <span class="badge bg-light text-primary border"><i class="bi bi-qr-code-scan"></i> QR / ATM / Thẻ</span>
+                                    </div>
+                                    <p class="text-muted small mb-0 mt-1">Thanh toán an toàn qua cổng VNPay bằng thẻ ATM nội địa, quét mã VietQR, Visa/MasterCard hoặc Ví điện tử.</p>
                                 </label>
                             </div>
                         </div>
@@ -138,13 +157,38 @@
 
                     <div class="checkout-actions mt-4">
                         <button class="lunara-button lunara-button--dark w-100 py-3" type="submit" id="submitOrderBtn">
-                            Đặt hàng ngay
+                            {{ old('payment_method') === 'vnpay' ? 'Chuyển đến cổng VNPay' : 'Đặt hàng ngay' }}
                         </button>
                         <p class="text-center mt-2 mb-0">
                             <a class="text-muted small text-decoration-underline" href="{{ route('cart.index') }}">← Quay lại giỏ hàng</a>
                         </p>
                     </div>
                 </form>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const codRadio = document.getElementById('payment_cod');
+                        const vnpayRadio = document.getElementById('payment_vnpay');
+                        const optCod = document.getElementById('opt_payment_cod');
+                        const optVnpay = document.getElementById('opt_payment_vnpay');
+                        const submitBtn = document.getElementById('submitOrderBtn');
+
+                        function updatePaymentDisplay() {
+                            if (vnpayRadio.checked) {
+                                optVnpay.classList.add('selected');
+                                optCod.classList.remove('selected');
+                                submitBtn.textContent = 'Chuyển đến cổng VNPay';
+                            } else {
+                                optCod.classList.add('selected');
+                                optVnpay.classList.remove('selected');
+                                submitBtn.textContent = 'Đặt hàng ngay';
+                            }
+                        }
+
+                        codRadio.addEventListener('change', updatePaymentDisplay);
+                        vnpayRadio.addEventListener('change', updatePaymentDisplay);
+                    });
+                </script>
             </div>
 
             <aside class="checkout-summary" aria-label="Tóm tắt đơn hàng">
