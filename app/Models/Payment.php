@@ -120,8 +120,7 @@ class Payment extends Model
     public function canBeQueried(): bool
     {
         return $this->isVNPay()
-            && ! empty($this->txn_ref)
-            && ! empty($this->vnp_create_date);
+            && ! empty($this->txn_ref);
     }
 
     /**

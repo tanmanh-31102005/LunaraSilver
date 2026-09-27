@@ -43,6 +43,11 @@ class PaymentReconciliationService
             ];
         }
 
+        if (empty($payment->vnp_create_date)) {
+            $payment->vnp_create_date = $payment->created_at ? $payment->created_at->format('YmdHis') : now()->format('YmdHis');
+            $payment->save();
+        }
+
         $queryResult = $this->vnpayService->queryTransaction($payment, $ipAddress);
 
         return DB::transaction(function () use ($payment, $queryResult): array {

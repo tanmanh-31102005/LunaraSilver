@@ -54,7 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout.show');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::post('/payment/vnpay/retry/{orderCode}', [VNPayController::class, 'retry'])->name('payment.vnpay.retry');
+    Route::match(['get', 'post'], '/payment/vnpay/retry/{orderCode}', [VNPayController::class, 'retry'])->name('payment.vnpay.retry');
 
     Route::prefix('account')->name('account.')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -94,6 +94,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('orders/{orderCode}', [AdminOrderController::class, 'show'])->name('orders.show');
     Route::patch('orders/{orderCode}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.status');
     Route::post('orders/{orderCode}/cancel', [AdminOrderController::class, 'cancel'])->name('orders.cancel');
-    Route::post('orders/{orderCode}/reconcile', [AdminOrderController::class, 'reconcile'])->name('orders.reconcile');
-    Route::post('orders/{orderCode}/refund', [AdminOrderController::class, 'refund'])->name('orders.refund');
+    Route::match(['get', 'post'], 'orders/{orderCode}/reconcile', [AdminOrderController::class, 'reconcile'])->name('orders.reconcile');
+    Route::match(['get', 'post'], 'orders/{orderCode}/refund', [AdminOrderController::class, 'refund'])->name('orders.refund');
 });

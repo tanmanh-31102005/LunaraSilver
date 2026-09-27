@@ -197,12 +197,24 @@ class OrderController extends Controller
         $paymentId = $request->input('payment_id');
         $payment = $paymentId
             ? $order->payments()->where('id', $paymentId)->first()
-            : $order->latestPayment;
+            : ($order->latestPayment ?: $order->payments()->first());
 
-        if (! $payment || ! $payment->canBeQueried()) {
+        if (! $payment) {
             return redirect()
                 ->route('admin.orders.show', $orderCode)
-                ->with('error', 'Không tìm thấy lượt thanh toán VNPay có thể đối soát cho đơn hàng này.');
+                ->with('error', 'Đơn hàng này chưa có dữ liệu lượt thanh toán nào.');
+        }
+
+        if (! $payment->isVNPay()) {
+            return redirect()
+                ->route('admin.orders.show', $orderCode)
+                ->with('error', 'Đơn hàng này sử dụng phương thức ' . $order->payment_method_label . ', không phải VNPay.');
+        }
+
+        if (empty($payment->txn_ref)) {
+            return redirect()
+                ->route('admin.orders.show', $orderCode)
+                ->with('error', 'Lượt thanh toán này thiếu mã tham chiếu (TxnRef) để đối soát sang VNPay.');
         }
 
         $result = $this->reconciliationService->reconcileVNPayPayment(
