@@ -37,6 +37,7 @@
                     </div>
                 @else
                     <div class="detail-gallery__empty" role="img" aria-label="Chưa có ảnh sản phẩm"><i class="bi bi-image" aria-hidden="true"></i></div>
+                @endif
             </section>
 
             <section class="detail-info" aria-labelledby="product-name">
