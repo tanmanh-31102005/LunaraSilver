@@ -3,6 +3,7 @@
 namespace App\Services\VNPay;
 
 use App\Models\Payment;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -47,13 +48,17 @@ class VNPayService
             throw new RuntimeException('VNPay TMN_CODE or HASH_SECRET is not configured.');
         }
 
-        $createDate = $payment->vnp_create_date ?: now()->format('YmdHis');
-        if (! $payment->vnp_create_date) {
-            $payment->vnp_create_date = $createDate;
-            $payment->save();
-        }
+        $cleanIp = filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? $ipAddress : '127.0.0.1';
 
-        $expireDate = date('YmdHis', strtotime('+15 minutes', strtotime($createDate)));
+        // VNPay strictly requires timestamps in Asia/Ho_Chi_Minh (GMT+7)
+        $nowVn = Carbon::now('Asia/Ho_Chi_Minh');
+        $createDate = $nowVn->format('YmdHis');
+        $expireDate = $nowVn->copy()->addMinutes(15)->format('YmdHis');
+
+        // Always save fresh GMT+7 create date to the payment attempt
+        $payment->vnp_create_date = $createDate;
+        $payment->save();
+
         $returnUrl = config('vnpay.return_url') ?: route('payment.vnpay.return');
 
         $vnpParams = [
@@ -63,7 +68,7 @@ class VNPayService
             'vnp_Command' => 'pay',
             'vnp_CreateDate' => $createDate,
             'vnp_CurrCode' => config('vnpay.currency', 'VND'),
-            'vnp_IpAddr' => $ipAddress,
+            'vnp_IpAddr' => $cleanIp,
             'vnp_Locale' => config('vnpay.locale', 'vn'),
             'vnp_OrderInfo' => "Thanh toan don hang {$order->order_code} tai Lunara Silver",
             'vnp_OrderType' => 'other',
@@ -89,6 +94,16 @@ class VNPayService
 
         $secureHash = hash_hmac('sha512', $hashData, $hashSecret);
         $vnpUrl = $this->getPaymentUrl() . '?' . $query . 'vnp_SecureHash=' . $secureHash;
+
+        // Temporary safe logging for audit and debugging (never logs HashSecret)
+        Log::info('VNPay createPaymentUrl generated', [
+            'txn_ref' => (string) $payment->txn_ref,
+            'vnp_CreateDate' => $createDate,
+            'vnp_ExpireDate' => $expireDate,
+            'current_gmt7' => $nowVn->format('Y-m-d H:i:s'),
+            'order_code' => $order->order_code,
+            'amount' => $payment->amount,
+        ]);
 
         return $vnpUrl;
     }
@@ -160,8 +175,9 @@ class VNPayService
         $command = 'querydr';
         $txnRef = (string) $payment->txn_ref;
         $orderInfo = 'Truy van don hang ' . ($payment->order?->order_code ?? $txnRef);
-        $transactionDate = (string) ($payment->vnp_create_date ?: now()->format('YmdHis'));
-        $createDate = now()->format('YmdHis');
+        $nowVn = Carbon::now('Asia/Ho_Chi_Minh');
+        $transactionDate = (string) ($payment->vnp_create_date ?: $nowVn->format('YmdHis'));
+        $createDate = $nowVn->format('YmdHis');
 
         // Checksum data format according to VNPay QueryDr 2.1.0:
         // $vnp_RequestId . '|' . $vnp_Version . '|' . $vnp_Command . '|' . $vnp_TmnCode . '|' . $vnp_TxnRef . '|' . $vnp_TransactionDate . '|' . $vnp_CreateDate . '|' . $vnp_IpAddr . '|' . $vnp_OrderInfo
@@ -285,8 +301,9 @@ class VNPayService
         $txnRef = (string) $payment->txn_ref;
         $vnpAmount = (int) round($amount * 100);
         $transactionNo = (string) ($payment->vnp_transaction_no ?: '0');
-        $transactionDate = (string) ($payment->vnp_create_date ?: now()->format('YmdHis'));
-        $createDate = now()->format('YmdHis');
+        $nowVn = Carbon::now('Asia/Ho_Chi_Minh');
+        $transactionDate = (string) ($payment->vnp_create_date ?: $nowVn->format('YmdHis'));
+        $createDate = $nowVn->format('YmdHis');
 
         // Checksum data format according to VNPay Refund 2.1.0:
         // $vnp_RequestId . '|' . $vnp_Version . '|' . $vnp_Command . '|' . $vnp_TmnCode . '|' . $vnp_TransactionType . '|' . $vnp_TxnRef . '|' . $vnp_Amount . '|' . $vnp_TransactionNo . '|' . $vnp_TransactionDate . '|' . $vnp_CreateBy . '|' . $vnp_CreateDate . '|' . $vnp_IpAddr . '|' . $vnp_OrderInfo

@@ -10,6 +10,7 @@ use App\Models\OrderStatusHistory;
 use App\Models\Payment;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -170,7 +171,7 @@ class CheckoutService
                     'order_id' => $order->id,
                     'provider' => 'vnpay',
                     'txn_ref' => $txnRef,
-                    'vnp_create_date' => now()->format('YmdHis'),
+                    'vnp_create_date' => Carbon::now('Asia/Ho_Chi_Minh')->format('YmdHis'),
                     'transaction_id' => null,
                     'amount' => $grandTotalDecimal,
                     'status' => 'pending',

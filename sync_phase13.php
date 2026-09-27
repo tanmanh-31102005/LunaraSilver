@@ -12,6 +12,7 @@ if (file_exists($envPath)) {
     $needsUpdate = false;
 
     $vnpayVars = [
+        'APP_TIMEZONE' => 'Asia/Ho_Chi_Minh',
         'VNPAY_SANDBOX' => 'true',
         'VNPAY_TMN_CODE' => '7OO2Y0S8',
         'VNPAY_HASH_SECRET' => 'TRPSTTTYPHQWBATDQWCUWMANEWXLZMGE',

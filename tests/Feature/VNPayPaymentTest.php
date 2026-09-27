@@ -16,6 +16,7 @@ use App\Services\VNPay\VNPayQueryResult;
 use App\Services\VNPay\VNPayRefundResult;
 use App\Services\VNPay\VNPayService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -93,7 +94,7 @@ class VNPayPaymentTest extends TestCase
             'order_id' => $order->id,
             'provider' => 'vnpay',
             'txn_ref' => 'LNS-TEST-0001-1',
-            'vnp_create_date' => now()->format('YmdHis'),
+            'vnp_create_date' => Carbon::now('Asia/Ho_Chi_Minh')->format('YmdHis'),
             'amount' => '450000.00',
             'status' => 'pending',
         ]);
@@ -106,6 +107,12 @@ class VNPayPaymentTest extends TestCase
         $this->assertStringContainsString('vnp_TxnRef=LNS-TEST-0001-1', $url);
         $this->assertStringContainsString('vnp_Amount=45000000', $url);
         $this->assertStringContainsString('vnp_SecureHash=', $url);
+
+        // Verify GMT+7 timezone and 15-minute expiration
+        parse_str(parse_url($url, PHP_URL_QUERY), $queryParams);
+        $createDate = Carbon::createFromFormat('YmdHis', $queryParams['vnp_CreateDate'], 'Asia/Ho_Chi_Minh');
+        $expireDate = Carbon::createFromFormat('YmdHis', $queryParams['vnp_ExpireDate'], 'Asia/Ho_Chi_Minh');
+        $this->assertSame(15, (int) $createDate->diffInMinutes($expireDate));
     }
 
     public function test_vnpay_checksum_verification(): void
@@ -430,6 +437,16 @@ class VNPayPaymentTest extends TestCase
         $latest = $order->payments()->latest('id')->first();
         $this->assertSame('LNS-RETRY-001-2', $latest->txn_ref);
         $this->assertSame('pending', $latest->status);
+
+        $redirectUrl = $response->headers->get('Location');
+        $this->assertNotNull($redirectUrl);
+        $this->assertStringContainsString('vnp_TxnRef=LNS-RETRY-001-2', $redirectUrl);
+        $this->assertStringContainsString('vnp_SecureHash=', $redirectUrl);
+
+        parse_str(parse_url($redirectUrl, PHP_URL_QUERY), $queryParams);
+        $retryCreate = Carbon::createFromFormat('YmdHis', $queryParams['vnp_CreateDate'], 'Asia/Ho_Chi_Minh');
+        $retryExpire = Carbon::createFromFormat('YmdHis', $queryParams['vnp_ExpireDate'], 'Asia/Ho_Chi_Minh');
+        $this->assertSame(15, (int) $retryCreate->diffInMinutes($retryExpire));
     }
 
     public function test_refund_service_supports_full_and_partial_refunds(): void

@@ -9,6 +9,7 @@ use App\Services\VNPay\VNPayService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
@@ -197,15 +198,19 @@ class VNPayController extends Controller
                 ->with('error', 'Đơn hàng này hiện không thể thanh toán lại (trạng thái: ' . $order->order_status_label . ', thanh toán: ' . $order->payment_status_label . ').');
         }
 
-        // Create a new Payment attempt for the retry
+        // Create a new Payment attempt for the retry with guaranteed unique txn_ref
         $attemptCount = $order->payments()->count() + 1;
         $txnRef = $order->order_code . '-' . $attemptCount;
+        while (Payment::query()->where('txn_ref', $txnRef)->exists()) {
+            $attemptCount++;
+            $txnRef = $order->order_code . '-' . $attemptCount;
+        }
 
         $newPayment = Payment::create([
             'order_id' => $order->id,
             'provider' => 'vnpay',
             'txn_ref' => $txnRef,
-            'vnp_create_date' => now()->format('YmdHis'),
+            'vnp_create_date' => Carbon::now('Asia/Ho_Chi_Minh')->format('YmdHis'),
             'amount' => $order->grand_total,
             'status' => Payment::STATUS_PENDING,
             'query_count' => 0,

@@ -44,7 +44,9 @@ class PaymentReconciliationService
         }
 
         if (empty($payment->vnp_create_date)) {
-            $payment->vnp_create_date = $payment->created_at ? $payment->created_at->format('YmdHis') : now()->format('YmdHis');
+            $payment->vnp_create_date = $payment->created_at
+                ? $payment->created_at->timezone('Asia/Ho_Chi_Minh')->format('YmdHis')
+                : Carbon::now('Asia/Ho_Chi_Minh')->format('YmdHis');
             $payment->save();
         }
 
