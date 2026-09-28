@@ -1,116 +1,200 @@
-# Hướng dẫn Triển khai Lunara Silver lên InfinityFree Hosting
+# Hướng dẫn Triển khai & Tự Động Hóa Lunara Silver Lên InfinityFree Hosting
 
-Tài liệu này hướng dẫn chi tiết cách đưa dự án **Lunara Silver** lên tên miền **`lunarasilver.infinityfreeapp.com`** (Tài khoản: `if0_42986888`) và quy trình tiếp tục phát triển tính năng song song trên máy tính cá nhân.
+Tài liệu này cung cấp quy trình hoàn chỉnh và chi tiết nhất để đưa dự án **Lunara Silver** lên tên miền thực tế:
+🌐 **`https://lunarasilver.infinityfreeapp.com`** *(Tài khoản: `if0_42986888`)*.
+
+Đồng thời, tài liệu hướng dẫn cách vận hành **Bộ công cụ Tự động hóa & Chẩn đoán không cần SSH/CLI** độc quyền được thiết kế riêng cho môi trường Shared Hosting miễn phí.
 
 ---
 
-## I. Các tệp đã được chuẩn bị sẵn trong dự án
+## I. Thách thức Khi Đưa Laravel 12 Lên Shared Hosting & Giải pháp
 
-Hệ thống đã tự động tạo sẵn toàn bộ tài nguyên cần thiết trong thư mục gốc `d:\Lunara`:
+Shared Hosting (như InfinityFree, cPanel giá rẻ) có những hạn chế kỹ thuật khắt khe:
+1. **Không có SSH / Terminal**: Không thể gõ lệnh `php artisan migrate`, `php artisan config:cache` hay `composer install`.
+2. **Thư mục gốc cố định (`htdocs/`)**: Laravel yêu cầu Document Root trỏ vào `public/`, nếu không cấu hình đúng sẽ gây lỗi 403, 500 hoặc làm lộ mã nguồn nhạy cảm (`.env`, `storage/`).
+3. **Giới hạn số lượng tệp (Inodes) & Giới hạn thời gian tải FTP**: Thư mục `vendor/` chứa hàng chục nghìn file nhỏ, nếu upload từng file qua FTP sẽ mất nhiều giờ và dễ đứt gãy.
+4. **Khó bắt lỗi runtime**: Khi gặp lỗi HTTP 500, hosting free chỉ hiển thị trang trắng hoặc thông báo chung chung, không có debug chi tiết.
 
-| Tệp tin | Vị trí | Mục đích |
+### 👉 Giải pháp Tự động hóa Đã Xây Dựng Trong Dự Án
+
+Hệ thống đã chuẩn bị sẵn bộ công cụ tự động hóa tại thư mục gốc `d:\Lunara`:
+
+| Tệp tin | Vị trí | Mục đích & Cơ chế hoạt động |
 | :--- | :--- | :--- |
-| **`lunara_silver_export.sql`** | `d:\Lunara\lunara_silver_export.sql` | Bản sao lưu toàn bộ cơ sở dữ liệu MySQL chuẩn UTF-8 (gồm 45 sản phẩm, danh mục, hình ảnh, tài khoản quản trị). Dùng để **Import vào phpMyAdmin**. |
-| **`.htaccess`** | `d:\Lunara\.htaccess` | Cấu hình cho thư mục gốc `htdocs/`. Tự động chuyển hướng yêu cầu vào `public/` và **khóa an toàn** các file nhạy cảm (`.env`, `vendor/`, `app/`, `storage/`). |
-| **`.env.production.example`** | `d:\Lunara\.env.production.example` | Mẫu cấu hình môi trường cho InfinityFree với `APP_KEY` nguyên bản, `APP_ENV=production`, `APP_DEBUG=false`. |
-| **`public/build/`** | `d:\Lunara\public\build\` | Toàn bộ CSS, JS, Bootstrap Icons đã được biên dịch production bằng Vite (`npm run build`). |
+| **`diag.php`** | `d:\Lunara\diag.php` | **Bộ Chẩn đoán Sức khỏe Hệ thống**: Kiểm tra 10 extension PHP, quyền ghi `storage/`, tính toàn vẹn cấu trúc file, kết nối DB PDO, giả lập request `GET /` để bắt lỗi runtime chi tiết, đọc log `storage/logs/laravel.log` và nút xóa cache `?clear_cache=1`. |
+| **`sync_phase13.php`** | `d:\Lunara\sync_phase13.php` | **Bộ Tự Động Migrate & Sync Config**: Tự động chèn biến môi trường VNPay vào `.env`, khởi chạy `Artisan::call('migrate', ['--force' => true])` qua giao diện web, xóa cache và hiển thị bảng kiểm toán 5 đơn hàng mới nhất. |
+| **`update_vendor.php`** | `d:\Lunara\update_vendor.php` | **Bộ Cập nhật Thư viện Nhanh**: Tự động giải nén tệp `cloudinary_vendor.zip` bằng `ZipArchive` trực tiếp trên server, khắc phục lỗi đường dẫn và nạp Class mà không cần chạy Composer trên host. |
+| **`.htaccess`** | `d:\Lunara\.htaccess` | **Định tuyến Thông minh**: Chuyển tiếp toàn bộ request từ `htdocs/` vào `public/` mà không gây loop 500, đồng thời chặn truy cập trực tiếp vào các tệp bảo mật (`.env`, `vendor/`, `storage/`). |
+| **`lunara_silver_export.sql`** | `d:\Lunara\lunara_silver_export.sql` | **Bản sao lưu CSDL chuẩn UTF-8mb4**: Nạp sẵn 45 sản phẩm, danh mục, hình ảnh, tài khoản admin `admin@lunara.vn`. |
+| **`.env.production`** | `d:\Lunara\.env.production` | File cấu hình chuẩn production đã điền sẵn `APP_KEY`, thông số DB host và các dịch vụ. |
+| **`public/build/`** | `d:\Lunara\public\build\` | CSS/JS đã được biên dịch tối ưu qua Vite (`npm run build`). |
 
 ---
 
-## II. Hướng dẫn 4 bước triển khai thực tế
+## II. Quy trình 4 Bước Triển khai Thực Tế
 
 ### Bước 1: Tạo Database và Import dữ liệu trên InfinityFree
 
-1. Đăng nhập vào trang quản trị InfinityFree: [https://dash.infinityfree.com](https://dash.infinityfree.com)
-2. Chọn tài khoản **`if0_42986888`** $\rightarrow$ Bấm nút **Control Panel** (hoặc vPanel).
-3. Trong giao diện vPanel, tìm mục **Databases** $\rightarrow$ Chọn **MySQL Databases**:
-   - Tại ô *Create New Database*, nhập tên (ví dụ: `lunara`) $\rightarrow$ Bấm **Create Database**.
-   - Hệ thống sẽ tạo database có tên dạng: `if0_42986888_lunara`.
-4. Nhìn sang bảng thông tin kết nối MySQL bên phải / phía trên, ghi lại:
-   - **MySQL Hostname** (thường có dạng `sqlXXX.infinityfree.com` hoặc `sqlXXX.epizy.com`).
-   - **MySQL Database Name** (`if0_42986888_lunara`).
-   - **MySQL Username** (`if0_42986888`).
-   - **MySQL Password** (chính là mật khẩu tài khoản hosting InfinityFree của bạn).
-5. Quay lại danh sách database vừa tạo $\rightarrow$ Bấm vào nút **Admin** (hoặc mở **phpMyAdmin**):
+1. Đăng nhập trang quản trị InfinityFree: [https://dash.infinityfree.com](https://dash.infinityfree.com)
+2. Chọn tài khoản **`if0_42986888`** $\rightarrow$ Bấm nút **Control Panel** (vPanel).
+3. Trong vPanel, tìm mục **Databases** $\rightarrow$ Chọn **MySQL Databases**:
+   - Tại ô *Create New Database*, nhập tên: `lunara` $\rightarrow$ Bấm **Create Database**.
+   - Tên cơ sở dữ liệu hoàn chỉnh sẽ có dạng: `if0_42986888_lunara`.
+4. Ghi lại các thông số kết nối hiển thị trên bảng:
+   - **MySQL Hostname**: `sql305.infinityfree.com` (hoặc hostname tương ứng của tài khoản).
+   - **MySQL Database Name**: `if0_42986888_lunara`
+   - **MySQL Username**: `if0_42986888`
+   - **MySQL Password**: `manh31102005` (mật khẩu hosting vPanel của bạn).
+5. Mở công cụ **phpMyAdmin**:
    - Chọn database `if0_42986888_lunara` ở cột bên trái.
-   - Chọn tab **Import** ở thanh menu trên cùng.
+   - Chọn tab **Import** trên thanh menu.
    - Nhấn **Choose File** $\rightarrow$ Chọn tệp `d:\Lunara\lunara_silver_export.sql`.
-   - Giữ nguyên các tùy chọn mặc định $\rightarrow$ Kéo xuống dưới bấm nút **Go** (hoặc **Import**).
-   - Đợi thông báo thành công màu xanh: *"Import has been successfully finished, XX queries executed"*.
+   - Bấm nút **Import** (hoặc **Go**) ở cuối trang.
+   - Chờ thông báo màu xanh hoàn tất.
 
 ---
 
 ### Bước 2: Chuẩn bị tệp cấu hình `.env` cho Hosting
 
-1. Mở tệp `d:\Lunara\.env.production.example` trên máy tính.
-2. Cập nhật thông số database bạn vừa lấy ở Bước 1:
-   ```env
-   DB_CONNECTION=mysql
-   DB_HOST=sqlXXX.infinityfree.com
-   DB_PORT=3306
-   DB_DATABASE=if0_42986888_lunara
-   DB_USERNAME=if0_42986888
-   DB_PASSWORD=MẬT_KHẨU_HOSTING_CỦA_BẠN
+Mở tệp `d:\Lunara\.env.production` (hoặc copy từ `.env.production.example` thành `.env`) và xác nhận các thông số:
+```env
+APP_NAME="Lunara Silver"
+APP_ENV=production
+APP_KEY=base64:cjhbd2p1aWdpZWV1dmJ3NmQ5d2J2eXN3eWZldHN5YWU=
+APP_DEBUG=false
+APP_URL=https://lunarasilver.infinityfreeapp.com
+
+DB_CONNECTION=mysql
+DB_HOST=sql305.infinityfree.com
+DB_PORT=3306
+DB_DATABASE=if0_42986888_lunara
+DB_USERNAME=if0_42986888
+DB_PASSWORD=manh31102005
+
+SESSION_DRIVER=database
+QUEUE_CONNECTION=sync
+CACHE_STORE=file
+
+# VNPay Sandbox
+VNPAY_SANDBOX=true
+VNPAY_TMN_CODE=7OO2Y0S8
+VNPAY_HASH_SECRET=TRPSTTTYPHQWBATDQWCUWMANEWXLZMGE
+VNPAY_URL=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+VNPAY_RETURN_URL="https://lunarasilver.infinityfreeapp.com/payment/vnpay/return"
+```
+
+---
+
+### Bước 3: Đưa Mã Nguồn Lên Thư Mục `htdocs/` Của Hosting
+
+Bạn có thể lựa chọn 1 trong 2 cách sau:
+
+#### Cách 1: Nén ZIP và tải qua Online File Manager (Nhanh nhất & Tránh sót file)
+1. Trên máy tính cá nhân, trước khi nén, đảm bảo đã chạy lệnh build giao diện:
+   ```bash
+   npm run build
    ```
-3. Lưu tệp này lại thành tên **`.env`** (để chuẩn bị upload lên thư mục `htdocs/`).
-
----
-
-### Bước 3: Tải mã nguồn lên thư mục `htdocs/` của Hosting
-
-#### Cách 1: Sử dụng FileZilla (Khuyên dùng - Ổn định nhất)
-1. Tải và mở phần mềm **FileZilla Client**.
-2. Lấy thông tin FTP trong trang quản trị InfinityFree (tab *FTP Details*):
-   - **Host**: `ftpupload.net` (hoặc IP hiển thị trong trang).
-   - **Username**: `if0_42986888`
-   - **Password**: Mật khẩu hosting của bạn.
-   - **Port**: `21`
-   - Bấm **Quickconnect**.
-3. Cột bên phải (Remote site): Mở thư mục **`htdocs/`**.
-4. Cột bên trái (Local site): Mở thư mục **`d:\Lunara`**.
-5. Chọn các thư mục và tệp sau để tải lên `htdocs/`:
-   - `.htaccess` *(tệp vừa tạo ở thư mục gốc)*
-   - `.env` *(tệp cấu hình production vừa sửa ở Bước 2)*
+2. Chọn các thư mục và file sau để nén thành 1 file duy nhất `deploy_lunara.zip`:
+   - File gốc: `.htaccess`, `.env`, `composer.json`, `index.php`, `diag.php`, `sync_phase13.php`, `update_vendor.php`, `cloudinary_vendor.zip`
    - Thư mục: `app/`, `bootstrap/`, `config/`, `database/`, `media/`, `public/`, `resources/`, `routes/`, `storage/`, `vendor/`
-6. **LƯU Ý CỰC KỲ QUAN TRỌNG - KHÔNG UPLOAD CÁC MỤC SAU**:
-   - `node_modules/` *(hơn 20.000 file nặng không dùng trên host)*
-   - `.git/` *(lịch sử git)*
-   - `tests/` *(unit test)*
-   - `lunara_silver_export.sql` *(file sql đã import xong, không để trên host)*
+   > ⛔ **CỰC KỲ QUAN TRỌNG — TUYỆT ĐỐI KHÔNG NÉN CÁC MỤC SAU**:
+   > - `node_modules/` *(hàng nghìn file nặng gây tràn dung lượng host)*
+   > - `.git/` *(lịch sử commit không cần thiết trên live host)*
+   > - `tests/` *(unit test không chạy trên production)*
+   > - `lunara_silver_export.sql` *(đã import xong vào DB)*
+3. Mở **Online File Manager** trên vPanel InfinityFree $\rightarrow$ Mở thư mục **`htdocs/`**.
+4. Nhấn **Upload** file `deploy_lunara.zip` lên.
+5. Chuột phải vào file zip trên File Manager $\rightarrow$ Chọn **Extract** để giải nén trực tiếp trên server.
+6. Xóa file `deploy_lunara.zip` sau khi giải nén để tiết kiệm dung lượng.
 
-#### Cách 2: Nén ZIP và tải qua Online File Manager
-1. Nếu dùng Online File Manager trên web, bạn có thể nén các thư mục trên thành 1 file zip.
-2. Tải file zip vào `htdocs/` $\rightarrow$ Nhấp chuột phải chọn **Extract** $\rightarrow$ Xóa file zip sau khi giải nén xong.
-
----
-
-### Bước 4: Kiểm tra nghiệm thu trên tên miền Live
-
-Sau khi tải xong, truy cập: **`https://lunarasilver.infinityfreeapp.com`**
-
-1. **Kiểm tra Storefront**:
-   - Trang chủ hiển thị đầy đủ Hero banner 3 slide, logo Lunara Silver màu sắc nét.
-   - Danh mục sản phẩm (Dây chuyền, Nhẫn, Vòng tay, Bộ sưu tập, Quà tặng).
-   - Trang chi tiết sản phẩm, ảnh sản phẩm từ `media/` hiển thị sắc nét.
-   - Thử thêm sản phẩm vào giỏ hàng và đặt hàng thử (COD).
-2. **Kiểm tra Admin Dashboard**:
-   - Truy cập `https://lunarasilver.infinityfreeapp.com/admin`
-   - Đăng nhập bằng tài khoản Administrator:
-     - **Email**: `admin@lunara.vn`
-     - **Password**: `admin123` (hoặc mật khẩu admin bạn đã tạo)
-   - Kiểm tra Bảng điều khiển, Sản phẩm, Danh mục và Quản lý đơn hàng.
+#### Cách 2: Sử dụng phần mềm FileZilla Client (FTP)
+1. Tải và mở **FileZilla Client**.
+2. Điền thông tin kết nối FTP:
+   - **Host**: `ftpupload.net`
+   - **Username**: `if0_42986888`
+   - **Password**: `manh31102005`
+   - **Port**: `21` $\rightarrow$ Nhấn **Quickconnect**.
+3. Cột bên phải (Remote): Vào thư mục `htdocs/`.
+4. Cột bên trái (Local): Mở thư mục dự án `d:\Lunara`.
+5. Kéo thả các tệp/thư mục tương tự như Cách 1 sang `htdocs/`.
 
 ---
 
-## III. Quy trình tiếp tục phát triển các tính năng tiếp theo
+### Bước 4: Chạy Bộ Tự Động Hóa & Kiểm Tra Hệ Thống Trực Tuyến
 
-Sau khi website đã online, bạn tiếp tục phát triển các phase tiếp theo theo chu trình:
+Sau khi tải mã nguồn lên, thực hiện 3 bước kiểm tra và kích hoạt tự động qua trình duyệt:
 
-1. **Lập trình tại máy local (`d:\Lunara`)**:
-   - Mở IDE và tiếp tục làm việc cùng AI Assistant trên máy tính của bạn (`http://127.0.0.1:8000`).
-   - Phát triển các tính năng mới: VNPay Gateway, Mã giảm giá (Coupons), Đánh giá sản phẩm (Reviews), Quản lý người dùng nâng cao.
-   - Chạy test tự động bằng lệnh `php artisan test` để đảm bảo 100% test pass.
-2. **Cập nhật lên Live Hosting**:
-   - **Nếu chỉ sửa file PHP / Blade (code/giao diện)**: Dùng FileZilla upload đúng những file vừa sửa (ví dụ: `app/Http/Controllers/...` hoặc `resources/views/...`). Quá trình này chỉ mất 3 - 5 giây!
-   - **Nếu có sửa file CSS / JS**: Chạy lệnh `npm run build` ở máy local, sau đó upload thư mục `public/build/` lên host.
-   - **Nếu có Migration cơ sở dữ liệu mới**: Chạy câu lệnh SQL bổ sung vào phpMyAdmin trên vPanel.
+#### 1. Kiểm tra sức khỏe toàn diện qua `diag.php`
+Truy cập: **`https://lunarasilver.infinityfreeapp.com/diag.php`**
+- Trang kiểm tra sẽ tự động:
+  - Xác nhận phiên bản PHP và các extension bắt buộc (`pdo_mysql`, `mbstring`, `fileinfo`...).
+  - Tự động tạo thư mục và cấp quyền ghi cho `storage/` và `bootstrap/cache/`.
+  - Kiểm tra kết nối PDO trực tiếp đến cơ sở dữ liệu `if0_42986888_lunara`.
+  - Khởi động Laravel HTTP Kernel và giả lập request `GET /`.
+  - Nếu hiển thị **"🎉 HOÀN TOÀN THÀNH CÔNG! Trang chủ trả về HTTP 200 OK"** nghĩa là hệ thống sẵn sàng 100%!
+
+#### 2. Chạy đồng bộ Migration & Cấu hình qua `sync_phase13.php`
+Truy cập: **`https://lunarasilver.infinityfreeapp.com/sync_phase13.php`**
+- Script sẽ tự động:
+  - Bổ sung cấu hình VNPay Sandbox vào `.env` nếu thiếu.
+  - Chạy `Artisan::call('migrate', ['--force' => true])` để cập nhật bảng `payments` và các cột mới nhất.
+  - Dọn dẹp cache Laravel bằng `Artisan::call('optimize:clear')`.
+  - Hiển thị bảng tra cứu đơn hàng và giao dịch thanh toán trực quan.
+
+#### 3. Nếu thiếu thư viện Cloudinary, chạy `update_vendor.php`
+Truy cập: **`https://lunarasilver.infinityfreeapp.com/update_vendor.php`**
+- Script sẽ tự động giải nén gói `cloudinary_vendor.zip` vào `vendor/` và nạp Class `Cloudinary\Cloudinary` ngay trên hosting.
+
+---
+
+## III. Nghiệm Thu & Vận Hành Trên Live
+
+Truy cập trang chủ chính thức: **`https://lunarasilver.infinityfreeapp.com`**
+
+### 1. Kiểm tra Phía Khách Hàng (Storefront)
+- [x] Trang chủ hiển thị sắc nét Logo Lunara Silver, Hero Carousel 3 slide, typography sang trọng.
+- [x] Các danh mục: Dây chuyền, Nhẫn, Vòng tay, Bộ sưu tập, Set Quà tặng.
+- [x] Trang chi tiết sản phẩm hiển thị ảnh, thông số kỹ thuật và tình trạng tồn kho.
+- [x] Thêm sản phẩm vào giỏ hàng AJAX, cập nhật số lượng và đặt hàng thành công.
+- [x] Thử nghiệm thanh toán trực tuyến qua cổng VNPay Sandbox bằng thẻ test NCB.
+
+### 2. Kiểm tra Phía Quản Trị Viên (Admin Portal)
+- Đường dẫn: `https://lunarasilver.infinityfreeapp.com/login`
+- Đăng nhập tài khoản:
+  - **Email**: `admin@lunara.vn`
+  - **Mật khẩu**: `admin123456`
+- Truy cập vào **`/admin`**:
+  - Xem Dashboard thống kê doanh thu và đơn hàng.
+  - Quản lý sản phẩm, chỉnh sửa tồn kho nhanh, quản lý thư viện ảnh Cloudinary.
+  - Quản lý đơn hàng, đổi trạng thái và đối soát giao dịch VNPay.
+
+---
+
+## IV. Quy Trình Cập Nhật Tính Năng Mới Từ Máy Cá Nhân Lên Live Host
+
+Khi bạn code thêm tính năng mới trên máy local (`d:\Lunara`), quy trình cập nhật cực kỳ nhanh chóng:
+
+```text
+               +------------------------------------+
+               |  Lập trình & Test tại Local máy    |
+               |  (http://127.0.0.1:8000)           |
+               +-----------------+------------------+
+                                 |
+         +-----------------------+-----------------------+
+         | (Nếu sửa PHP/Blade)                           | (Nếu sửa CSS/JS)
+         v                                               v
++-------------------------------+             +-----------------------------+
+| Dùng FileZilla upload đúng    |             | Chạy lệnh: `npm run build`  |
+| file PHP/Blade vừa sửa lên host|             | Upload thư mục `public/build`|
+| (Mất chỉ 2 - 5 giây!)         |             +-----------------------------+
++-------------------------------+                            |
+         |                                                   |
+         +-----------------------+---------------------------+
+                                 |
+                                 v
+               +------------------------------------+
+               | (Nếu có migration CSDL mới)        |
+               | Mở trình duyệt vào link:           |
+               | /sync_phase13.php để tự động migrate|
+               +------------------------------------+
+```
