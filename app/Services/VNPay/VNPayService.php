@@ -6,7 +6,6 @@ use App\Models\Payment;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use RuntimeException;
 
 class VNPayService
@@ -84,16 +83,16 @@ class VNPayService
         $i = 0;
         foreach ($vnpParams as $key => $value) {
             if ($i === 1) {
-                $hashData .= '&' . urlencode((string) $key) . '=' . urlencode((string) $value);
+                $hashData .= '&'.urlencode((string) $key).'='.urlencode((string) $value);
             } else {
-                $hashData .= urlencode((string) $key) . '=' . urlencode((string) $value);
+                $hashData .= urlencode((string) $key).'='.urlencode((string) $value);
                 $i = 1;
             }
-            $query .= urlencode((string) $key) . '=' . urlencode((string) $value) . '&';
+            $query .= urlencode((string) $key).'='.urlencode((string) $value).'&';
         }
 
         $secureHash = hash_hmac('sha512', $hashData, $hashSecret);
-        $vnpUrl = $this->getPaymentUrl() . '?' . $query . 'vnp_SecureHash=' . $secureHash;
+        $vnpUrl = $this->getPaymentUrl().'?'.$query.'vnp_SecureHash='.$secureHash;
 
         // Temporary safe logging for audit and debugging (never logs HashSecret)
         Log::info('VNPay createPaymentUrl generated', [
@@ -111,7 +110,7 @@ class VNPayService
     /**
      * Verify the return / IPN checksum signature from VNPay.
      *
-     * @param array<string, mixed> $params
+     * @param  array<string, mixed>  $params
      */
     public function verifyReturnChecksum(array $params): bool
     {
@@ -138,9 +137,9 @@ class VNPayService
         $i = 0;
         foreach ($vnpData as $key => $value) {
             if ($i === 1) {
-                $hashData .= '&' . urlencode((string) $key) . '=' . urlencode((string) $value);
+                $hashData .= '&'.urlencode((string) $key).'='.urlencode((string) $value);
             } else {
-                $hashData .= urlencode((string) $key) . '=' . urlencode((string) $value);
+                $hashData .= urlencode((string) $key).'='.urlencode((string) $value);
                 $i = 1;
             }
         }
@@ -169,19 +168,19 @@ class VNPayService
         }
 
         // VNPay WebAPI requires alphanumeric unique RequestId (max 32 chars, typically date + random digits)
-        $requestId = date('YmdHis') . str_pad((string) random_int(1, 999999), 6, '0', STR_PAD_LEFT);
+        $requestId = date('YmdHis').str_pad((string) random_int(1, 999999), 6, '0', STR_PAD_LEFT);
         $cleanIp = filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? $ipAddress : '127.0.0.1';
         $version = config('vnpay.version', '2.1.0');
         $command = 'querydr';
         $txnRef = (string) $payment->txn_ref;
-        $orderInfo = 'Truy van don hang ' . ($payment->order?->order_code ?? $txnRef);
+        $orderInfo = 'Truy van don hang '.($payment->order?->order_code ?? $txnRef);
         $nowVn = Carbon::now('Asia/Ho_Chi_Minh');
         $transactionDate = (string) ($payment->vnp_create_date ?: $nowVn->format('YmdHis'));
         $createDate = $nowVn->format('YmdHis');
 
         // Checksum data format according to VNPay QueryDr 2.1.0:
         // $vnp_RequestId . '|' . $vnp_Version . '|' . $vnp_Command . '|' . $vnp_TmnCode . '|' . $vnp_TxnRef . '|' . $vnp_TransactionDate . '|' . $vnp_CreateDate . '|' . $vnp_IpAddr . '|' . $vnp_OrderInfo
-        $hashData = $requestId . '|' . $version . '|' . $command . '|' . $tmnCode . '|' . $txnRef . '|' . $transactionDate . '|' . $createDate . '|' . $cleanIp . '|' . $orderInfo;
+        $hashData = $requestId.'|'.$version.'|'.$command.'|'.$tmnCode.'|'.$txnRef.'|'.$transactionDate.'|'.$createDate.'|'.$cleanIp.'|'.$orderInfo;
         $secureHash = hash_hmac('sha512', $hashData, $hashSecret);
 
         $payload = [
@@ -252,7 +251,7 @@ class VNPayService
                 rawPayload: $json
             );
         } catch (\Throwable $e) {
-            Log::error('VNPay QueryDr Exception: ' . $e->getMessage(), [
+            Log::error('VNPay QueryDr Exception: '.$e->getMessage(), [
                 'payment_id' => $payment->id,
                 'trace' => $e->getTraceAsString(),
             ]);
@@ -261,7 +260,7 @@ class VNPayService
                 isSuccess: false,
                 responseCode: '98',
                 transactionStatus: '98',
-                message: 'Exception during QueryDr: ' . $e->getMessage(),
+                message: 'Exception during QueryDr: '.$e->getMessage(),
                 rawPayload: ['error' => $e->getMessage()]
             );
         }
@@ -270,7 +269,7 @@ class VNPayService
     /**
      * Submit refund request to VNPay WebAPI.
      *
-     * @param string $refundType 'full' or 'partial'
+     * @param  string  $refundType  'full' or 'partial'
      */
     public function refund(
         Payment $payment,
@@ -293,7 +292,7 @@ class VNPayService
         }
 
         // VNPay WebAPI requires alphanumeric unique RequestId (max 32 chars)
-        $requestId = date('YmdHis') . str_pad((string) random_int(1, 999999), 6, '0', STR_PAD_LEFT);
+        $requestId = date('YmdHis').str_pad((string) random_int(1, 999999), 6, '0', STR_PAD_LEFT);
         $cleanIp = filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? $ipAddress : '127.0.0.1';
         $version = config('vnpay.version', '2.1.0');
         $command = 'refund';
@@ -307,7 +306,7 @@ class VNPayService
 
         // Checksum data format according to VNPay Refund 2.1.0:
         // $vnp_RequestId . '|' . $vnp_Version . '|' . $vnp_Command . '|' . $vnp_TmnCode . '|' . $vnp_TransactionType . '|' . $vnp_TxnRef . '|' . $vnp_Amount . '|' . $vnp_TransactionNo . '|' . $vnp_TransactionDate . '|' . $vnp_CreateBy . '|' . $vnp_CreateDate . '|' . $vnp_IpAddr . '|' . $vnp_OrderInfo
-        $hashData = $requestId . '|' . $version . '|' . $command . '|' . $tmnCode . '|' . $vnpTransactionType . '|' . $txnRef . '|' . $vnpAmount . '|' . $transactionNo . '|' . $transactionDate . '|' . $createBy . '|' . $createDate . '|' . $cleanIp . '|' . $reason;
+        $hashData = $requestId.'|'.$version.'|'.$command.'|'.$tmnCode.'|'.$vnpTransactionType.'|'.$txnRef.'|'.$vnpAmount.'|'.$transactionNo.'|'.$transactionDate.'|'.$createBy.'|'.$createDate.'|'.$cleanIp.'|'.$reason;
         $secureHash = hash_hmac('sha512', $hashData, $hashSecret);
 
         $payload = [
@@ -374,7 +373,7 @@ class VNPayService
                 rawPayload: $json
             );
         } catch (\Throwable $e) {
-            Log::error('VNPay Refund Exception: ' . $e->getMessage(), [
+            Log::error('VNPay Refund Exception: '.$e->getMessage(), [
                 'payment_id' => $payment->id,
                 'trace' => $e->getTraceAsString(),
             ]);
@@ -382,7 +381,7 @@ class VNPayService
             return new VNPayRefundResult(
                 isSuccess: false,
                 responseCode: '98',
-                message: 'Exception during Refund: ' . $e->getMessage(),
+                message: 'Exception during Refund: '.$e->getMessage(),
                 rawPayload: ['error' => $e->getMessage()]
             );
         }

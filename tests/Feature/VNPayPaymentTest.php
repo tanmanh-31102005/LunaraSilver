@@ -7,13 +7,10 @@ use App\Models\CartItem;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Payment;
-use App\Models\PaymentRefund;
 use App\Models\Product;
 use App\Models\User;
-use App\Services\VNPay\PaymentReconciliationService;
+use App\Services\OrderInventoryService;
 use App\Services\VNPay\RefundService;
-use App\Services\VNPay\VNPayQueryResult;
-use App\Services\VNPay\VNPayRefundResult;
 use App\Services\VNPay\VNPayService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
@@ -26,7 +23,9 @@ class VNPayPaymentTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private User $admin;
+
     private Product $singleProduct;
 
     protected function setUp(): void
@@ -137,9 +136,9 @@ class VNPayPaymentTest extends TestCase
         $i = 0;
         foreach ($params as $k => $v) {
             if ($i === 1) {
-                $hashData .= '&' . urlencode($k) . '=' . urlencode($v);
+                $hashData .= '&'.urlencode($k).'='.urlencode($v);
             } else {
-                $hashData .= urlencode($k) . '=' . urlencode($v);
+                $hashData .= urlencode($k).'='.urlencode($v);
                 $i = 1;
             }
         }
@@ -294,9 +293,9 @@ class VNPayPaymentTest extends TestCase
         $i = 0;
         foreach ($params as $k => $v) {
             if ($i === 1) {
-                $hashData .= '&' . urlencode($k) . '=' . urlencode($v);
+                $hashData .= '&'.urlencode($k).'='.urlencode($v);
             } else {
-                $hashData .= urlencode($k) . '=' . urlencode($v);
+                $hashData .= urlencode($k).'='.urlencode($v);
                 $i = 1;
             }
         }
@@ -371,9 +370,9 @@ class VNPayPaymentTest extends TestCase
         $i = 0;
         foreach ($params as $k => $v) {
             if ($i === 1) {
-                $hashData .= '&' . urlencode($k) . '=' . urlencode($v);
+                $hashData .= '&'.urlencode($k).'='.urlencode($v);
             } else {
-                $hashData .= urlencode($k) . '=' . urlencode($v);
+                $hashData .= urlencode($k).'='.urlencode($v);
                 $i = 1;
             }
         }
@@ -610,7 +609,7 @@ class VNPayPaymentTest extends TestCase
         $this->assertSame($initialStock + 3, $this->singleProduct->stock_quantity);
 
         // Try restoring again (idempotency check)
-        $inventoryService = app(\App\Services\OrderInventoryService::class);
+        $inventoryService = app(OrderInventoryService::class);
         $secondRestore = $inventoryService->restoreInventory($order);
         $this->assertFalse($secondRestore['restored']);
 

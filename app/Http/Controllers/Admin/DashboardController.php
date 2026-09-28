@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\ContactMessage;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\SupportMessage;
 use Illuminate\Contracts\View\View;
 
 class DashboardController extends Controller
@@ -95,6 +97,9 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        $unresolvedSupport = ContactMessage::whereIn('status', [ContactMessage::STATUS_NEW, ContactMessage::STATUS_IN_PROGRESS])->count();
+        $unreadChatMessages = SupportMessage::where('sender_type', SupportMessage::SENDER_CUSTOMER)->whereNull('read_at')->count();
+
         return view('admin.dashboard', [
             'metrics' => [
                 'total_products' => $totalProducts,
@@ -105,6 +110,8 @@ class DashboardController extends Controller
                 'out_of_stock_products' => $outOfStockCount,
                 'total_orders' => $totalOrders,
                 'pending_orders' => $pendingOrders,
+                'unresolved_support' => $unresolvedSupport,
+                'unread_chat_messages' => $unreadChatMessages,
                 'low_stock_threshold' => $threshold,
             ],
             'lowStockProducts' => $lowStockProducts,

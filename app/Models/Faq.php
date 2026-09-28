@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Faq extends Model
+{
+    use HasFactory;
+
+    public const CATEGORIES = [
+        'Đặt hàng',
+        'Thanh toán',
+        'VNPay',
+        'Giao hàng',
+        'Đổi trả',
+        'Tài khoản',
+        'Khuyến mãi',
+        'Bảo quản trang sức',
+    ];
+
+    protected $fillable = [
+        'category',
+        'question',
+        'answer',
+        'sort_order',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'sort_order' => 'integer',
+        'is_active' => 'boolean',
+    ];
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('is_active', true);
+    }
+}

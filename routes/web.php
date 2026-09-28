@@ -7,9 +7,11 @@ use App\Http\Controllers\Account\PasswordController;
 use App\Http\Controllers\Account\ProfileController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\FaqController as AdminFaqController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductImageController as AdminProductImageController;
+use App\Http\Controllers\Admin\SupportController as AdminSupportController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\AuthController;
@@ -18,6 +20,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SupportController;
 use App\Http\Controllers\VNPayController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +36,17 @@ Route::delete('/cart/items/{item}', [CartController::class, 'destroy'])->whereNu
 Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
 Route::get('/order-success/{orderCode}', [CheckoutController::class, 'success'])->name('orders.success');
 Route::get('/media/{path}', MediaController::class)->where('path', '.*')->name('media.show');
+
+// Customer Support & FAQ routes
+Route::get('/support', [SupportController::class, 'faq'])->name('support.index');
+Route::get('/support/faq', [SupportController::class, 'faq'])->name('support.faq');
+Route::get('/contact', [SupportController::class, 'contact'])->name('contact');
+Route::post('/contact', [SupportController::class, 'submitContact'])->name('contact.submit');
+
+// Live Support Chat AJAX polling routes
+Route::post('/support/chat/init', [SupportController::class, 'initChat'])->name('support.chat.init');
+Route::get('/support/chat/{reference}/messages', [SupportController::class, 'getChatMessages'])->name('support.chat.messages');
+Route::post('/support/chat/{reference}/messages', [SupportController::class, 'sendChatMessage'])->name('support.chat.send');
 
 // VNPay gateway callback routes
 Route::get('/payment/vnpay/return', [VNPayController::class, 'return'])->name('payment.vnpay.return');
@@ -96,4 +110,20 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('orders/{orderCode}/cancel', [AdminOrderController::class, 'cancel'])->name('orders.cancel');
     Route::match(['get', 'post'], 'orders/{orderCode}/reconcile', [AdminOrderController::class, 'reconcile'])->name('orders.reconcile');
     Route::match(['get', 'post'], 'orders/{orderCode}/refund', [AdminOrderController::class, 'refund'])->name('orders.refund');
+
+    // Customer Support Inbox & Live Chat
+    Route::get('support', [AdminSupportController::class, 'index'])->name('support.index');
+    Route::get('support/chat', [AdminSupportController::class, 'chatIndex'])->name('support.chat');
+    Route::get('support/chat/{conversation}', [AdminSupportController::class, 'chatShow'])->name('support.chat.show');
+    Route::post('support/chat/{conversation}/reply', [AdminSupportController::class, 'chatReply'])->name('support.chat.reply');
+    Route::post('support/chat/{conversation}/close', [AdminSupportController::class, 'chatClose'])->name('support.chat.close');
+    Route::get('support/{support}', [AdminSupportController::class, 'show'])->name('support.show');
+    Route::patch('support/{support}/status', [AdminSupportController::class, 'updateStatus'])->name('support.status');
+    Route::patch('support/{support}/assign', [AdminSupportController::class, 'assign'])->name('support.assign');
+    Route::post('support/{support}/notes', [AdminSupportController::class, 'saveNotes'])->name('support.notes');
+    Route::post('support/{support}/reply', [AdminSupportController::class, 'reply'])->name('support.reply');
+
+    // FAQs Management
+    Route::patch('faqs/{faq}/toggle', [AdminFaqController::class, 'toggle'])->name('faqs.toggle');
+    Route::resource('faqs', AdminFaqController::class)->except(['show']);
 });

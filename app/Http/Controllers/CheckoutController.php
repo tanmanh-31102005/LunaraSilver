@@ -7,6 +7,7 @@ use App\Models\Cart;
 use App\Models\Order;
 use App\Services\CartService;
 use App\Services\CheckoutService;
+use App\Services\VNPay\VNPayService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -20,7 +21,7 @@ class CheckoutController extends Controller
     public function __construct(
         private CartService $cartService,
         private CheckoutService $checkoutService,
-        private \App\Services\VNPay\VNPayService $vnpayService
+        private VNPayService $vnpayService
     ) {}
 
     public function show(Request $request): View|RedirectResponse
@@ -101,6 +102,7 @@ class CheckoutController extends Controller
             $payment = $order->latestPayment;
             if ($payment) {
                 $paymentUrl = $this->vnpayService->createPaymentUrl($payment, $request->ip() ?? '127.0.0.1');
+
                 return redirect()->away($paymentUrl);
             }
         }

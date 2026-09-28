@@ -50,7 +50,7 @@ class RefundService
         $remaining = $order->remainingRefundableAmount();
         if ($amount > $remaining) {
             throw ValidationException::withMessages([
-                'amount' => 'Số tiền yêu cầu hoàn (' . number_format($amount) . ' đ) vượt quá số tiền có thể hoàn còn lại (' . number_format($remaining) . ' đ).',
+                'amount' => 'Số tiền yêu cầu hoàn ('.number_format($amount).' đ) vượt quá số tiền có thể hoàn còn lại ('.number_format($remaining).' đ).',
             ]);
         }
 
@@ -89,7 +89,7 @@ class RefundService
             ipAddress: $ipAddress
         );
 
-        return DB::transaction(function () use ($refund, $refundResult, $order, $amount, $refundType): PaymentRefund {
+        return DB::transaction(function () use ($refund, $refundResult, $order, $amount): PaymentRefund {
             /** @var PaymentRefund $lockedRefund */
             $lockedRefund = PaymentRefund::query()->where('id', $refund->id)->lockForUpdate()->firstOrFail();
             /** @var Order $lockedOrder */
@@ -119,7 +119,7 @@ class RefundService
                     'from_status' => $lockedOrder->order_status,
                     'to_status' => $lockedOrder->order_status,
                     'changed_by' => auth()->id(),
-                    'note' => "Hoàn tiền VNPay thành công: " . number_format($amount) . " đ ({$lockedRefund->type_label}). Trạng thái thanh toán: {$lockedOrder->payment_status_label}.",
+                    'note' => 'Hoàn tiền VNPay thành công: '.number_format($amount)." đ ({$lockedRefund->type_label}). Trạng thái thanh toán: {$lockedOrder->payment_status_label}.",
                 ]);
             } else {
                 $lockedRefund->status = PaymentRefund::STATUS_FAILED;
@@ -157,7 +157,7 @@ class RefundService
 
             if (! $lockedOrder->isCancellable()) {
                 throw ValidationException::withMessages([
-                    'order' => 'Không thể hủy đơn hàng đang ở trạng thái ' . $lockedOrder->order_status_label,
+                    'order' => 'Không thể hủy đơn hàng đang ở trạng thái '.$lockedOrder->order_status_label,
                 ]);
             }
 
@@ -189,7 +189,7 @@ class RefundService
                         $refundRecord = $this->processRefund(
                             order: $lockedOrder,
                             amount: $refundableAmount,
-                            reason: 'Hủy đơn hàng: ' . $reason,
+                            reason: 'Hủy đơn hàng: '.$reason,
                             requestedBy: $requestedBy,
                             ipAddress: $ipAddress
                         );

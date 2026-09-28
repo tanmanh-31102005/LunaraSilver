@@ -166,7 +166,7 @@ class CheckoutService
 
             // Create Payment record
             if ($paymentMethod === 'vnpay') {
-                $txnRef = $order->order_code . '-1';
+                $txnRef = $order->order_code.'-1';
                 Payment::create([
                     'order_id' => $order->id,
                     'provider' => 'vnpay',

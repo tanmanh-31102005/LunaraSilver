@@ -8,9 +8,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PaymentRefund extends Model
 {
     public const STATUS_REQUESTED = 'requested';
+
     public const STATUS_PROCESSING = 'processing';
+
     public const STATUS_SUCCEEDED = 'succeeded';
+
     public const STATUS_FAILED = 'failed';
+
     public const STATUS_REJECTED = 'rejected';
 
     public const STATUSES = [
@@ -22,6 +26,7 @@ class PaymentRefund extends Model
     ];
 
     public const TYPE_FULL = 'full';
+
     public const TYPE_PARTIAL = 'partial';
 
     public const TYPES = [

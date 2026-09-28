@@ -16,7 +16,7 @@ class PaymentReconciliationService
     /**
      * Reconcile a VNPay payment attempt with VNPay QueryDr.
      *
-     * @param bool $force Bypass cooldown throttle
+     * @param  bool  $force  Bypass cooldown throttle
      * @return array{success: bool, status: string, changed: bool, message: string, payment: Payment}
      */
     public function reconcileVNPayPayment(Payment $payment, string $ipAddress = '127.0.0.1', bool $force = false): array
@@ -140,7 +140,7 @@ class PaymentReconciliationService
                     'success' => true,
                     'status' => $lockedPayment->status,
                     'changed' => $changed,
-                    'message' => 'Giao dịch thất bại hoặc đã bị hủy trên cổng VNPay: ' . $queryResult->getHumanMessage(),
+                    'message' => 'Giao dịch thất bại hoặc đã bị hủy trên cổng VNPay: '.$queryResult->getHumanMessage(),
                     'payment' => $lockedPayment,
                 ];
             }

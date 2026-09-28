@@ -70,6 +70,23 @@
                         <span>Đơn hàng</span>
                     </a>
                 </div>
+
+                <div class="admin-nav-group">
+                    <div class="admin-nav-group__title">KHÁCH HÀNG</div>
+                    <a href="{{ route('admin.support.index') }}"
+                       class="admin-nav-item {{ request()->routeIs('admin.support.*') ? 'admin-nav-item--active' : '' }}"
+                       data-bs-toggle="tooltip" data-bs-placement="right" title="Hỗ trợ khách hàng">
+                        <i class="bi bi-headset"></i>
+                        <span>Hỗ trợ</span>
+                    </a>
+
+                    <a href="{{ route('admin.faqs.index') }}"
+                       class="admin-nav-item {{ request()->routeIs('admin.faqs.*') ? 'admin-nav-item--active' : '' }}"
+                       data-bs-toggle="tooltip" data-bs-placement="right" title="Quản lý FAQ">
+                        <i class="bi bi-question-circle"></i>
+                        <span>FAQ</span>
+                    </a>
+                </div>
             </nav>
 
             <div class="admin-sidebar__footer">
@@ -117,6 +134,19 @@
                         <a href="{{ route('admin.orders.index') }}" class="admin-nav-item {{ request()->routeIs('admin.orders.*') ? 'admin-nav-item--active' : '' }}">
                             <i class="bi bi-receipt"></i>
                             <span>Đơn hàng</span>
+                        </a>
+                    </div>
+
+                    <div class="admin-nav-group">
+                        <div class="admin-nav-group__title text-white-50">KHÁCH HÀNG</div>
+                        <a href="{{ route('admin.support.index') }}" class="admin-nav-item {{ request()->routeIs('admin.support.*') ? 'admin-nav-item--active' : '' }}">
+                            <i class="bi bi-headset"></i>
+                            <span>Hỗ trợ</span>
+                        </a>
+
+                        <a href="{{ route('admin.faqs.index') }}" class="admin-nav-item {{ request()->routeIs('admin.faqs.*') ? 'admin-nav-item--active' : '' }}">
+                            <i class="bi bi-question-circle"></i>
+                            <span>FAQ</span>
                         </a>
                     </div>
                 </nav>

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Services\OrderStatusService;
+use App\Services\VNPay\PaymentReconciliationService;
+use App\Services\VNPay\RefundService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,8 +17,8 @@ class OrderController extends Controller
 {
     public function __construct(
         private OrderStatusService $statusService,
-        private \App\Services\VNPay\PaymentReconciliationService $reconciliationService,
-        private \App\Services\VNPay\RefundService $refundService
+        private PaymentReconciliationService $reconciliationService,
+        private RefundService $refundService
     ) {}
 
     public function index(Request $request): View
@@ -208,7 +210,7 @@ class OrderController extends Controller
         if (! $payment->isVNPay()) {
             return redirect()
                 ->route('admin.orders.show', $orderCode)
-                ->with('error', 'Đơn hàng này sử dụng phương thức ' . $order->payment_method_label . ', không phải VNPay.');
+                ->with('error', 'Đơn hàng này sử dụng phương thức '.$order->payment_method_label.', không phải VNPay.');
         }
 
         if (empty($payment->txn_ref)) {
@@ -224,9 +226,10 @@ class OrderController extends Controller
         );
 
         $msgType = $result['success'] ? 'success' : 'warning';
+
         return redirect()
             ->route('admin.orders.show', $orderCode)
-            ->with($msgType, 'Kết quả đối soát VNPay QueryDr: ' . $result['message']);
+            ->with($msgType, 'Kết quả đối soát VNPay QueryDr: '.$result['message']);
     }
 
     /**
@@ -259,12 +262,12 @@ class OrderController extends Controller
             if ($refund->isSuccessful()) {
                 return redirect()
                     ->route('admin.orders.show', $orderCode)
-                    ->with('success', 'Yêu cầu hoàn tiền đã được VNPay chấp nhận thành công (' . number_format($refund->amount) . ' đ).');
+                    ->with('success', 'Yêu cầu hoàn tiền đã được VNPay chấp nhận thành công ('.number_format($refund->amount).' đ).');
             }
 
             return redirect()
                 ->route('admin.orders.show', $orderCode)
-                ->with('error', 'Yêu cầu hoàn tiền thất bại từ phía VNPay: ' . ($refund->response_payload['vnp_Message'] ?? 'Lỗi không xác định'));
+                ->with('error', 'Yêu cầu hoàn tiền thất bại từ phía VNPay: '.($refund->response_payload['vnp_Message'] ?? 'Lỗi không xác định'));
         } catch (ValidationException $e) {
             return redirect()
                 ->route('admin.orders.show', $orderCode)

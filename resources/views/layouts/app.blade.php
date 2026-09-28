@@ -125,6 +125,8 @@
                 <a href="{{ route('account.orders.index') }}">Lịch sử đơn hàng</a>
                 <a href="{{ route('account.addresses.index') }}">Sổ địa chỉ</a>
                 <a href="{{ route('cart.index') }}">Giỏ hàng</a>
+                <a href="{{ route('support.faq') }}">Trung tâm hỗ trợ & FAQ</a>
+                <a href="{{ route('contact') }}">Liên hệ chúng tôi</a>
                 <a href="{{ route('home') }}#story">Câu chuyện Lunara</a>
             </div>
             <div class="site-footer__pledges">
@@ -148,6 +150,7 @@
             <span>Shine with your own moonlight</span>
         </div>
     </footer>
+    @include('partials.support_widget')
     @stack('scripts')
 </body>
 </html>

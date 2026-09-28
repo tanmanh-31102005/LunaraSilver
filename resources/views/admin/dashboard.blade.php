@@ -98,6 +98,32 @@
                 </div>
             </a>
         </div>
+
+        {{-- Unresolved Support --}}
+        <div class="col-sm-6 col-xl-2">
+            <a href="{{ route('admin.support.index') }}" class="text-decoration-none">
+                <div class="admin-metric-card">
+                    <div class="admin-metric-label">Hỗ trợ chưa xử lý</div>
+                    <div class="admin-metric-value {{ $metrics['unresolved_support'] > 0 ? 'text-warning-emphasis' : 'text-dark' }}">
+                        {{ number_format($metrics['unresolved_support']) }}
+                    </div>
+                    <div class="admin-metric-desc">Yêu cầu liên hệ</div>
+                </div>
+            </a>
+        </div>
+
+        {{-- Unread Chat Messages --}}
+        <div class="col-sm-6 col-xl-2">
+            <a href="{{ route('admin.support.chat') }}" class="text-decoration-none">
+                <div class="admin-metric-card">
+                    <div class="admin-metric-label">Tin nhắn chưa đọc</div>
+                    <div class="admin-metric-value {{ $metrics['unread_chat_messages'] > 0 ? 'text-info' : 'text-dark' }}">
+                        {{ number_format($metrics['unread_chat_messages']) }}
+                    </div>
+                    <div class="admin-metric-desc">Hội thoại Live Chat</div>
+                </div>
+            </a>
+        </div>
     </div>
 
     {{-- LAYER 2: ATTENTION REQUIRED (CẦN XỬ LÝ) --}}

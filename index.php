@@ -6,4 +6,4 @@
  * loại bỏ hoàn toàn lỗi 403 Forbidden.
  */
 
-require_once __DIR__ . '/public/index.php';
+require_once __DIR__.'/public/index.php';

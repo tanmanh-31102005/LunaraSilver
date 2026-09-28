@@ -40,7 +40,7 @@ class VNPayController extends Controller
                 'success' => false,
                 'isPaid' => false,
                 'checksumValid' => $isValidChecksum,
-                'message' => 'Không tìm thấy thông tin lượt thanh toán với mã tham chiếu: ' . htmlspecialchars($txnRef),
+                'message' => 'Không tìm thấy thông tin lượt thanh toán với mã tham chiếu: '.htmlspecialchars($txnRef),
                 'order' => null,
                 'payment' => null,
                 'vnpParams' => $allParams,
@@ -132,6 +132,7 @@ class VNPayController extends Controller
         // 1. Verify Checksum
         if (! $this->vnpayService->verifyReturnChecksum($allParams)) {
             Log::warning('VNPay IPN invalid checksum', ['params' => $allParams]);
+
             return response()->json([
                 'RspCode' => '97',
                 'Message' => 'Invalid Checksum',
@@ -195,15 +196,15 @@ class VNPayController extends Controller
 
         if (! $order->canRetryPayment()) {
             return redirect()->route('account.orders.show', $order->order_code)
-                ->with('error', 'Đơn hàng này hiện không thể thanh toán lại (trạng thái: ' . $order->order_status_label . ', thanh toán: ' . $order->payment_status_label . ').');
+                ->with('error', 'Đơn hàng này hiện không thể thanh toán lại (trạng thái: '.$order->order_status_label.', thanh toán: '.$order->payment_status_label.').');
         }
 
         // Create a new Payment attempt for the retry with guaranteed unique txn_ref
         $attemptCount = $order->payments()->count() + 1;
-        $txnRef = $order->order_code . '-' . $attemptCount;
+        $txnRef = $order->order_code.'-'.$attemptCount;
         while (Payment::query()->where('txn_ref', $txnRef)->exists()) {
             $attemptCount++;
-            $txnRef = $order->order_code . '-' . $attemptCount;
+            $txnRef = $order->order_code.'-'.$attemptCount;
         }
 
         $newPayment = Payment::create([

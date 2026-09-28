@@ -37,7 +37,7 @@ class VNPayRefundResult
             '97' => 'Chữ ký không hợp lệ (Checksum failed).',
             '98' => 'Timeout hoặc lỗi hệ thống xử lý phía VNPay.',
             '99' => 'Các lỗi khác từ hệ thống VNPay.',
-            default => 'Lỗi xử lý hoàn tiền (Mã lỗi: ' . $code . ').',
+            default => 'Lỗi xử lý hoàn tiền (Mã lỗi: '.$code.').',
         };
     }
 }
