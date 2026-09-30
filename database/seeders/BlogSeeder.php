@@ -73,8 +73,8 @@ class BlogSeeder extends Seeder
 </ul>
 <h3>3. Bảo quản trong hộp kín hoặc túi zip</h3>
 <p>Khi không sử dụng, hãy cất giữ trang sức trong hộp đựng Lunara có lót nhung êm ái hoặc túi zip kín gió. Tránh để trang sức tiếp xúc trực tiếp với không khí ẩm ướt hoặc ánh nắng mặt trời gắt gao.</p>',
-                'cover_image_url' => 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=1200&q=80',
-                'image_url' => 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=1200&q=80',
+                'cover_image_url' => 'media/banner.jpg',
+                'image_url' => 'media/banner.jpg',
                 'status' => Post::STATUS_PUBLISHED,
                 'is_published' => true,
                 'is_featured' => true,
@@ -99,8 +99,8 @@ class BlogSeeder extends Seeder
 <blockquote>Sự tinh tế của phong cách Quiet Luxury không nằm ở kích thước phô trương, mà nằm ở độ tỉ mỉ trong từng đường nét cắt gọt và sự hài hòa giữa các tầng lớp.</blockquote>
 <h2>Kết hợp các kết cấu sợi dây (Textural Contrast)</h2>
 <p>Đừng ngần ngại kết hợp sợi dây chuyền trơn bóng (Snake Chain) cùng sợi mắt xích mảnh (Cable Chain). Sự tương phản nhẹ nhàng về mặt xúc giác tạo nên chiều sâu cuốn hút mà vẫn giữ trọn vẻ đẹp thanh lịch vượt thời gian.</p>',
-                'cover_image_url' => 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=1200&q=80',
-                'image_url' => 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=1200&q=80',
+                'cover_image_url' => 'media/banner2.png',
+                'image_url' => 'media/banner2.png',
                 'status' => Post::STATUS_PUBLISHED,
                 'is_published' => true,
                 'is_featured' => false,
@@ -121,8 +121,8 @@ class BlogSeeder extends Seeder
 <blockquote>"Bạn không cần phải luôn rực rỡ và tròn đầy như trăng rằm mới được xem là hoàn hảo. Ở bất kỳ giai đoạn nào của cuộc đời, bạn đều sở hữu một nét đẹp độc bản và xứng đáng được trân quý."</blockquote>
 <h2>Ngôi sao Bắc Đẩu — Ánh sáng dẫn lối niềm hy vọng</h2>
 <p>Đồng hành cùng ánh trăng là những vì tinh tú lấp lánh giữa màn đêm. Biểu tượng ngôi sao 4 cánh và 8 cánh đính đá Zirconia cao cấp tượng trưng cho niềm hy vọng kiên định và ngọn hải đăng soi sáng con đường bạn lựa chọn bước đi.</p>',
-                'cover_image_url' => 'https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?auto=format&fit=crop&w=1200&q=80',
-                'image_url' => 'https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?auto=format&fit=crop&w=1200&q=80',
+                'cover_image_url' => 'media/banner3.png',
+                'image_url' => 'media/banner3.png',
                 'status' => Post::STATUS_PUBLISHED,
                 'is_published' => true,
                 'is_featured' => false,
@@ -138,8 +138,8 @@ class BlogSeeder extends Seeder
                 'author_id' => $author?->id,
                 'excerpt' => 'Bài viết bản nháp đang trong quá trình biên tập nội dung, chỉ quản trị viên có quyền xem trước trên giao diện.',
                 'content' => '<p>Đây là bài viết bản nháp kiểm tra tính năng bảo mật phân quyền. Chỉ quản trị viên mới có thể xem trước bài viết này tại storefront.</p>',
-                'cover_image_url' => 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=1200&q=80',
-                'image_url' => 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=1200&q=80',
+                'cover_image_url' => 'media/Collection/set 1(1).jpg.png',
+                'image_url' => 'media/Collection/set 1(1).jpg.png',
                 'status' => Post::STATUS_DRAFT,
                 'is_published' => false,
                 'is_featured' => false,

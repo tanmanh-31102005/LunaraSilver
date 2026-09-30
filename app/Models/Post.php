@@ -120,19 +120,46 @@ class Post extends Model
     }
 
     /**
-     * Accessor for cover image with fallback.
+     * Accessor for cover image with real system media fallback.
      */
     public function getCoverImageAttribute(): string
     {
-        if (! empty($this->cover_image_url)) {
-            return $this->cover_image_url;
+        $raw = $this->cover_image_url ?: $this->image_url;
+
+        if (empty($raw)) {
+            return route('media.show', ['path' => 'banner.jpg']);
         }
 
-        if (! empty($this->image_url)) {
-            return $this->image_url;
+        if (str_starts_with($raw, 'http://') || str_starts_with($raw, 'https://')) {
+            return $raw;
         }
 
-        return asset('images/blog-default.jpg');
+        if (str_starts_with($raw, 'media-previews/')) {
+            return asset($raw);
+        }
+
+        if (str_starts_with($raw, 'media/')) {
+            $preview = 'media-previews/'.sha1($raw).'.webp';
+            if (is_file(public_path($preview))) {
+                return asset($preview);
+            }
+
+            return route('media.show', ['path' => substr($raw, strlen('media/'))]);
+        }
+
+        if (str_starts_with($raw, '/media/')) {
+            return route('media.show', ['path' => substr($raw, strlen('/media/'))]);
+        }
+
+        if (str_starts_with($raw, 'storage/') || str_starts_with($raw, '/storage/')) {
+            return asset(ltrim($raw, '/'));
+        }
+
+        if (file_exists(base_path('media/'.ltrim($raw, '/')))) {
+            return route('media.show', ['path' => ltrim($raw, '/')]);
+        }
+
+        return route('media.show', ['path' => 'banner.jpg']);
     }
 
     /**

@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Coupon;
 use App\Models\Post;
 use App\Models\PostCategory;
 use Illuminate\Contracts\Console\Kernel;
