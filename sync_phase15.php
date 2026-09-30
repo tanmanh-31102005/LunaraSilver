@@ -1,10 +1,8 @@
 <?php
 
 use App\Models\Coupon;
-use App\Models\Order;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 header('Content-Type: text/html; charset=utf-8');

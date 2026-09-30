@@ -38,6 +38,11 @@ class Coupon extends Model
         'usage_limit_per_user',
         'used_count',
         'is_active',
+        'is_first_order_only',
+        'applicable_categories',
+        'applicable_products',
+        'applicable_customer_ids',
+        'applicable_customer_emails',
     ];
 
     protected $casts = [
@@ -50,6 +55,11 @@ class Coupon extends Model
         'usage_limit_per_user' => 'integer',
         'used_count' => 'integer',
         'is_active' => 'boolean',
+        'is_first_order_only' => 'boolean',
+        'applicable_categories' => 'array',
+        'applicable_products' => 'array',
+        'applicable_customer_ids' => 'array',
+        'applicable_customer_emails' => 'array',
     ];
 
     protected function code(): Attribute
@@ -129,5 +139,58 @@ class Coupon extends Model
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('is_active', true);
+    }
+
+    public function isFirstOrderOnly(): bool
+    {
+        return (bool) $this->is_first_order_only;
+    }
+
+    public function hasProductOrCategoryRestrictions(): bool
+    {
+        return ! empty($this->applicable_categories) || ! empty($this->applicable_products);
+    }
+
+    public function hasCustomerRestrictions(): bool
+    {
+        return ! empty($this->applicable_customer_ids) || ! empty($this->applicable_customer_emails);
+    }
+
+    public function appliesToProduct(int $productId, ?int $categoryId = null): bool
+    {
+        if (! $this->hasProductOrCategoryRestrictions()) {
+            return true;
+        }
+
+        if (! empty($this->applicable_products) && in_array($productId, $this->applicable_products, true)) {
+            return true;
+        }
+
+        if ($categoryId && ! empty($this->applicable_categories) && in_array($categoryId, $this->applicable_categories, true)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function appliesToCustomer(?User $user = null, ?string $email = null): bool
+    {
+        if (! $this->hasCustomerRestrictions()) {
+            return true;
+        }
+
+        if ($user && ! empty($this->applicable_customer_ids) && in_array($user->id, $this->applicable_customer_ids, true)) {
+            return true;
+        }
+
+        $checkEmail = strtolower(trim((string) ($email ?? $user?->email)));
+        if ($checkEmail !== '' && ! empty($this->applicable_customer_emails)) {
+            $allowedEmails = array_map('strtolower', array_map('trim', $this->applicable_customer_emails));
+            if (in_array($checkEmail, $allowedEmails, true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

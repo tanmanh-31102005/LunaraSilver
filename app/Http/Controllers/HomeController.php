@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Post;
 use App\Models\Product;
 use Illuminate\Contracts\View\View;
 
@@ -56,6 +57,12 @@ class HomeController extends Controller
             $category->preview_image = $image?->displayUrl();
         });
 
+        $latestPosts = Post::published()
+            ->with(['category'])
+            ->latest('published_at')
+            ->take(3)
+            ->get();
+
         return view('home', [
             'categories' => $categories,
             'featured' => $featured,
@@ -64,6 +71,7 @@ class HomeController extends Controller
             'bracelets' => $products->where('category.slug', 'vong-tay')->take(2),
             'collections' => $collections,
             'gifts' => $gifts,
+            'latestPosts' => $latestPosts,
         ]);
     }
 }

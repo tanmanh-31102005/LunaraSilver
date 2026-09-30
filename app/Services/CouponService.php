@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Cart;
 use App\Models\Coupon;
 use App\Models\CouponUsage;
 use App\Models\Order;
@@ -12,14 +13,19 @@ use Illuminate\Validation\ValidationException;
 class CouponService
 {
     /**
-     * Validate coupon code against subtotal and user context.
+     * Validate coupon code against subtotal, cart items, user and customer email.
      *
      * @return array{valid: bool, coupon: Coupon, code: string, type: string, value: float, discount: float, discount_amount: float, discount_display: string, message: string}
      *
      * @throws ValidationException
      */
-    public function validate(?string $code, float|int $subtotal, ?User $user = null): array
-    {
+    public function validate(
+        ?string $code,
+        float|int $subtotal,
+        ?User $user = null,
+        ?Cart $cart = null,
+        ?string $customerEmail = null
+    ): array {
         $code = trim((string) $code);
         if ($code === '') {
             throw ValidationException::withMessages(['coupon' => 'Vui lòng nhập mã ưu đãi.']);
@@ -78,8 +84,49 @@ class CouponService
             }
         }
 
-        // 8. Calculate discount
-        $discount = $this->calculateDiscount($coupon, (float) $subtotal);
+        // 8. First-Order Only coupon restriction
+        if ($coupon->isFirstOrderOnly()) {
+            $hasPreviousOrder = false;
+            if ($user) {
+                $hasPreviousOrder = Order::where('user_id', $user->id)
+                    ->whereNotIn('order_status', ['cancelled'])
+                    ->exists();
+            }
+            $email = trim((string) ($customerEmail ?? $user?->email));
+            if (! $hasPreviousOrder && $email !== '') {
+                $hasPreviousOrder = Order::where('customer_email', $email)
+                    ->whereNotIn('order_status', ['cancelled'])
+                    ->exists();
+            }
+
+            if ($hasPreviousOrder) {
+                throw ValidationException::withMessages([
+                    'coupon' => 'Mã ưu đãi này chỉ áp dụng cho đơn hàng đầu tiên của khách hàng mới.',
+                ]);
+            }
+        }
+
+        // 9. Customer-Specific coupon restriction
+        if ($coupon->hasCustomerRestrictions()) {
+            if (! $coupon->appliesToCustomer($user, $customerEmail)) {
+                throw ValidationException::withMessages([
+                    'coupon' => 'Mã ưu đãi này chỉ dành riêng cho khách hàng được chỉ định.',
+                ]);
+            }
+        }
+
+        // 10. Product-Specific or Category-Specific coupon restriction
+        if ($coupon->hasProductOrCategoryRestrictions() && $cart) {
+            $eligible = $this->calculateEligibleSubtotal($coupon, $cart);
+            if ($eligible === null || $eligible <= 0) {
+                throw ValidationException::withMessages([
+                    'coupon' => 'Mã ưu đãi này chỉ áp dụng cho một số sản phẩm hoặc danh mục cụ thể và giỏ hàng của bạn không có sản phẩm phù hợp.',
+                ]);
+            }
+        }
+
+        // 11. Calculate discount
+        $discount = $this->calculateDiscount($coupon, (float) $subtotal, $cart);
 
         return [
             'valid' => true,
@@ -95,11 +142,47 @@ class CouponService
     }
 
     /**
-     * Calculate discount amount without exceeding subtotal.
+     * Calculate eligible subtotal for coupons restricted to specific products or categories.
      */
-    public function calculateDiscount(Coupon $coupon, float $subtotal): float
+    public function calculateEligibleSubtotal(Coupon $coupon, ?Cart $cart): ?float
+    {
+        if (! $coupon->hasProductOrCategoryRestrictions() || ! $cart) {
+            return null;
+        }
+
+        $cart->loadMissing(['items.product.category']);
+        $eligibleSubtotal = 0.0;
+        $hasMatch = false;
+
+        foreach ($cart->items as $item) {
+            $product = $item->product;
+            if (! $product) {
+                continue;
+            }
+
+            $catId = $product->category_id ?? $product->category?->id;
+            if ($coupon->appliesToProduct($product->id, $catId)) {
+                $hasMatch = true;
+                $eligibleSubtotal += ((float) $item->unit_price) * $item->quantity;
+            }
+        }
+
+        return $hasMatch ? $eligibleSubtotal : 0.0;
+    }
+
+    /**
+     * Calculate discount amount without exceeding subtotal or eligible portion.
+     */
+    public function calculateDiscount(Coupon $coupon, float $subtotal, ?Cart $cart = null): float
     {
         if ($subtotal <= 0) {
+            return 0.0;
+        }
+
+        $eligibleSubtotal = $this->calculateEligibleSubtotal($coupon, $cart);
+        $base = $eligibleSubtotal !== null ? $eligibleSubtotal : $subtotal;
+
+        if ($base <= 0) {
             return 0.0;
         }
 
@@ -107,7 +190,7 @@ class CouponService
         $val = (float) $coupon->value;
 
         if ($coupon->type === Coupon::TYPE_PERCENTAGE) {
-            $discount = round($subtotal * ($val / 100));
+            $discount = round($base * ($val / 100));
             $maxDiscount = (float) ($coupon->max_discount_amount ?? $coupon->maximum_discount ?? 0);
             if ($maxDiscount > 0) {
                 $discount = min($discount, $maxDiscount);
@@ -116,8 +199,8 @@ class CouponService
             $discount = $val;
         }
 
-        // Never exceed subtotal and never negative
-        $discount = min($discount, $subtotal);
+        // Never exceed base subtotal and never negative
+        $discount = min($discount, $base);
         $discount = max(0.0, $discount);
 
         return round($discount, 2);

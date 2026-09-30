@@ -56,6 +56,7 @@ class CloudinaryService
             'collection', 'collections' => 'collections',
             'gift', 'gifts' => 'gifts',
             'banner', 'banners' => 'banners',
+            'blog', 'posts' => 'blog',
             default => $cleanType,
         };
 

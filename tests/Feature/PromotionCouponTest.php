@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Cart;
+use App\Models\Category;
 use App\Models\Coupon;
 use App\Models\CouponUsage;
 use App\Models\Order;
@@ -526,5 +527,141 @@ class PromotionCouponTest extends TestCase
         // Rule 15.19: Refunding a completed order does NOT release coupon
         $this->assertEquals(CouponUsage::STATUS_APPLIED, $usage->fresh()->status);
         $this->assertEquals(1, $coupon->fresh()->used_count);
+    }
+
+    public function test_first_order_coupon_validation_fails_if_customer_has_previous_orders(): void
+    {
+        $service = app(CouponService::class);
+
+        $coupon = Coupon::create([
+            'code' => 'FIRSTORDER',
+            'type' => Coupon::TYPE_FIXED,
+            'value' => 50000,
+            'is_first_order_only' => true,
+            'is_active' => true,
+        ]);
+
+        $newCustomer = User::factory()->create(['role' => User::ROLE_USER, 'email' => 'newuser@lunara.vn']);
+
+        // Succeeded for new user with 0 orders
+        $validated = $service->validate('FIRSTORDER', 200000, $newCustomer, null, 'newuser@lunara.vn');
+        $this->assertEquals('FIRSTORDER', $validated['code']);
+
+        // Create an active order for this user
+        Order::create([
+            'user_id' => $newCustomer->id,
+            'order_code' => 'LNS-ORD-PRIOR-01',
+            'customer_name' => 'New User',
+            'customer_email' => 'newuser@lunara.vn',
+            'customer_phone' => '0901234567',
+            'shipping_address' => '123 Le Loi',
+            'shipping_city' => 'Hồ Chí Minh',
+            'shipping_method' => 'standard',
+            'subtotal' => 200000,
+            'shipping_fee' => 0,
+            'grand_total' => 200000,
+            'payment_method' => 'cod',
+            'payment_status' => 'pending',
+            'order_status' => 'processing',
+        ]);
+
+        // Now fails because user has existing order
+        $this->expectException(ValidationException::class);
+        $service->validate('FIRSTORDER', 200000, $newCustomer, null, 'newuser@lunara.vn');
+    }
+
+    public function test_customer_specific_coupon_restricts_to_authorized_emails(): void
+    {
+        $service = app(CouponService::class);
+
+        Coupon::create([
+            'code' => 'VIPONLY',
+            'type' => Coupon::TYPE_PERCENTAGE,
+            'value' => 15,
+            'applicable_customer_emails' => ['vip@lunara.vn', 'special@lunara.vn'],
+            'is_active' => true,
+        ]);
+
+        // Allowed email passes
+        $res = $service->validate('VIPONLY', 300000, null, null, 'vip@lunara.vn');
+        $this->assertEquals('VIPONLY', $res['code']);
+
+        // Disallowed email throws ValidationException
+        $this->expectException(ValidationException::class);
+        $service->validate('VIPONLY', 300000, null, null, 'regular@lunara.vn');
+    }
+
+    public function test_category_and_product_specific_coupons_calculate_discount_on_eligible_items(): void
+    {
+        $service = app(CouponService::class);
+
+        $categoryA = Category::first();
+        $categoryB = Category::skip(1)->first() ?? Category::create(['name' => 'Other Category', 'slug' => 'other-cat']);
+
+        $productA = Product::create([
+            'name' => 'Test Product A',
+            'slug' => 'test-product-a',
+            'sku' => 'TEST-PROD-A',
+            'category_id' => $categoryA->id,
+            'regular_price' => 400000,
+            'stock_quantity' => 10,
+            'product_type' => 'single',
+            'is_active' => true,
+        ]);
+        $productB = Product::create([
+            'name' => 'Test Product B',
+            'slug' => 'test-product-b',
+            'sku' => 'TEST-PROD-B',
+            'category_id' => $categoryB->id,
+            'regular_price' => 600000,
+            'stock_quantity' => 10,
+            'product_type' => 'single',
+            'is_active' => true,
+        ]);
+
+        $cart = Cart::create(['user_id' => $this->customer->id]);
+        $cart->items()->create(['product_id' => $productA->id, 'quantity' => 1, 'unit_price' => 400000]);
+        $cart->items()->create(['product_id' => $productB->id, 'quantity' => 1, 'unit_price' => 600000]);
+        $cart->load('items.product');
+
+        // Coupon for Category A only (10% off)
+        $couponCatA = Coupon::create([
+            'code' => 'CAT10',
+            'type' => Coupon::TYPE_PERCENTAGE,
+            'value' => 10,
+            'applicable_categories' => [$categoryA->id],
+            'is_active' => true,
+        ]);
+
+        $service->validate('CAT10', 1000000, $this->customer, $cart);
+        $discount = $service->calculateDiscount($couponCatA, 1000000, $cart);
+
+        // 10% of 400,000 (Product A only) = 40,000, not 100,000
+        $this->assertEquals(40000, $discount);
+
+        // Product-specific coupon for Product B only
+        $couponProdB = Coupon::create([
+            'code' => 'PROD50K',
+            'type' => Coupon::TYPE_FIXED,
+            'value' => 50000,
+            'applicable_products' => [$productB->id],
+            'is_active' => true,
+        ]);
+
+        $service->validate('PROD50K', 1000000, $this->customer, $cart);
+        $discountProd = $service->calculateDiscount($couponProdB, 1000000, $cart);
+        $this->assertEquals(50000, $discountProd);
+
+        // Coupon for an excluded product should fail validation if cart has no eligible items
+        $couponUnrelated = Coupon::create([
+            'code' => 'UNRELATED',
+            'type' => Coupon::TYPE_FIXED,
+            'value' => 50000,
+            'applicable_products' => [999999],
+            'is_active' => true,
+        ]);
+
+        $this->expectException(ValidationException::class);
+        $service->validate('UNRELATED', 1000000, $this->customer, $cart);
     }
 }

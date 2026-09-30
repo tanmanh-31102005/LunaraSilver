@@ -90,7 +90,72 @@
         </div>
     </div>
 
-    {{-- Usages History Table --}}
+    {{-- Advanced Restrictions & Scope --}}
+    @if($coupon->is_first_order_only || !empty($coupon->applicable_categories) || !empty($coupon->applicable_products) || !empty($coupon->applicable_customer_emails))
+        <div class="admin-card p-3 mb-4">
+            <h4 class="h6 fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+                <i class="bi bi-shield-lock-fill text-primary"></i>
+                <span>Phạm vi & Giới hạn nâng cao</span>
+            </h4>
+            <div class="row g-3">
+                @if($coupon->is_first_order_only)
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <div class="p-2 border rounded bg-light h-100">
+                            <div class="text-muted small fw-medium mb-1"><i class="bi bi-person-check text-success me-1"></i> Khách hàng mới</div>
+                            <span class="badge bg-success">Chỉ áp dụng cho đơn đầu tiên</span>
+                        </div>
+                    </div>
+                @endif
+
+                @if(!empty($coupon->applicable_categories))
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <div class="p-2 border rounded bg-light h-100">
+                            <div class="text-muted small fw-medium mb-1"><i class="bi bi-tags text-primary me-1"></i> Danh mục giới hạn</div>
+                            <div class="d-flex flex-wrap gap-1 mt-1">
+                                @forelse($restrictedCategories as $cat)
+                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">{{ $cat->name }}</span>
+                                @empty
+                                    @foreach($coupon->applicable_categories as $catId)
+                                        <span class="badge bg-secondary">ID #{{ $catId }}</span>
+                                    @endforeach
+                                @endforelse
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                @if(!empty($coupon->applicable_products))
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <div class="p-2 border rounded bg-light h-100">
+                            <div class="text-muted small fw-medium mb-1"><i class="bi bi-gem text-warning me-1"></i> Sản phẩm giới hạn</div>
+                            <div class="d-flex flex-wrap gap-1 mt-1">
+                                @forelse($restrictedProducts as $prod)
+                                    <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25">{{ $prod->name }}</span>
+                                @empty
+                                    @foreach($coupon->applicable_products as $prodId)
+                                        <span class="badge bg-secondary">SP #{{ $prodId }}</span>
+                                    @endforeach
+                                @endforelse
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                @if(!empty($coupon->applicable_customer_emails))
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <div class="p-2 border rounded bg-light h-100">
+                            <div class="text-muted small fw-medium mb-1"><i class="bi bi-envelope text-info me-1"></i> Email khách hàng được phép</div>
+                            <div class="d-flex flex-wrap gap-1 mt-1">
+                                @foreach($coupon->applicable_customer_emails as $em)
+                                    <span class="badge bg-secondary bg-opacity-25 text-dark font-monospace">{{ $em }}</span>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            </div>
+        </div>
+    @endif
     <div class="admin-card">
         <div class="admin-card-header d-flex align-items-center justify-content-between p-3 border-bottom">
             <h3 class="admin-card-title h6 mb-0 fw-bold text-dark d-flex align-items-center gap-2">

@@ -74,8 +74,8 @@ class HomePageTest extends TestCase
         $response = $this->get('/');
 
         $response->assertOk();
-        // 1 category query, 3 single product queries, 5 collection queries, 5 gift queries = 14 total queries
-        $this->assertLessThanOrEqual(15, $queryCount);
+        // 1 category query, 3 single product queries, 5 collection queries, 5 gift queries, + 2 Phase 16 journal queries = 16 queries (bounded O(1))
+        $this->assertLessThanOrEqual(18, $queryCount);
     }
 
     public function test_homepage_renders_design_system_and_brand_assets(): void

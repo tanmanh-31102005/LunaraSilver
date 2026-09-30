@@ -271,7 +271,7 @@ class CartService
 
         if ($couponCode && $subtotalFloat > 0) {
             try {
-                $couponValidation = app(CouponService::class)->validate($couponCode, $subtotalFloat, auth()->user());
+                $couponValidation = app(CouponService::class)->validate($couponCode, $subtotalFloat, auth()->user(), $cart);
                 $discountAmount = $couponValidation['discount_amount'];
                 $couponData = [
                     'code' => $couponValidation['code'],

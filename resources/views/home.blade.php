@@ -100,6 +100,57 @@
         </div>
     </section>
 
+    {{-- Lunara Journal Editorial Section --}}
+    @if(isset($latestPosts) && $latestPosts->count() > 0)
+        <section class="journal-section py-5 my-3" aria-labelledby="journal-title">
+            <div class="lunara-container">
+                <div class="d-flex flex-column flex-md-row align-items-md-end justify-content-between mb-4 pb-2 border-bottom">
+                    <div>
+                        <p class="text-uppercase tracking-wider text-muted small fw-semibold mb-1">KIẾN THỨC & CẢM HỨNG</p>
+                        <h2 id="journal-title" class="h3 font-serif fw-normal text-dark mb-0">Nhật Ký Lunara</h2>
+                    </div>
+                    <div class="mt-3 mt-md-0">
+                        <a href="{{ route('blog.index') }}" class="small text-dark fw-medium text-decoration-none">
+                            Xem tất cả bài viết <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    @foreach($latestPosts as $post)
+                        <div class="col-12 col-md-4">
+                            <article class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden bg-white">
+                                <a href="{{ route('blog.show', $post->slug) }}" class="d-block overflow-hidden ratio ratio-16x9">
+                                    <img src="{{ $post->cover_image }}" alt="{{ $post->title }}" class="w-100 h-100 object-fit-cover" loading="lazy">
+                                </a>
+                                <div class="card-body p-4 d-flex flex-column">
+                                    <div class="text-muted small mb-2 d-flex align-items-center gap-2">
+                                        @if($post->category)
+                                            <span class="badge bg-light text-dark border">{{ $post->category->name }}</span>
+                                            <span>•</span>
+                                        @endif
+                                        <span>{{ $post->published_at ? $post->published_at->format('d/m/Y') : '' }}</span>
+                                    </div>
+                                    <h3 class="h6 font-serif fw-normal mb-2 text-dark">
+                                        <a href="{{ route('blog.show', $post->slug) }}" class="text-dark text-decoration-none">
+                                            {{ $post->title }}
+                                        </a>
+                                    </h3>
+                                    <p class="text-muted small mb-3 flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                        {{ $post->excerpt ?: Str::limit(strip_tags($post->content), 90) }}
+                                    </p>
+                                    <a href="{{ route('blog.show', $post->slug) }}" class="small text-dark fw-medium text-decoration-none">
+                                        Đọc tiếp <i class="bi bi-chevron-right small"></i>
+                                    </a>
+                                </div>
+                            </article>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
     <section class="story-section" id="story" aria-labelledby="story-title">
         <div class="lunara-container story-section__inner">
             <div class="story-section__visual">

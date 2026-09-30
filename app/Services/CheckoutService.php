@@ -88,7 +88,13 @@ class CheckoutService
             // Re-validate coupon server-side before order creation (Rule 15.12)
             $couponCode = session('coupon_code') ?? ($customerData['coupon_code'] ?? null);
             if ($couponCode) {
-                $couponValidation = app(CouponService::class)->validate($couponCode, $subtotalFloat, $user);
+                $couponValidation = app(CouponService::class)->validate(
+                    $couponCode,
+                    $subtotalFloat,
+                    $user,
+                    $cart,
+                    $customerData['customer_email'] ?? null
+                );
                 $discountAmount = $couponValidation['discount_amount'];
                 $appliedCoupon = $couponValidation['coupon'];
             }

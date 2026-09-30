@@ -82,6 +82,22 @@
                 </div>
 
                 <div class="admin-nav-group">
+                    <div class="admin-nav-group__title">NỘI DUNG</div>
+                    <a href="{{ route('admin.posts.index') }}"
+                       class="admin-nav-item {{ request()->routeIs('admin.posts.*') ? 'admin-nav-item--active' : '' }}"
+                       data-bs-toggle="tooltip" data-bs-placement="right" title="Quản lý bài viết blog">
+                        <i class="bi bi-journal-text"></i>
+                        <span>Bài viết</span>
+                    </a>
+                    <a href="{{ route('admin.post-categories.index') }}"
+                       class="admin-nav-item {{ request()->routeIs('admin.post-categories.*') ? 'admin-nav-item--active' : '' }}"
+                       data-bs-toggle="tooltip" data-bs-placement="right" title="Danh mục blog">
+                        <i class="bi bi-folder2-open"></i>
+                        <span>Danh mục Blog</span>
+                    </a>
+                </div>
+
+                <div class="admin-nav-group">
                     <div class="admin-nav-group__title">KHÁCH HÀNG</div>
                     <a href="{{ route('admin.support.index') }}"
                        class="admin-nav-item {{ request()->routeIs('admin.support.*') ? 'admin-nav-item--active' : '' }}"
@@ -152,6 +168,18 @@
                         <a href="{{ route('admin.coupons.index') }}" class="admin-nav-item {{ request()->routeIs('admin.coupons.*') ? 'admin-nav-item--active' : '' }}">
                             <i class="bi bi-ticket-perforated"></i>
                             <span>Mã giảm giá</span>
+                        </a>
+                    </div>
+
+                    <div class="admin-nav-group">
+                        <div class="admin-nav-group__title text-white-50">NỘI DUNG</div>
+                        <a href="{{ route('admin.posts.index') }}" class="admin-nav-item {{ request()->routeIs('admin.posts.*') ? 'admin-nav-item--active' : '' }}">
+                            <i class="bi bi-journal-text"></i>
+                            <span>Bài viết</span>
+                        </a>
+                        <a href="{{ route('admin.post-categories.index') }}" class="admin-nav-item {{ request()->routeIs('admin.post-categories.*') ? 'admin-nav-item--active' : '' }}">
+                            <i class="bi bi-folder2-open"></i>
+                            <span>Danh mục Blog</span>
                         </a>
                     </div>
 

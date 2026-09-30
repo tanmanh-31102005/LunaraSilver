@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Coupon;
+use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -46,7 +48,10 @@ class CouponController extends Controller
      */
     public function create(): View
     {
-        return view('admin.coupons.create');
+        $categories = Category::orderBy('name')->get();
+        $products = Product::active()->orderBy('name')->get();
+
+        return view('admin.coupons.create', compact('categories', 'products'));
     }
 
     /**
@@ -74,12 +79,26 @@ class CouponController extends Controller
             'usage_limit' => ['nullable', 'integer', 'min:1'],
             'usage_limit_per_user' => ['nullable', 'integer', 'min:1'],
             'is_active' => ['nullable', 'boolean'],
+            'is_first_order_only' => ['nullable', 'boolean'],
+            'applicable_categories' => ['nullable', 'array'],
+            'applicable_products' => ['nullable', 'array'],
+            'applicable_customer_emails' => ['nullable', 'string'],
         ], [
             'code.required' => 'Vui lòng nhập mã ưu đãi.',
             'code.unique' => 'Mã ưu đãi này đã tồn tại trong hệ thống.',
             'value.required' => 'Vui lòng nhập giá trị giảm giá.',
             'expires_at.after_or_equal' => 'Ngày hết hạn phải sau hoặc bằng ngày bắt đầu.',
         ]);
+
+        $emailsInput = trim((string) $request->input('applicable_customer_emails', ''));
+        $customerEmails = null;
+        if ($emailsInput !== '') {
+            $raw = preg_split('/[\r\n,]+/', $emailsInput);
+            $customerEmails = array_values(array_filter(array_unique(array_map('strtolower', array_map('trim', $raw)))));
+        }
+
+        $categories = array_filter(array_map('intval', (array) $request->input('applicable_categories', [])));
+        $products = array_filter(array_map('intval', (array) $request->input('applicable_products', [])));
 
         Coupon::create([
             'code' => $validated['code'],
@@ -92,6 +111,10 @@ class CouponController extends Controller
             'usage_limit' => $validated['usage_limit'] ?? null,
             'usage_limit_per_user' => $validated['usage_limit_per_user'] ?? null,
             'is_active' => $request->boolean('is_active', true),
+            'is_first_order_only' => $request->boolean('is_first_order_only'),
+            'applicable_categories' => ! empty($categories) ? array_values($categories) : null,
+            'applicable_products' => ! empty($products) ? array_values($products) : null,
+            'applicable_customer_emails' => ! empty($customerEmails) ? $customerEmails : null,
         ]);
 
         return redirect()->route('admin.coupons.index')->with('success', 'Đã tạo mã giảm giá mới thành công.');
@@ -105,7 +128,15 @@ class CouponController extends Controller
         $coupon->load(['usages.order', 'usages.user']);
         $usages = $coupon->usages()->with(['order', 'user'])->orderByDesc('id')->paginate(20);
 
-        return view('admin.coupons.show', compact('coupon', 'usages'));
+        $restrictedCategories = ! empty($coupon->applicable_categories)
+            ? Category::whereIn('id', $coupon->applicable_categories)->get()
+            : collect();
+
+        $restrictedProducts = ! empty($coupon->applicable_products)
+            ? Product::whereIn('id', $coupon->applicable_products)->get()
+            : collect();
+
+        return view('admin.coupons.show', compact('coupon', 'usages', 'restrictedCategories', 'restrictedProducts'));
     }
 
     /**
@@ -113,7 +144,10 @@ class CouponController extends Controller
      */
     public function edit(Coupon $coupon): View
     {
-        return view('admin.coupons.edit', compact('coupon'));
+        $categories = Category::orderBy('name')->get();
+        $products = Product::active()->orderBy('name')->get();
+
+        return view('admin.coupons.edit', compact('coupon', 'categories', 'products'));
     }
 
     /**
@@ -141,12 +175,26 @@ class CouponController extends Controller
             'usage_limit' => ['nullable', 'integer', 'min:1'],
             'usage_limit_per_user' => ['nullable', 'integer', 'min:1'],
             'is_active' => ['nullable', 'boolean'],
+            'is_first_order_only' => ['nullable', 'boolean'],
+            'applicable_categories' => ['nullable', 'array'],
+            'applicable_products' => ['nullable', 'array'],
+            'applicable_customer_emails' => ['nullable', 'string'],
         ], [
             'code.required' => 'Vui lòng nhập mã ưu đãi.',
             'code.unique' => 'Mã ưu đãi này đã tồn tại trong hệ thống.',
             'value.required' => 'Vui lòng nhập giá trị giảm giá.',
             'expires_at.after_or_equal' => 'Ngày hết hạn phải sau hoặc bằng ngày bắt đầu.',
         ]);
+
+        $emailsInput = trim((string) $request->input('applicable_customer_emails', ''));
+        $customerEmails = null;
+        if ($emailsInput !== '') {
+            $raw = preg_split('/[\r\n,]+/', $emailsInput);
+            $customerEmails = array_values(array_filter(array_unique(array_map('strtolower', array_map('trim', $raw)))));
+        }
+
+        $categories = array_filter(array_map('intval', (array) $request->input('applicable_categories', [])));
+        $products = array_filter(array_map('intval', (array) $request->input('applicable_products', [])));
 
         $coupon->update([
             'code' => $validated['code'],
@@ -159,6 +207,10 @@ class CouponController extends Controller
             'usage_limit' => $validated['usage_limit'] ?? null,
             'usage_limit_per_user' => $validated['usage_limit_per_user'] ?? null,
             'is_active' => $request->boolean('is_active'),
+            'is_first_order_only' => $request->boolean('is_first_order_only'),
+            'applicable_categories' => ! empty($categories) ? array_values($categories) : null,
+            'applicable_products' => ! empty($products) ? array_values($products) : null,
+            'applicable_customer_emails' => ! empty($customerEmails) ? $customerEmails : null,
         ]);
 
         return redirect()->route('admin.coupons.index')->with('success', 'Đã cập nhật mã giảm giá thành công.');

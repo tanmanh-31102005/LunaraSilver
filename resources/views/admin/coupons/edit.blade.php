@@ -180,6 +180,76 @@
                                 @enderror
                             </div>
 
+                            {{-- Advanced Scope Restrictions (Option A) --}}
+                            <div class="col-12 mt-4 pt-3 border-top">
+                                <h3 class="h6 fw-bold text-dark mb-2 d-flex align-items-center gap-2">
+                                    <i class="bi bi-shield-lock text-primary"></i>
+                                    <span>Quy tắc áp dụng nâng cao (Tùy chọn)</span>
+                                </h3>
+                                <p class="text-muted small mb-3">Nếu để trống, mã sẽ áp dụng cho tất cả sản phẩm, danh mục và mọi khách hàng.</p>
+
+                                <div class="row g-3">
+                                    {{-- First-Order Only --}}
+                                    <div class="col-12">
+                                        <div class="form-check form-switch p-3 bg-light rounded-3 border">
+                                            <input class="form-check-input ms-0 me-3" type="checkbox" role="switch" name="is_first_order_only" id="couponIsFirstOrderOnly" value="1" {{ old('is_first_order_only', $coupon->is_first_order_only) ? 'checked' : '' }}>
+                                            <label class="form-check-label fw-bold text-dark" for="couponIsFirstOrderOnly">
+                                                <i class="bi bi-person-plus text-primary me-1"></i> Chỉ áp dụng cho đơn hàng đầu tiên (Khách hàng mới)
+                                            </label>
+                                            <small class="text-muted d-block mt-1 ps-4 ms-2">Hệ thống sẽ từ chối nếu tài khoản hoặc email của khách đã từng có bất kỳ đơn hàng nào trước đó.</small>
+                                        </div>
+                                    </div>
+
+                                    {{-- Category specific --}}
+                                    <div class="col-md-6">
+                                        <label for="couponCategories" class="form-label small fw-medium text-dark">
+                                            Áp dụng riêng cho danh mục (Category-specific)
+                                        </label>
+                                        @php
+                                            $selectedCats = (array) old('applicable_categories', $coupon->applicable_categories ?? []);
+                                        @endphp
+                                        <select name="applicable_categories[]" id="couponCategories" class="form-select font-monospace" multiple size="4">
+                                            @foreach($categories as $cat)
+                                                <option value="{{ $cat->id }}" {{ in_array($cat->id, $selectedCats) ? 'selected' : '' }}>
+                                                    {{ $cat->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <small class="text-muted">Giữ Ctrl / Cmd để chọn nhiều danh mục. Chiết khấu sẽ chỉ tính trên các sản phẩm thuộc danh mục đã chọn.</small>
+                                    </div>
+
+                                    {{-- Product specific --}}
+                                    <div class="col-md-6">
+                                        <label for="couponProducts" class="form-label small fw-medium text-dark">
+                                            Áp dụng riêng cho sản phẩm (Product-specific)
+                                        </label>
+                                        @php
+                                            $selectedProds = (array) old('applicable_products', $coupon->applicable_products ?? []);
+                                        @endphp
+                                        <select name="applicable_products[]" id="couponProducts" class="form-select font-monospace" multiple size="4">
+                                            @foreach($products as $prod)
+                                                <option value="{{ $prod->id }}" {{ in_array($prod->id, $selectedProds) ? 'selected' : '' }}>
+                                                    [{{ $prod->sku }}] {{ $prod->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <small class="text-muted">Giữ Ctrl / Cmd để chọn nhiều sản phẩm. Chiết khấu chỉ áp dụng cho các sản phẩm này.</small>
+                                    </div>
+
+                                    {{-- Customer specific --}}
+                                    <div class="col-12">
+                                        <label for="couponCustomerEmails" class="form-label small fw-medium text-dark">
+                                            Chỉ định email khách hàng (Customer-specific)
+                                        </label>
+                                        @php
+                                            $emailsStr = old('applicable_customer_emails', is_array($coupon->applicable_customer_emails) ? implode("\n", $coupon->applicable_customer_emails) : $coupon->applicable_customer_emails);
+                                        @endphp
+                                        <textarea name="applicable_customer_emails" id="couponCustomerEmails" class="form-control font-monospace" rows="2" placeholder="Ví dụ: vip@gmail.com, khachthanthiet@yahoo.com (nhập phân cách bằng dấu phẩy hoặc xuống dòng)">{{ $emailsStr }}</textarea>
+                                        <small class="text-muted">Chỉ các tài khoản đăng nhập hoặc đơn hàng có email trong danh sách này mới được áp dụng.</small>
+                                    </div>
+                                </div>
+                            </div>
+
                             {{-- Kích hoạt --}}
                             <div class="col-12 mt-4">
                                 <div class="form-check form-switch">

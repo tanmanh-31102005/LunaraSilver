@@ -99,7 +99,7 @@ class CartController extends Controller
         $subtotal = (float) $summary['subtotal'];
 
         try {
-            $validation = $couponService->validate($code, $subtotal, $request->user());
+            $validation = $couponService->validate($code, $subtotal, $request->user(), $cart);
             $request->session()->put('coupon_code', $validation['code']);
 
             $newSummary = $this->carts->summary($cart);

@@ -31,7 +31,7 @@
                 <a href="{{ route('products.category', 'vong-tay') }}">Vòng tay</a>
                 <a href="{{ route('products.category', 'bo-trang-suc') }}">Bộ sưu tập</a>
                 <a href="{{ route('products.category', 'set-qua-tang') }}">Quà tặng</a>
-                <span class="nav-unavailable" aria-label="Blog chưa mở">Blog</span>
+                <a href="{{ route('blog.index') }}" class="{{ request()->routeIs('blog.*') ? 'active' : '' }}">Blog</a>
                 <a href="{{ route('home') }}#story">Giới thiệu</a>
             </nav>
             <div class="site-header__actions">
@@ -60,7 +60,7 @@
             <a href="{{ route('products.category', 'vong-tay') }}">Vòng tay</a>
             <a href="{{ route('products.category', 'bo-trang-suc') }}">Bộ sưu tập</a>
             <a href="{{ route('products.category', 'set-qua-tang') }}">Quà tặng</a>
-            <span class="nav-unavailable" aria-label="Blog chưa mở">Blog</span>
+            <a href="{{ route('blog.index') }}">Nhật ký Lunara (Blog)</a>
             <a href="{{ route('home') }}#story">Giới thiệu</a>
             <div class="mobile-navigation__divider"></div>
             @auth
@@ -127,6 +127,7 @@
                 <a href="{{ route('cart.index') }}">Giỏ hàng</a>
                 <a href="{{ route('support.faq') }}">Trung tâm hỗ trợ & FAQ</a>
                 <a href="{{ route('contact') }}">Liên hệ chúng tôi</a>
+                <a href="{{ route('blog.index') }}">Nhật ký Lunara (Blog)</a>
                 <a href="{{ route('home') }}#story">Câu chuyện Lunara</a>
             </div>
             <div class="site-footer__pledges">

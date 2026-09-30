@@ -10,12 +10,15 @@ use App\Http\Controllers\Admin\CouponController as AdminCouponController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\FaqController as AdminFaqController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\PostCategoryController as AdminPostCategoryController;
+use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductImageController as AdminProductImageController;
 use App\Http\Controllers\Admin\SupportController as AdminSupportController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
@@ -39,6 +42,11 @@ Route::post('/cart/coupon', [CartController::class, 'applyCoupon'])->name('cart.
 Route::delete('/cart/coupon', [CartController::class, 'removeCoupon'])->name('cart.coupon.remove');
 Route::get('/order-success/{orderCode}', [CheckoutController::class, 'success'])->name('orders.success');
 Route::get('/media/{path}', MediaController::class)->where('path', '.*')->name('media.show');
+
+// Editorial Journal & Blog routes
+Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/category/{category:slug}', [BlogController::class, 'category'])->name('blog.category');
+Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
 // Customer Support & FAQ routes
 Route::get('/support', [SupportController::class, 'faq'])->name('support.index');
@@ -133,4 +141,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Marketing & Coupons Management
     Route::patch('coupons/{coupon}/toggle', [AdminCouponController::class, 'toggle'])->name('coupons.toggle');
     Route::resource('coupons', AdminCouponController::class);
+
+    // Editorial Blog CMS
+    Route::patch('posts/{post}/toggle-feature', [AdminPostController::class, 'toggleFeature'])->name('posts.toggle-feature');
+    Route::resource('posts', AdminPostController::class);
+    Route::resource('post-categories', AdminPostCategoryController::class)->except(['show']);
 });
