@@ -25,12 +25,12 @@
                 <img src="{{ route('media.show', ['path' => 'lunara-logo-light.svg']) }}" alt="Lunara Silver" width="180" height="75">
             </a>
             <nav class="site-header__nav d-none d-lg-flex" aria-label="Điều hướng chính">
-                <a href="{{ route('products.index') }}">Sản phẩm</a>
-                <a href="{{ route('products.category', 'day-chuyen') }}">Dây chuyền</a>
-                <a href="{{ route('products.category', 'nhan') }}">Nhẫn</a>
-                <a href="{{ route('products.category', 'vong-tay') }}">Vòng tay</a>
-                <a href="{{ route('products.category', 'bo-trang-suc') }}">Bộ sưu tập</a>
-                <a href="{{ route('products.category', 'set-qua-tang') }}">Quà tặng</a>
+                <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.index') && !request()->route('category') ? 'active' : '' }}">Sản phẩm</a>
+                <a href="{{ route('products.category', 'day-chuyen') }}" class="{{ request()->routeIs('products.category') && request()->route('category') === 'day-chuyen' ? 'active' : '' }}">Dây chuyền</a>
+                <a href="{{ route('products.category', 'nhan') }}" class="{{ request()->routeIs('products.category') && request()->route('category') === 'nhan' ? 'active' : '' }}">Nhẫn</a>
+                <a href="{{ route('products.category', 'vong-tay') }}" class="{{ request()->routeIs('products.category') && request()->route('category') === 'vong-tay' ? 'active' : '' }}">Vòng tay</a>
+                <a href="{{ route('products.category', 'bo-trang-suc') }}" class="{{ request()->routeIs('products.category') && request()->route('category') === 'bo-trang-suc' ? 'active' : '' }}">Bộ sưu tập</a>
+                <a href="{{ route('products.category', 'set-qua-tang') }}" class="{{ request()->routeIs('products.category') && request()->route('category') === 'set-qua-tang' ? 'active' : '' }}">Quà tặng</a>
                 <a href="{{ route('blog.index') }}" class="{{ request()->routeIs('blog.*') ? 'active' : '' }}">Blog</a>
                 <a href="{{ route('home') }}#story">Giới thiệu</a>
             </nav>
@@ -54,22 +54,28 @@
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Đóng menu"></button>
         </div>
         <nav class="offcanvas-body" aria-label="Điều hướng di động">
-            <a href="{{ route('products.index') }}">Sản phẩm</a>
-            <a href="{{ route('products.category', 'day-chuyen') }}">Dây chuyền</a>
-            <a href="{{ route('products.category', 'nhan') }}">Nhẫn</a>
-            <a href="{{ route('products.category', 'vong-tay') }}">Vòng tay</a>
-            <a href="{{ route('products.category', 'bo-trang-suc') }}">Bộ sưu tập</a>
-            <a href="{{ route('products.category', 'set-qua-tang') }}">Quà tặng</a>
-            <a href="{{ route('blog.index') }}">Nhật ký Lunara (Blog)</a>
+            <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.index') && !request()->route('category') ? 'active' : '' }}">Sản phẩm</a>
+            <a href="{{ route('products.category', 'day-chuyen') }}" class="{{ request()->routeIs('products.category') && request()->route('category') === 'day-chuyen' ? 'active' : '' }}">Dây chuyền</a>
+            <a href="{{ route('products.category', 'nhan') }}" class="{{ request()->routeIs('products.category') && request()->route('category') === 'nhan' ? 'active' : '' }}">Nhẫn</a>
+            <a href="{{ route('products.category', 'vong-tay') }}" class="{{ request()->routeIs('products.category') && request()->route('category') === 'vong-tay' ? 'active' : '' }}">Vòng tay</a>
+            <a href="{{ route('products.category', 'bo-trang-suc') }}" class="{{ request()->routeIs('products.category') && request()->route('category') === 'bo-trang-suc' ? 'active' : '' }}">Bộ sưu tập</a>
+            <a href="{{ route('products.category', 'set-qua-tang') }}" class="{{ request()->routeIs('products.category') && request()->route('category') === 'set-qua-tang' ? 'active' : '' }}">Quà tặng</a>
+            <a href="{{ route('blog.index') }}" class="{{ request()->routeIs('blog.*') ? 'active' : '' }}">Nhật ký Lunara (Blog)</a>
             <a href="{{ route('home') }}#story">Giới thiệu</a>
             <div class="mobile-navigation__divider"></div>
             @auth
-                <a href="{{ route('account.dashboard') }}">Tài khoản của tôi</a>
-                <form method="post" action="{{ route('logout') }}">@csrf<button type="submit">Đăng xuất</button></form>
+                <div class="mobile-navigation__user-info mb-2 px-1">
+                    <span class="text-muted small d-block">Đăng nhập bởi:</span>
+                    <strong class="text-dark">{{ auth()->user()->name }}</strong>
+                </div>
+                <a href="{{ route('account.dashboard') }}"><i class="bi bi-person me-2"></i>Tài khoản của tôi</a>
+                <a href="{{ route('account.orders.index') }}"><i class="bi bi-box-seam me-2"></i>Đơn mua của tôi</a>
+                <form method="post" action="{{ route('logout') }}" class="mt-2">@csrf<button type="submit" class="text-danger w-100 text-start bg-transparent border-0 p-0"><i class="bi bi-box-arrow-right me-2"></i>Đăng xuất</button></form>
             @else
-                <a href="{{ route('login') }}">Đăng nhập / Đăng ký</a>
+                <a href="{{ route('login') }}"><i class="bi bi-box-arrow-in-right me-2"></i>Đăng nhập</a>
+                <a href="{{ route('register') }}"><i class="bi bi-person-plus me-2"></i>Đăng ký tài khoản</a>
             @endauth
-            <span class="nav-unavailable" aria-label="Danh sách yêu thích chưa mở">Yêu thích</span>
+            <span class="nav-unavailable mt-2" aria-label="Danh sách yêu thích chưa mở"><i class="bi bi-heart me-2"></i>Yêu thích (Sắp ra mắt)</span>
         </nav>
     </div>
 

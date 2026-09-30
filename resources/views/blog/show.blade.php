@@ -6,59 +6,60 @@
 @push('styles')
 <style>
     .article-body {
-        font-size: 1.0625rem;
+        font-family: var(--ln-font-ui);
+        font-size: var(--ln-text-body-lg);
         line-height: 1.85;
-        color: #2b2b2b;
+        color: var(--ln-color-ink);
     }
     .article-body p {
-        margin-bottom: 1.75rem;
+        margin-bottom: var(--ln-space-5);
     }
     .article-body h2 {
-        font-family: var(--font-serif, "Playfair Display", Georgia, serif);
-        font-size: 1.75rem;
+        font-family: var(--ln-font-display);
+        font-size: var(--ln-text-h2);
         font-weight: 500;
-        margin-top: 2.75rem;
-        margin-bottom: 1.25rem;
-        color: #111;
+        margin-top: var(--ln-space-7);
+        margin-bottom: var(--ln-space-4);
+        color: var(--ln-color-ink);
         letter-spacing: -0.01em;
     }
     .article-body h3 {
-        font-family: var(--font-serif, "Playfair Display", Georgia, serif);
-        font-size: 1.35rem;
+        font-family: var(--ln-font-display);
+        font-size: var(--ln-text-h3);
         font-weight: 500;
-        margin-top: 2.25rem;
-        margin-bottom: 1rem;
-        color: #1a1a1a;
+        margin-top: var(--ln-space-6);
+        margin-bottom: var(--ln-space-3);
+        color: var(--ln-color-ink);
     }
     .article-body blockquote {
-        border-left: 3px solid #111;
-        padding-left: 1.5rem;
-        margin: 2rem 0;
+        border-left: 3px solid var(--ln-color-accent);
+        padding-left: var(--ln-space-5);
+        margin: var(--ln-space-6) 0;
         font-style: italic;
-        color: #4a4a4a;
-        font-size: 1.125rem;
+        color: var(--ln-color-muted);
+        font-size: var(--ln-text-body-lg);
     }
     .article-body ul, .article-body ol {
-        margin-bottom: 1.75rem;
-        padding-left: 1.5rem;
+        margin-bottom: var(--ln-space-5);
+        padding-left: var(--ln-space-5);
     }
     .article-body li {
-        margin-bottom: 0.5rem;
+        margin-bottom: var(--ln-space-2);
     }
     .article-body img {
         max-width: 100%;
         height: auto;
-        border-radius: 8px;
-        margin: 2rem 0;
+        border-radius: var(--ln-radius-md);
+        margin: var(--ln-space-6) 0;
     }
     .article-body figure {
-        margin: 2rem 0;
+        margin: var(--ln-space-6) 0;
         text-align: center;
     }
     .article-body figcaption {
-        font-size: 0.875rem;
-        color: #777;
-        margin-top: 0.5rem;
+        font-size: var(--ln-text-small);
+        color: var(--ln-color-muted);
+        margin-top: var(--ln-space-2);
         font-style: italic;
     }
 </style>

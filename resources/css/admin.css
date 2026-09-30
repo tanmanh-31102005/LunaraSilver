@@ -1,37 +1,38 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
 @import 'bootstrap-icons/font/bootstrap-icons.css';
+@import './tokens.css';
 
 /* ==========================================================================
-   LUNARA SILVER — ADMIN OPERATIONAL DESIGN SYSTEM (PHASE 10.6 & 11)
+   LUNARA SILVER — ADMIN OPERATIONAL DESIGN SYSTEM (PHASE 17)
    Clean, modern, professional, data-first admin interface.
    ========================================================================== */
 
 :root {
-    --admin-sidebar-bg: #111318;
-    --admin-sidebar-hover: #1a1d24;
-    --admin-sidebar-active: #222630;
-    --admin-sidebar-border: #1e222b;
+    --admin-sidebar-bg: var(--ln-color-ink);
+    --admin-sidebar-hover: #1e222b;
+    --admin-sidebar-active: #272c37;
+    --admin-sidebar-border: #222631;
     --admin-sidebar-text: #9ca3af;
     --admin-sidebar-text-active: #ffffff;
-    --admin-accent-champagne: #B49A73;
+    --admin-accent-champagne: var(--ln-color-accent);
 
-    --admin-bg: #F6F7F8;
-    --admin-surface: #FFFFFF;
-    --admin-border: #E5E7EB;
-    --admin-border-subtle: #F0F2F5;
+    --admin-bg: #f8fafc;
+    --admin-surface: var(--ln-color-white);
+    --admin-border: var(--ln-color-border);
+    --admin-border-subtle: #f1f5f9;
 
-    --admin-text-main: #15171C;
-    --admin-text-muted: #6B7280;
-    --admin-text-subtle: #9CA3AF;
+    --admin-text-main: var(--ln-color-ink);
+    --admin-text-muted: var(--ln-color-muted);
+    --admin-text-subtle: #94a3b8;
 
     --admin-header-height: 64px;
     --admin-sidebar-width: 250px;
     --admin-sidebar-collapsed-width: 76px;
 
     --radius-xs: 4px;
-    --radius-sm: 6px;
-    --radius-md: 8px;
-    --radius-lg: 12px;
+    --radius-sm: var(--ln-radius-sm);
+    --radius-md: var(--ln-radius-md);
+    --radius-lg: var(--ln-radius-lg);
 }
 
 body.admin-body {

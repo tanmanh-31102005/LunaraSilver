@@ -1,20 +1,20 @@
 {{-- Lunara Silver Concierge / Live Support Widget --}}
-<div id="lunaraSupportWidget" class="lunara-support-widget" style="position: fixed; bottom: 24px; right: 24px; z-index: 1050; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+<div id="lunaraSupportWidget" class="lunara-support-widget" style="position: fixed; bottom: 24px; right: 24px; z-index: 1050; font-family: var(--ln-font-ui);">
     {{-- Launcher Button --}}
     <button id="lunaraChatLauncher"
-            class="btn btn-dark rounded-pill shadow-lg d-flex align-items-center gap-2 px-4 py-2 border-0"
-            style="letter-spacing: 0.05em; font-size: 0.875rem; background-color: #1a1a1a; transition: all 0.2s ease;"
+            class="ln-btn ln-btn--primary shadow-lg d-flex align-items-center gap-2 px-4 py-2 border-0"
+            style="letter-spacing: 0.05em; font-size: 0.875rem; border-radius: var(--ln-radius-pill); transition: all 0.2s ease;"
             type="button"
             aria-label="Mở cửa sổ hỗ trợ trực tuyến">
         <i class="bi bi-chat-dots-fill fs-6 text-white"></i>
         <span class="fw-medium text-white">Cần hỗ trợ?</span>
-        <span id="lunaraUnreadBadge" class="badge rounded-pill bg-danger d-none" style="font-size: 0.65rem;">1</span>
+        <span id="lunaraUnreadBadge" class="ln-badge ln-badge--danger ln-badge--sm d-none">1</span>
     </button>
 
     {{-- Chat Box Window --}}
     <div id="lunaraChatWindow"
          class="card border rounded-3 shadow-lg overflow-hidden d-none"
-         style="width: 360px; max-width: calc(100vw - 32px); height: 500px; max-height: calc(100vh - 120px); position: absolute; bottom: 60px; right: 0; border-color: #e5e0d8 !important; background-color: #ffffff;">
+         style="width: 360px; max-width: calc(100vw - 32px); height: 500px; max-height: calc(100vh - 120px); position: absolute; bottom: 60px; right: 0; border-color: var(--ln-color-border) !important; background-color: var(--ln-color-white);">
         {{-- Header --}}
         <div class="card-header bg-dark text-white p-3 d-flex align-items-center justify-content-between border-0">
             <div class="d-flex align-items-center gap-2">
@@ -38,10 +38,10 @@
         </div>
 
         {{-- Messages Container --}}
-        <div id="lunaraChatMessages" class="card-body p-3 overflow-y-auto d-flex flex-column gap-3" style="background-color: #faf9f6; flex-grow: 1;">
+        <div id="lunaraChatMessages" class="card-body p-3 overflow-y-auto d-flex flex-column gap-3" style="background-color: var(--ln-color-ivory); flex-grow: 1;">
             {{-- Welcome message from Lunara --}}
             <div class="d-flex gap-2">
-                <div class="p-3 rounded-2 text-dark border" style="max-width: 85%; font-size: 0.85rem; line-height: 1.5; background-color: #ffffff; border-color: #ebe7e0 !important;">
+                <div class="p-3 rounded-2 text-dark border" style="max-width: 85%; font-size: 0.85rem; line-height: 1.5; background-color: var(--ln-color-white); border-color: var(--ln-color-border) !important;">
                     <div class="fw-medium small text-muted mb-1">Lunara Concierge</div>
                     Xin chào quý khách. Lunara Silver có thể hỗ trợ quý khách về kích thước trang sức, đơn hàng hoặc chế độ bảo hành?
                 </div>
@@ -108,10 +108,10 @@ document.addEventListener('DOMContentLoaded', function () {
         bubble.style.lineHeight = '1.45';
 
         if (isCustomer) {
-            bubble.style.backgroundColor = '#1a1a1a';
+            bubble.style.backgroundColor = 'var(--ln-color-ink)';
         } else {
-            bubble.style.backgroundColor = '#ffffff';
-            bubble.style.borderColor = '#ebe7e0';
+            bubble.style.backgroundColor = 'var(--ln-color-white)';
+            bubble.style.borderColor = 'var(--ln-color-border)';
         }
 
         const senderLabel = isCustomer ? '' : `<div class="fw-medium small text-muted mb-1">${escapeHtml(msg.sender_name || 'Chuyên viên')}</div>`;

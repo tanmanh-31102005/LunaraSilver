@@ -151,13 +151,13 @@
                                     $notStarted = ! $coupon->hasStarted();
                                 @endphp
                                 @if($notStarted)
-                                    <span class="badge bg-warning text-dark">Chưa bắt đầu</span>
+                                    <x-ui.status-badge status="pending" label="Chưa bắt đầu" size="sm" />
                                     <div class="small text-muted mt-1">Từ: {{ $coupon->starts_at?->format('d/m/Y H:i') }}</div>
                                 @elseif($isExpired)
-                                    <span class="badge bg-danger text-white">Đã hết hạn</span>
+                                    <x-ui.status-badge status="failed" label="Đã hết hạn" size="sm" />
                                     <div class="small text-muted mt-1">Hết: {{ $coupon->expires_at?->format('d/m/Y H:i') }}</div>
                                 @else
-                                    <span class="badge bg-success bg-opacity-75 text-white">Đang áp dụng</span>
+                                    <x-ui.status-badge status="active" label="Đang áp dụng" size="sm" />
                                     @if($coupon->expires_at)
                                         <div class="small text-muted mt-1">Hết: {{ $coupon->expires_at->format('d/m/Y H:i') }}</div>
                                     @else

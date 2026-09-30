@@ -60,47 +60,51 @@
                     </div>
 
                     {{-- Coupon / Voucher Box --}}
-                    <div class="cart-coupon-box p-3 bg-light rounded-3 border mb-3">
-                        <div class="d-flex align-items-center gap-1 mb-2 fw-semibold text-dark small">
-                            <i class="bi bi-ticket-perforated text-primary"></i>
+                    <div class="cart-coupon-box p-3 bg-white rounded-3 border mb-3 shadow-sm">
+                        <div class="d-flex align-items-center gap-2 mb-2 fw-semibold text-dark small">
+                            <i class="bi bi-ticket-perforated text-muted"></i>
                             <span>Mã giảm giá / Voucher</span>
                         </div>
 
                         @if(session('coupon_success'))
-                            <div class="alert alert-success py-1 px-2 mb-2 small" role="alert">
-                                <i class="bi bi-check-circle me-1"></i> {{ session('coupon_success') }}
+                            <div class="alert alert-success py-2 px-3 mb-2 small rounded-2 d-flex align-items-center gap-2" role="alert">
+                                <i class="bi bi-check-circle-fill text-success flex-shrink-0"></i>
+                                <span>{{ session('coupon_success') }}</span>
                             </div>
                         @endif
                         @if($errors->has('coupon'))
-                            <div class="alert alert-danger py-1 px-2 mb-2 small" role="alert">
-                                <i class="bi bi-exclamation-circle me-1"></i> {{ $errors->first('coupon') }}
+                            <div class="alert alert-danger py-2 px-3 mb-2 small rounded-2 d-flex align-items-center gap-2" role="alert">
+                                <i class="bi bi-exclamation-circle-fill text-danger flex-shrink-0"></i>
+                                <span>{{ $errors->first('coupon') }}</span>
                             </div>
                         @endif
 
                         @if($cartSummary['coupon_applied'])
-                            <div class="d-flex align-items-center justify-content-between p-2 bg-white rounded border">
-                                <div>
-                                    <span class="badge bg-primary text-white font-monospace">{{ $cartSummary['coupon_code'] }}</span>
-                                    <span class="text-success small fw-bold ms-1">{{ $cartSummary['discount_display'] }}</span>
+                            <div class="d-flex align-items-center justify-content-between p-2 bg-light rounded border">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="ln-badge ln-badge--info font-monospace">{{ $cartSummary['coupon_code'] }}</span>
+                                    <span class="text-success small fw-bold">{{ $cartSummary['discount_display'] }}</span>
                                 </div>
                                 <form action="{{ route('cart.coupon.remove') }}" method="post" class="m-0">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size: 0.78rem;" type="submit" aria-label="Gỡ mã giảm giá">
-                                        <i class="bi bi-x-lg"></i> Gỡ
+                                    <button class="ln-btn ln-btn--ghost ln-btn--sm text-danger p-1" type="submit" aria-label="Gỡ mã giảm giá" title="Gỡ mã">
+                                        <i class="bi bi-x-circle me-1"></i> Gỡ
                                     </button>
                                 </form>
                             </div>
                         @else
                             <form action="{{ route('cart.coupon.apply') }}" method="post" class="d-flex gap-2">
                                 @csrf
-                                <input class="form-control form-control-sm font-monospace text-uppercase" type="text" name="code" placeholder="Mã ưu đãi (VD: LUNARA10)" value="{{ old('code') }}" required aria-label="Mã giảm giá">
-                                <button class="btn btn-sm btn-dark text-nowrap px-3" type="submit">Áp dụng</button>
+                                <input class="ln-input font-monospace text-uppercase py-1 px-3 fs-7" type="text" name="code" placeholder="Mã ưu đãi (VD: LUNARA10)" value="{{ old('code') }}" required aria-label="Mã giảm giá">
+                                <x-ui.button variant="primary" size="sm" type="submit">Áp dụng</x-ui.button>
                             </form>
                         @endif
                     </div>
 
-                    <a class="lunara-button lunara-button--dark w-100 text-center text-decoration-none" href="{{ route('checkout.show') }}">Tiến hành thanh toán</a>
+                    <x-ui.button variant="primary" size="lg" :href="route('checkout.show')" class="w-100 py-3 text-center fw-semibold">
+                        Tiến hành thanh toán
+                    </x-ui.button>
                     <button class="cart-clear-button mt-2" type="button" data-cart-clear data-url="{{ route('cart.clear') }}" aria-label="Xóa toàn bộ giỏ hàng">Xóa toàn bộ giỏ hàng</button>
                 </aside>
             </div>

@@ -66,13 +66,7 @@
                             <div class="d-flex justify-content-between py-2">
                                 <span class="text-muted">Trạng thái thanh toán:</span>
                                 <span>
-                                    @if($order->payment_status === 'paid')
-                                        <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Đã thanh toán</span>
-                                    @elseif($order->payment_status === 'failed')
-                                        <span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i>Thất bại</span>
-                                    @else
-                                        <span class="badge bg-warning text-dark"><i class="bi bi-clock me-1"></i>{{ $order->payment_status_label }}</span>
-                                    @endif
+                                    <x-ui.status-badge :status="$order->payment_status" type="payment" :label="$order->payment_status_label" size="md" />
                                 </span>
                             </div>
                         </div>

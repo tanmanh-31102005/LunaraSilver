@@ -20,20 +20,7 @@
                     <span>Danh sách</span>
                 </a>
                 <h2 class="h5 mb-0 fw-bold text-dark font-monospace">{{ $order->order_code }}</h2>
-                @php
-                    $statusClass = match($order->order_status) {
-                        'pending' => 'admin-badge--pending',
-                        'confirmed' => 'admin-badge--confirmed',
-                        'processing' => 'admin-badge--processing',
-                        'shipping' => 'admin-badge--shipping',
-                        'completed' => 'admin-badge--completed',
-                        'cancelled' => 'admin-badge--cancelled',
-                        default => 'admin-badge--pending',
-                    };
-                @endphp
-                <span class="admin-badge admin-badge--dot {{ $statusClass }}">
-                    {{ $order->order_status_label }}
-                </span>
+                <x-ui.status-badge :status="$order->order_status" type="order" :label="$order->order_status_label" size="md" />
             </div>
             <div class="text-muted small mt-1">
                 <span>Đặt hàng lúc: <strong>{{ $order->placed_at ? $order->placed_at->format('d/m/Y H:i:s') : $order->created_at->format('d/m/Y H:i:s') }}</strong></span>
@@ -398,9 +385,7 @@
                 <div class="admin-card-body">
                     <div class="mb-3">
                         <div class="text-muted small mb-1">Trạng thái hiện tại:</div>
-                        <span class="admin-badge admin-badge--dot {{ $statusClass }} fs-6 py-1-5 px-3">
-                            {{ $order->order_status_label }}
-                        </span>
+                        <x-ui.status-badge :status="$order->order_status" type="order" :label="$order->order_status_label" size="lg" />
                     </div>
 
                     @if (!empty($allowedTransitions))
@@ -443,7 +428,7 @@
                                         @csrf
                                         @method('PATCH')
                                         <input type="hidden" name="order_status" value="completed">
-                                        <button type="submit" class="admin-btn admin-btn--primary w-100 justify-content-center py-2" style="background-color: #059669; border-color: #059669;">
+                                        <button type="submit" class="admin-btn admin-btn--primary w-100 justify-content-center py-2" style="background-color: var(--ln-success); border-color: var(--ln-success);">
                                             <i class="bi bi-check2-all"></i>
                                             <span>Đánh dấu hoàn thành</span>
                                         </button>

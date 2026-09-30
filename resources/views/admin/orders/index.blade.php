@@ -173,36 +173,13 @@
                                 {{ number_format($order->grand_total, 0, ',', '.') }}đ
                             </td>
                             <td>
-                                @php
-                                    $paymentClass = match($order->payment_status) {
-                                        'paid' => 'admin-badge--paid',
-                                        'failed' => 'admin-badge--failed',
-                                        'cancelled' => 'admin-badge--cancelled',
-                                        default => 'admin-badge--pending',
-                                    };
-                                @endphp
-                                <span class="admin-badge admin-badge--dot {{ $paymentClass }}">
-                                    {{ $order->payment_status_label }}
-                                </span>
-                                <div class="text-muted mt-1" style="font-size: 0.72rem; text-transform: uppercase;">
+                                <x-ui.status-badge :status="$order->payment_status" type="payment" :label="$order->payment_status_label" size="sm" />
+                                <div class="text-muted mt-1 font-monospace" style="font-size: 0.72rem; text-transform: uppercase;">
                                     {{ strtoupper($order->payment_method) }}
                                 </div>
                             </td>
                             <td>
-                                @php
-                                    $statusClass = match($order->order_status) {
-                                        'pending' => 'admin-badge--pending',
-                                        'confirmed' => 'admin-badge--confirmed',
-                                        'processing' => 'admin-badge--processing',
-                                        'shipping' => 'admin-badge--shipping',
-                                        'completed' => 'admin-badge--completed',
-                                        'cancelled' => 'admin-badge--cancelled',
-                                        default => 'admin-badge--pending',
-                                    };
-                                @endphp
-                                <span class="admin-badge admin-badge--dot {{ $statusClass }}">
-                                    {{ $order->order_status_label }}
-                                </span>
+                                <x-ui.status-badge :status="$order->order_status" type="order" :label="$order->order_status_label" size="sm" />
                             </td>
                             <td class="text-end">
                                 <a href="{{ route('admin.orders.show', $order->order_code) }}"

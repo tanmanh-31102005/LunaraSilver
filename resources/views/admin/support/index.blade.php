@@ -171,18 +171,7 @@
                                 @endif
                             </td>
                             <td>
-                                @php
-                                    $badgeClass = match($msg->status) {
-                                        'new' => 'bg-warning text-dark',
-                                        'in_progress' => 'bg-primary text-white',
-                                        'resolved' => 'bg-success text-white',
-                                        'closed' => 'bg-secondary text-white',
-                                        default => 'bg-light text-dark',
-                                    };
-                                @endphp
-                                <span class="badge {{ $badgeClass }}">
-                                    {{ \App\Models\ContactMessage::STATUS_LABELS[$msg->status] ?? $msg->status }}
-                                </span>
+                                <x-ui.status-badge :status="$msg->status" type="support" :label="\App\Models\ContactMessage::STATUS_LABELS[$msg->status] ?? null" size="sm" />
                             </td>
                             <td>
                                 @if($msg->assignedUser)

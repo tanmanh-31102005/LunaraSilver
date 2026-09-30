@@ -310,6 +310,24 @@
         @endif
 
 
+        {{-- Complete the Look / Hoàn thiện phong cách (Phase 20) --}}
+        <section class="detail-section detail-complete-look my-5" aria-labelledby="complete-look-heading">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4 border-bottom pb-3">
+                <div>
+                    <span class="text-uppercase tracking-widest small text-muted d-block mb-1">Gợi ý phối đồ Lunara</span>
+                    <h2 id="complete-look-heading" class="h3 font-serif mb-0">Hoàn Thiện Phong Cách</h2>
+                </div>
+                <p class="text-muted small mb-0 mt-2 mt-md-0">Kết hợp cùng các thiết kế trang sức bạc 925 đồng điệu để tạo nên vẻ đẹp tỏa sáng tinh tế.</p>
+            </div>
+            @if($relatedProducts->isNotEmpty())
+                <div class="product-grid">
+                    @foreach($relatedProducts->take(3) as $lookItem)
+                        <x-product-card :product="$lookItem" />
+                    @endforeach
+                </div>
+            @endif
+        </section>
+
         @if($relatedProducts->isNotEmpty())
             <section class="detail-section detail-related" aria-labelledby="related-heading">
                 <h2 id="related-heading">Sản phẩm liên quan</h2>

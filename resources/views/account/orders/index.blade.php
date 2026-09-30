@@ -58,30 +58,15 @@
                                     <strong class="text-dark">{{ number_format($order->grand_total, 0, ',', '.') }} ₫</strong>
                                 </td>
                                 <td>
-                                    <span class="badge bg-light text-dark border small">
-                                        {{ $order->payment_status_label }}
-                                    </span>
+                                    <x-ui.status-badge :status="$order->payment_status" type="payment" :label="$order->payment_status_label" size="sm" />
                                 </td>
                                 <td>
-                                    @php
-                                        $badgeClass = match($order->order_status) {
-                                            'pending' => 'bg-secondary-subtle text-secondary border border-secondary-subtle',
-                                            'confirmed' => 'bg-info-subtle text-info border border-info-subtle',
-                                            'processing' => 'bg-primary-subtle text-primary border border-primary-subtle',
-                                            'shipping' => 'bg-warning-subtle text-warning border border-warning-subtle',
-                                            'completed' => 'bg-success-subtle text-success border border-success-subtle',
-                                            'cancelled' => 'bg-danger-subtle text-danger border border-danger-subtle',
-                                            default => 'bg-secondary text-white',
-                                        };
-                                    @endphp
-                                    <span class="badge {{ $badgeClass }} small">
-                                        {{ $order->order_status_label }}
-                                    </span>
+                                    <x-ui.status-badge :status="$order->order_status" type="order" :label="$order->order_status_label" size="sm" />
                                 </td>
                                 <td class="text-end px-3">
-                                    <a href="{{ route('account.orders.show', $order->order_code) }}" class="btn btn-sm btn-outline-dark py-1 px-3 small">
+                                    <x-ui.button variant="secondary" size="sm" :href="route('account.orders.show', $order->order_code)">
                                         Chi tiết
-                                    </a>
+                                    </x-ui.button>
                                 </td>
                             </tr>
                         @endforeach
@@ -102,9 +87,7 @@
                             </div>
                         </div>
                         <div>
-                            <span class="badge bg-secondary-subtle text-dark border small">
-                                {{ $order->order_status_label }}
-                            </span>
+                            <x-ui.status-badge :status="$order->order_status" type="order" :label="$order->order_status_label" size="sm" />
                         </div>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -112,14 +95,12 @@
                             <small class="text-muted d-block">{{ $order->items_count }} sản phẩm</small>
                             <strong class="text-dark">{{ number_format($order->grand_total, 0, ',', '.') }} ₫</strong>
                         </div>
-                        <span class="badge bg-light text-dark border small">
-                            {{ $order->payment_status_label }}
-                        </span>
+                        <x-ui.status-badge :status="$order->payment_status" type="payment" :label="$order->payment_status_label" size="sm" />
                     </div>
                     <div>
-                        <a href="{{ route('account.orders.show', $order->order_code) }}" class="lunara-button lunara-button--outline w-100 py-2 small text-center">
+                        <x-ui.button variant="secondary" size="sm" :href="route('account.orders.show', $order->order_code)" class="w-100 py-2 text-center">
                             Xem chi tiết đơn hàng
-                        </a>
+                        </x-ui.button>
                     </div>
                 </div>
             @endforeach

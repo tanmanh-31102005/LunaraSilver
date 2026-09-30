@@ -18,9 +18,9 @@
                 @if($selectedCategory)
                     <input type="hidden" name="category" value="{{ $selectedCategory }}">
                 @endif
-                <div class="input-group input-group-lg shadow-none border border-dark-subtle rounded-0 overflow-hidden bg-white">
-                    <input type="search" name="q" value="{{ $searchQuery }}" class="form-control border-0 rounded-0 ps-4 fs-6" placeholder="Tìm kiếm câu hỏi (đặt hàng, VNPay, đổi trả...)" aria-label="Tìm kiếm câu hỏi">
-                    <button class="btn btn-dark rounded-0 px-4 text-uppercase tracking-wider fs-7" type="submit">
+                <div class="input-group input-group-lg shadow-sm border rounded-pill overflow-hidden bg-white">
+                    <input type="search" name="q" value="{{ $searchQuery }}" class="form-control border-0 ps-4 fs-6" placeholder="Tìm kiếm câu hỏi (đặt hàng, VNPay, đổi trả...)" aria-label="Tìm kiếm câu hỏi">
+                    <button class="ln-btn ln-btn--primary px-4 text-uppercase tracking-wider" style="border-radius: 0 var(--ln-radius-pill) var(--ln-radius-pill) 0;" type="submit">
                         <i class="bi bi-search me-1"></i> Tìm kiếm
                     </button>
                 </div>
@@ -30,12 +30,12 @@
         {{-- Category Pills --}}
         <div class="d-flex flex-wrap justify-content-center gap-2 mb-5">
             <a href="{{ route('support.faq', $searchQuery ? ['q' => $searchQuery] : []) }}"
-               class="btn btn-sm rounded-pill px-3 py-2 {{ empty($selectedCategory) ? 'btn-dark' : 'btn-outline-secondary' }}">
+               class="ln-btn ln-btn--sm {{ empty($selectedCategory) ? 'ln-btn--primary' : 'ln-btn--secondary' }}" style="border-radius: var(--ln-radius-pill);">
                 Tất cả chủ đề
             </a>
             @foreach($categories as $cat)
                 <a href="{{ route('support.faq', array_filter(['category' => $cat, 'q' => $searchQuery])) }}"
-                   class="btn btn-sm rounded-pill px-3 py-2 {{ $selectedCategory === $cat ? 'btn-dark' : 'btn-outline-secondary' }}">
+                   class="ln-btn ln-btn--sm {{ $selectedCategory === $cat ? 'ln-btn--primary' : 'ln-btn--secondary' }}" style="border-radius: var(--ln-radius-pill);">
                     {{ $cat }}
                 </a>
             @endforeach
@@ -80,18 +80,18 @@
                 @endif
 
                 {{-- Contact CTA Card --}}
-                <div class="mt-5 p-4 p-md-5 border border-light-subtle text-center" style="background-color: #fbfaf8;">
+                <div class="mt-5 p-4 p-md-5 border rounded-3 text-center shadow-sm" style="background-color: var(--ln-color-ivory);">
                     <h3 class="font-serif fs-4 mb-2">Quý khách cần hỗ trợ thêm?</h3>
                     <p class="text-muted small mb-4 mx-auto" style="max-width: 500px;">
                         Đội ngũ chăm sóc khách hàng của Lunara Silver luôn sẵn sàng lắng nghe và giải đáp mọi yêu cầu của quý khách.
                     </p>
                     <div class="d-flex flex-wrap justify-content-center gap-3">
-                        <a href="{{ route('contact') }}" class="btn btn-dark rounded-0 px-4 py-2 text-uppercase tracking-wider fs-7">
+                        <x-ui.button variant="primary" :href="route('contact')" class="px-4 py-2">
                             Gửi yêu cầu liên hệ
-                        </a>
-                        <button type="button" class="btn btn-outline-dark rounded-0 px-4 py-2 text-uppercase tracking-wider fs-7" onclick="window.LunaraChat && window.LunaraChat.open()">
+                        </x-ui.button>
+                        <x-ui.button variant="secondary" class="px-4 py-2" onclick="window.LunaraChat && window.LunaraChat.open()">
                             <i class="bi bi-chat-dots me-1"></i> Trò chuyện trực tuyến
-                        </button>
+                        </x-ui.button>
                     </div>
                 </div>
             </div>

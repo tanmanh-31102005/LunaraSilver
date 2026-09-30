@@ -1,0 +1,476 @@
+/* ==========================================================================
+   LUNARA SILVER — DESIGN TOKENS (PHASE 17)
+   Unified token system for Storefront (Quiet Luxury / Editorial) & Admin (Operational / Data)
+   ========================================================================== */
+
+:root {
+    /* Brand Color Palette */
+    --ln-color-ink: #15171c;
+    --ln-color-midnight: #111827;
+    --ln-color-ivory: #f8f6f2;
+    --ln-color-white: #ffffff;
+
+    --ln-color-muted: #717782;
+    --ln-color-border: #e5e7eb;
+    --ln-color-silver: #c5c8ce;
+    --ln-color-silver-light: #f1efec;
+    --ln-color-accent: #b59a75;
+    --ln-color-accent-hover: #9c8362;
+    --ln-color-accent-soft: rgba(181, 154, 117, 0.12);
+
+    /* Semantic Status Colors */
+    --ln-success: #247a4b;
+    --ln-success-soft: #edf6f2;
+    --ln-warning: #a66b12;
+    --ln-warning-soft: #fef7ed;
+    --ln-danger: #b42318;
+    --ln-danger-soft: #fef2f2;
+    --ln-info: #1d6fb8;
+    --ln-info-soft: #eff6ff;
+
+    /* Border Radii */
+    --ln-radius-sm: 6px;
+    --ln-radius-md: 10px;
+    --ln-radius-lg: 16px;
+    --ln-radius-pill: 9999px;
+
+    /* Shadows */
+    --ln-shadow-subtle: 0 2px 8px rgba(21, 23, 28, 0.04);
+    --ln-shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.06);
+    --ln-shadow-card: 0 12px 32px rgba(21, 23, 28, 0.06);
+    --ln-shadow-hover: 0 18px 42px rgba(21, 23, 28, 0.09);
+    --ln-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.08);
+
+    /* Typography Families (Max 2) */
+    --ln-font-display: 'Cormorant Garamond', Georgia, serif;
+    --ln-font-ui: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+    /* Standardized Type Scale with responsive clamp() */
+    --ln-text-display: clamp(3rem, 4.5vw + 1rem, 4rem);         /* 48px - 64px */
+    --ln-text-h1: clamp(2.25rem, 3vw + 0.8rem, 3.375rem);       /* 36px - 54px */
+    --ln-text-h2: clamp(1.75rem, 2vw + 0.6rem, 2.625rem);       /* 28px - 42px */
+    --ln-text-h3: clamp(1.35rem, 1.2vw + 0.5rem, 1.875rem);     /* 22px - 30px */
+    --ln-text-body-lg: 1.125rem;                                 /* 18px */
+    --ln-text-body: 1rem;                                        /* 16px */
+    --ln-text-small: 0.875rem;                                   /* 14px */
+    --ln-text-caption: 0.8125rem;                                /* 13px */
+
+    /* Standardized Spacing Scale (4, 8, 12, 16, 24, 32, 48, 64, 96) */
+    --ln-space-1: 4px;
+    --ln-space-2: 8px;
+    --ln-space-3: 12px;
+    --ln-space-4: 16px;
+    --ln-space-5: 24px;
+    --ln-space-6: 32px;
+    --ln-space-7: 48px;
+    --ln-space-8: 64px;
+    --ln-space-9: 96px;
+
+    /* Transitions */
+    --ln-transition-fast: 160ms cubic-bezier(0.16, 1, 0.3, 1);
+    --ln-transition-normal: 240ms cubic-bezier(0.16, 1, 0.3, 1);
+    --ln-transition-smooth: 360ms cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Layout Constraints */
+    --ln-container-max: 1320px;
+}
+
+/* ==========================================================================
+   UNIFIED BUTTON SYSTEM (.ln-btn)
+   ========================================================================== */
+.ln-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--ln-space-2);
+    font-family: var(--ln-font-ui);
+    font-weight: 500;
+    line-height: 1.4;
+    text-decoration: none;
+    border: 1px solid transparent;
+    border-radius: var(--ln-radius-sm);
+    cursor: pointer;
+    transition: background-color var(--ln-transition-fast), border-color var(--ln-transition-fast), color var(--ln-transition-fast), box-shadow var(--ln-transition-fast), transform var(--ln-transition-fast);
+    user-select: none;
+    white-space: nowrap;
+}
+
+.ln-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--ln-color-accent-soft);
+}
+
+.ln-btn:disabled,
+.ln-btn.disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Sizes */
+.ln-btn--sm {
+    padding: 6px 12px;
+    font-size: var(--ln-text-small);
+    border-radius: var(--ln-radius-sm);
+}
+
+.ln-btn--md {
+    padding: 9px 18px;
+    font-size: var(--ln-text-body);
+    border-radius: var(--ln-radius-sm);
+}
+
+.ln-btn--lg {
+    padding: 12px 24px;
+    font-size: var(--ln-text-body-lg);
+    border-radius: var(--ln-radius-md);
+}
+
+/* Variants */
+.ln-btn--primary {
+    background-color: var(--ln-color-ink);
+    color: var(--ln-color-white) !important;
+    border-color: var(--ln-color-ink);
+}
+
+.ln-btn--primary:hover {
+    background-color: var(--ln-color-midnight);
+    color: var(--ln-color-white) !important;
+    transform: translateY(-1px);
+    box-shadow: var(--ln-shadow-subtle);
+}
+
+.ln-btn--secondary {
+    background-color: transparent;
+    color: var(--ln-color-ink) !important;
+    border-color: var(--ln-color-border);
+}
+
+.ln-btn--secondary:hover {
+    background-color: var(--ln-color-ivory);
+    border-color: var(--ln-color-silver);
+    color: var(--ln-color-ink) !important;
+}
+
+.ln-btn--ghost {
+    background-color: transparent;
+    color: var(--ln-color-muted) !important;
+    border-color: transparent;
+}
+
+.ln-btn--ghost:hover {
+    background-color: var(--ln-color-ivory);
+    color: var(--ln-color-ink) !important;
+}
+
+.ln-btn--danger {
+    background-color: var(--ln-danger);
+    color: var(--ln-color-white) !important;
+    border-color: var(--ln-danger);
+}
+
+.ln-btn--danger:hover {
+    background-color: #991b1b;
+    border-color: #991b1b;
+    color: var(--ln-color-white) !important;
+    box-shadow: var(--ln-shadow-subtle);
+}
+
+.ln-btn--icon {
+    padding: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: var(--ln-radius-pill);
+    background-color: transparent;
+    color: var(--ln-color-ink) !important;
+    border-color: transparent;
+}
+
+.ln-btn--icon.ln-btn--sm {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+}
+
+.ln-btn--icon:hover {
+    background-color: var(--ln-color-ivory);
+    color: var(--ln-color-accent) !important;
+}
+
+/* ==========================================================================
+   UNIFIED STATUS BADGE SYSTEM (.ln-badge)
+   ========================================================================== */
+.ln-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ln-space-2);
+    padding: 4px 10px;
+    font-family: var(--ln-font-ui);
+    font-size: var(--ln-text-caption);
+    font-weight: 500;
+    line-height: 1.25;
+    border-radius: var(--ln-radius-pill);
+    border: 1px solid transparent;
+    white-space: nowrap;
+    text-transform: none;
+}
+
+.ln-badge--sm {
+    padding: 2px 7px;
+    font-size: 0.72rem;
+}
+
+.ln-badge--lg {
+    padding: 6px 14px;
+    font-size: var(--ln-text-small);
+}
+
+.ln-badge__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: currentColor;
+    flex-shrink: 0;
+}
+
+.ln-badge__icon {
+    font-size: 0.85em;
+    flex-shrink: 0;
+}
+
+.ln-badge--success {
+    background-color: var(--ln-success-soft);
+    color: var(--ln-success);
+    border-color: rgba(36, 122, 75, 0.2);
+}
+
+.ln-badge--info {
+    background-color: var(--ln-info-soft);
+    color: var(--ln-info);
+    border-color: rgba(29, 111, 184, 0.2);
+}
+
+.ln-badge--warning {
+    background-color: var(--ln-warning-soft);
+    color: var(--ln-warning);
+    border-color: rgba(166, 107, 18, 0.2);
+}
+
+.ln-badge--danger {
+    background-color: var(--ln-danger-soft);
+    color: var(--ln-danger);
+    border-color: rgba(180, 35, 24, 0.2);
+}
+
+.ln-badge--neutral {
+    background-color: var(--ln-color-silver-light);
+    color: var(--ln-color-ink);
+    border-color: var(--ln-color-border);
+}
+
+/* ==========================================================================
+   UNIFIED FORM SYSTEM (.ln-form-group, .ln-input, etc.)
+   ========================================================================== */
+.ln-form-group {
+    margin-bottom: var(--ln-space-4);
+}
+
+.ln-label {
+    display: block;
+    font-family: var(--ln-font-ui);
+    font-size: var(--ln-text-small);
+    font-weight: 500;
+    color: var(--ln-color-ink);
+    margin-bottom: var(--ln-space-2);
+}
+
+.ln-label__required {
+    color: var(--ln-danger);
+    margin-left: 2px;
+}
+
+.ln-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.ln-input-wrapper--has-icon .ln-input {
+    padding-left: 38px;
+}
+
+.ln-input-icon {
+    position: absolute;
+    left: 12px;
+    color: var(--ln-color-muted);
+    font-size: 1rem;
+    pointer-events: none;
+}
+
+.ln-input,
+.ln-select,
+.ln-textarea {
+    width: 100%;
+    padding: 10px 14px;
+    font-family: var(--ln-font-ui);
+    font-size: var(--ln-text-body);
+    color: var(--ln-color-ink);
+    background-color: var(--ln-color-white);
+    border: 1px solid var(--ln-color-border);
+    border-radius: var(--ln-radius-sm);
+    transition: border-color var(--ln-transition-fast), box-shadow var(--ln-transition-fast);
+}
+
+.ln-input:focus,
+.ln-select:focus,
+.ln-textarea:focus {
+    outline: none;
+    border-color: var(--ln-color-accent);
+    box-shadow: 0 0 0 3px var(--ln-color-accent-soft);
+}
+
+.ln-input.is-invalid,
+.ln-select.is-invalid,
+.ln-textarea.is-invalid,
+.ln-input-wrapper--error .ln-input,
+.ln-select-wrapper--error .ln-select,
+.ln-textarea-wrapper--error .ln-textarea {
+    border-color: var(--ln-danger);
+}
+
+.ln-input.is-invalid:focus,
+.ln-select.is-invalid:focus,
+.ln-textarea.is-invalid:focus {
+    box-shadow: 0 0 0 3px rgba(180, 35, 24, 0.15);
+}
+
+.ln-input:disabled,
+.ln-select:disabled,
+.ln-textarea:disabled {
+    background-color: var(--ln-color-ivory);
+    color: var(--ln-color-muted);
+    cursor: not-allowed;
+}
+
+.ln-select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.ln-select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 36px;
+    cursor: pointer;
+}
+
+.ln-select-chevron {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ln-color-muted);
+    pointer-events: none;
+    font-size: 0.85rem;
+}
+
+.ln-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.ln-field-error {
+    display: flex;
+    align-items: center;
+    gap: var(--ln-space-1);
+    font-size: var(--ln-text-caption);
+    color: var(--ln-danger);
+    margin-top: var(--ln-space-1);
+    margin-bottom: 0;
+}
+
+.ln-field-help {
+    font-size: var(--ln-text-caption);
+    color: var(--ln-color-muted);
+    margin-top: var(--ln-space-1);
+    margin-bottom: 0;
+}
+
+/* Checkbox & Radio */
+.ln-check-group {
+    margin-bottom: var(--ln-space-3);
+}
+
+.ln-checkbox-container,
+.ln-radio-container {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ln-space-2);
+    cursor: pointer;
+    user-select: none;
+    font-family: var(--ln-font-ui);
+    font-size: var(--ln-text-small);
+    color: var(--ln-color-ink);
+}
+
+.ln-checkbox,
+.ln-radio {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.ln-checkbox-custom {
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--ln-color-border);
+    border-radius: 4px;
+    background-color: var(--ln-color-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--ln-transition-fast);
+    flex-shrink: 0;
+}
+
+.ln-checkbox-check-icon {
+    font-size: 1.1rem;
+    color: var(--ln-color-white);
+    display: none;
+}
+
+.ln-checkbox:checked + .ln-checkbox-custom {
+    background-color: var(--ln-color-ink);
+    border-color: var(--ln-color-ink);
+}
+
+.ln-checkbox:checked + .ln-checkbox-custom .ln-checkbox-check-icon {
+    display: block;
+}
+
+.ln-checkbox:focus-visible + .ln-checkbox-custom {
+    box-shadow: 0 0 0 3px var(--ln-color-accent-soft);
+}
+
+.ln-radio-custom {
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--ln-color-border);
+    border-radius: 50%;
+    background-color: var(--ln-color-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--ln-transition-fast);
+    flex-shrink: 0;
+}
+
+.ln-radio:checked + .ln-radio-custom {
+    border-color: var(--ln-color-ink);
+    border-width: 5px;
+}
+
+.ln-radio:focus-visible + .ln-radio-custom {
+    box-shadow: 0 0 0 3px var(--ln-color-accent-soft);
+}

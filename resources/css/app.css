@@ -1,56 +1,61 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
 @import 'bootstrap-icons/font/bootstrap-icons.css';
+@import './tokens.css';
 
 /* ==========================================================================
-   LUNARA SILVER — CELESTIAL LUXURY MINIMALISM DESIGN SYSTEM
+   LUNARA SILVER — CELESTIAL LUXURY MINIMALISM DESIGN SYSTEM (PHASE 17)
    ========================================================================== */
 
 :root {
-    /* Color Palette */
-    --lunara-midnight: #131522;
-    --lunara-midnight-soft: #1e2133;
-    --lunara-silver: #d4cfcc;
-    --lunara-silver-light: #ece8e5;
-    --lunara-mauve: #8c7385;
-    --lunara-cream: #f4f1ed;
-    --lunara-ivory: #f8f6f3;
-    --lunara-text: #212435;
-    --lunara-muted: #6b6e80;
-    --lunara-border: #e3ddd8;
-    --lunara-surface: #faf9f7;
-    --lunara-danger: #9c4146;
-    --lunara-danger-soft: #fbf0f1;
-    --lunara-success: #28634e;
-    --lunara-success-soft: #edf6f2;
-    --lunara-accent: #786071;
-    --lunara-blush: #f3edf2;
-    --lunara-line: #ebe5e1;
-    --lunara-raised: #ffffff;
+    /* Color Palette mapped to unified tokens */
+    --lunara-midnight: var(--ln-color-midnight);
+    --lunara-midnight-soft: var(--ln-color-ink);
+    --lunara-silver: var(--ln-color-silver);
+    --lunara-silver-light: var(--ln-color-silver-light);
+    --lunara-mauve: var(--ln-color-accent);
+    --lunara-cream: var(--ln-color-ivory);
+    --lunara-ivory: var(--ln-color-ivory);
+    --lunara-text: var(--ln-color-ink);
+    --lunara-muted: var(--ln-color-muted);
+    --lunara-border: var(--ln-color-border);
+    --lunara-surface: var(--ln-color-ivory);
+    --lunara-danger: var(--ln-danger);
+    --lunara-danger-soft: var(--ln-danger-soft);
+    --lunara-success: var(--ln-success);
+    --lunara-success-soft: var(--ln-success-soft);
+    --lunara-accent: var(--ln-color-accent);
+    --lunara-blush: var(--ln-color-silver-light);
+    --lunara-line: var(--ln-color-border);
+    --lunara-raised: var(--ln-color-white);
+
+    /* Font tokens */
+    --font-serif: var(--ln-font-display);
+    --font-sans: var(--ln-font-ui);
 
     /* Bootstrap variable mappings */
-    --bs-primary: #786071;
-    --bs-primary-rgb: 120, 96, 113;
+    --bs-primary: var(--ln-color-accent);
+    --bs-primary-rgb: 181, 154, 117;
 
     /* Radii */
-    --radius-sm: 4px;
-    --radius-md: 8px;
-    --radius-lg: 16px;
-    --radius-pill: 9999px;
+    --radius-sm: var(--ln-radius-sm);
+    --radius-md: var(--ln-radius-md);
+    --radius-lg: var(--ln-radius-lg);
+    --radius-pill: var(--ln-radius-pill);
 
     /* Shadows — Soft, multi-layered, luminous */
-    --shadow-subtle: 0 2px 8px rgba(19, 21, 34, 0.035);
-    --shadow-soft: 0 8px 24px rgba(19, 21, 34, 0.05);
-    --shadow-card: 0 12px 32px rgba(19, 21, 34, 0.065);
-    --shadow-hover: 0 18px 42px rgba(19, 21, 34, 0.09);
-    --shadow-glow: 0 0 20px rgba(140, 115, 133, 0.15);
+    --shadow-subtle: var(--ln-shadow-subtle);
+    --shadow-soft: var(--ln-shadow-soft);
+    --shadow-card: var(--ln-shadow-card);
+    --shadow-hover: var(--ln-shadow-hover);
+    --shadow-glow: 0 0 20px rgba(181, 154, 117, 0.18);
 
     /* Transitions */
-    --transition-fast: 180ms cubic-bezier(0.16, 1, 0.3, 1);
-    --transition-normal: 260ms cubic-bezier(0.16, 1, 0.3, 1);
-    --transition-smooth: 380ms cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-fast: var(--ln-transition-fast);
+    --transition-normal: var(--ln-transition-normal);
+    --transition-smooth: var(--ln-transition-smooth);
 
     /* Layout */
-    --container-max: 1320px;
+    --container-max: var(--ln-container-max);
 }
 
 /* Base Reset & Typography */
@@ -60,6 +65,7 @@
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
 body {
@@ -71,6 +77,7 @@ body {
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
 }
 
 img {

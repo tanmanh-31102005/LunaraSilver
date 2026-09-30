@@ -79,7 +79,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <span class="badge bg-secondary">{{ $latestOrder->order_status_label }}</span>
+                                    <x-ui.status-badge :status="$latestOrder->order_status" type="order" :label="$latestOrder->order_status_label" size="sm" />
                                 </div>
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
@@ -87,9 +87,9 @@
                                     <span class="text-muted small d-block">Tổng thanh toán</span>
                                     <strong class="h5 mb-0 text-dark">{{ number_format($latestOrder->grand_total, 0, ',', '.') }} ₫</strong>
                                 </div>
-                                <a href="{{ route('account.orders.show', $latestOrder->order_code) }}" class="lunara-button lunara-button--outline py-1 px-3 small">
+                                <x-ui.button variant="secondary" size="sm" :href="route('account.orders.show', $latestOrder->order_code)">
                                     Xem chi tiết
-                                </a>
+                                </x-ui.button>
                             </div>
                         </div>
                     @else

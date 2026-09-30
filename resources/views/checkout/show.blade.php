@@ -126,7 +126,7 @@
                                 <label class="form-check-label w-100" for="payment_cod">
                                     <div class="d-flex align-items-center justify-content-between">
                                         <strong>Thanh toán khi nhận hàng (COD)</strong>
-                                        <span class="badge bg-light text-dark border"><i class="bi bi-cash"></i> Tiền mặt</span>
+                                        <span class="ln-badge ln-badge--neutral ln-badge--sm"><i class="bi bi-cash me-1"></i> Tiền mặt</span>
                                     </div>
                                     <p class="text-muted small mb-0 mt-1">Quý khách nhận hàng, kiểm tra sản phẩm và thanh toán tiền mặt trực tiếp cho nhân viên vận chuyển.</p>
                                 </label>
@@ -139,10 +139,10 @@
                                 <label class="form-check-label w-100" for="payment_vnpay">
                                     <div class="d-flex align-items-center justify-content-between">
                                         <div class="d-flex align-items-center gap-2">
-                                            <strong class="text-primary">Cổng thanh toán VNPay Sandbox</strong>
-                                            <span class="badge bg-primary text-white" style="font-size: 0.72rem;">Demo Sandbox</span>
+                                            <strong class="text-dark">Cổng thanh toán VNPay Sandbox</strong>
+                                            <span class="ln-badge ln-badge--info ln-badge--sm">Demo Sandbox</span>
                                         </div>
-                                        <span class="badge bg-light text-primary border"><i class="bi bi-qr-code-scan"></i> QR / ATM / Thẻ</span>
+                                        <span class="ln-badge ln-badge--neutral ln-badge--sm"><i class="bi bi-qr-code-scan me-1"></i> QR / ATM / Thẻ</span>
                                     </div>
                                     <p class="text-muted small mb-0 mt-1">Thanh toán an toàn qua cổng VNPay bằng thẻ ATM nội địa, quét mã VietQR, Visa/MasterCard hoặc Ví điện tử.</p>
                                 </label>
@@ -156,9 +156,9 @@
                     </section>
 
                     <div class="checkout-actions mt-4">
-                        <button class="lunara-button lunara-button--dark w-100 py-3" type="submit" id="submitOrderBtn">
+                        <x-ui.button variant="primary" size="lg" type="submit" id="submitOrderBtn" class="w-100 py-3 fw-semibold">
                             {{ old('payment_method') === 'vnpay' ? 'Chuyển đến cổng VNPay' : 'Đặt hàng ngay' }}
-                        </button>
+                        </x-ui.button>
                         <p class="text-center mt-2 mb-0">
                             <a class="text-muted small text-decoration-underline" href="{{ route('cart.index') }}">← Quay lại giỏ hàng</a>
                         </p>
@@ -226,7 +226,7 @@
                     </div>
                     @if($cartSummary['coupon_applied'])
                         <div class="d-flex justify-content-between py-2 border-top text-success">
-                            <span>Giảm giá (<span class="badge bg-success bg-opacity-10 text-success border border-success">{{ $cartSummary['coupon_code'] }}</span>)</span>
+                            <span>Giảm giá (<span class="ln-badge ln-badge--success ln-badge--sm font-monospace">{{ $cartSummary['coupon_code'] }}</span>)</span>
                             <strong class="font-monospace">{{ $cartSummary['discount_display'] }}</strong>
                         </div>
                     @endif

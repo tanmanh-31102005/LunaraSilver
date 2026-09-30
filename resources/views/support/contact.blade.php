@@ -17,7 +17,7 @@
         <div class="row g-5 justify-content-center">
             {{-- Contact Information Sidebar --}}
             <div class="col-lg-4 order-lg-2">
-                <div class="p-4 p-md-5 border border-light-subtle h-100" style="background-color: #faf9f6;">
+                <div class="p-4 p-md-5 border rounded-3 h-100 shadow-sm" style="background-color: var(--ln-color-ivory);">
                     <h3 class="font-serif fs-5 mb-4 text-dark">Thông Tin Hỗ Trợ</h3>
 
                     <div class="mb-4">
@@ -41,20 +41,20 @@
                     <div class="mb-3">
                         <span class="d-block text-muted small text-uppercase tracking-wider mb-2">Hỗ trợ nhanh</span>
                         <p class="small text-secondary mb-3">Tìm kiếm câu trả lời nhanh chóng cho các câu hỏi thường gặp về thanh toán, giao vận và bảo dưỡng.</p>
-                        <a href="{{ route('support.faq') }}" class="btn btn-sm btn-outline-dark rounded-0 w-100 py-2 text-uppercase tracking-wider fs-7">
+                        <x-ui.button variant="secondary" size="sm" :href="route('support.faq')" class="w-100 py-2">
                             Xem Câu Hỏi Thường Gặp (FAQ)
-                        </a>
+                        </x-ui.button>
                     </div>
                 </div>
             </div>
 
             {{-- Contact Form --}}
             <div class="col-lg-7 order-lg-1">
-                <div class="p-4 p-md-5 border border-light-subtle bg-white">
+                <div class="p-4 p-md-5 border rounded-3 bg-white shadow-sm">
                     @if(session('success'))
-                        <div class="alert alert-success rounded-0 border-0 mb-4 py-3" role="alert" style="background-color: #e8f5e9; color: #2e7d32;">
+                        <div class="alert alert-success rounded-3 border-0 mb-4 py-3" role="alert">
                             <div class="d-flex align-items-center gap-2">
-                                <i class="bi bi-check-circle-fill fs-5"></i>
+                                <i class="bi bi-check-circle-fill fs-5 text-success"></i>
                                 <div>
                                     <strong>Gửi yêu cầu thành công!</strong>
                                     <div class="small">{{ session('success') }}</div>
@@ -188,9 +188,9 @@
 
                             {{-- Submit Button --}}
                             <div class="col-12 mt-4">
-                                <button type="submit" class="btn btn-dark rounded-0 px-5 py-3 text-uppercase tracking-wider fs-7 w-100 w-md-auto">
+                                <x-ui.button variant="primary" size="lg" type="submit" class="px-5 py-3 text-uppercase tracking-wider fs-7 w-100 w-md-auto">
                                     Gửi yêu cầu hỗ trợ
-                                </button>
+                                </x-ui.button>
                             </div>
                         </div>
                     </form>

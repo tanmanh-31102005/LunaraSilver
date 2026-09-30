@@ -94,11 +94,11 @@
                             <li class="mb-2"><strong>Phương thức:</strong> Thanh toán khi nhận hàng (COD)</li>
                             <li class="mb-2">
                                 <strong>Thanh toán:</strong>
-                                <span class="badge bg-warning text-dark">Chờ thanh toán khi nhận hàng</span>
+                                <x-ui.status-badge :status="$order->payment_status" type="payment" :label="$order->payment_status_label" size="sm" />
                             </li>
                             <li class="mb-2">
                                 <strong>Đơn hàng:</strong>
-                                <span class="badge bg-secondary">Đang chờ xử lý</span>
+                                <x-ui.status-badge :status="$order->order_status" type="order" :label="$order->order_status_label" size="sm" />
                             </li>
                             @if($order->placed_at)
                                 <li class="mb-0 text-muted"><strong>Thời gian đặt:</strong> {{ $order->placed_at->format('d/m/Y H:i') }}</li>
@@ -109,9 +109,9 @@
             </div>
 
             <div class="text-center mt-5">
-                <a class="lunara-button lunara-button--dark px-4 py-2" href="{{ route('products.index') }}">
+                <x-ui.button variant="primary" size="lg" :href="route('products.index')" class="px-5 py-3">
                     Tiếp tục mua sắm
-                </a>
+                </x-ui.button>
             </div>
         </div>
     </div>

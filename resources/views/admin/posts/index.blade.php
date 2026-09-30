@@ -117,9 +117,9 @@
                             </td>
                             <td class="text-center">
                                 @if($post->isPublished())
-                                    <span class="badge bg-success bg-opacity-75">Đã xuất bản</span>
+                                    <x-ui.status-badge status="published" label="Đã xuất bản" size="sm" />
                                 @else
-                                    <span class="badge bg-secondary">Bản nháp</span>
+                                    <x-ui.status-badge status="draft" label="Bản nháp" size="sm" />
                                 @endif
                             </td>
                             <td>

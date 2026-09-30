@@ -44,14 +44,21 @@
                         <a href="{{ route('account.dashboard') }}" class="account-nav-link {{ request()->routeIs('account.dashboard') ? 'active' : '' }}">
                             <i class="bi bi-grid me-2"></i> Tổng quan
                         </a>
-                        <a href="{{ route('account.profile.edit') }}" class="account-nav-link {{ request()->routeIs('account.profile.*') ? 'active' : '' }}">
-                            <i class="bi bi-person me-2"></i> Thông tin cá nhân
+                        <a href="{{ route('account.orders.index') }}" class="account-nav-link {{ request()->routeIs('account.orders.*') ? 'active' : '' }}">
+                            <i class="bi bi-box-seam me-2"></i> Đơn mua
                         </a>
+                        <span class="account-nav-link text-muted d-flex align-items-center justify-content-between" style="opacity: 0.65; cursor: default;">
+                            <span><i class="bi bi-heart me-2"></i> Yêu thích</span>
+                            <span class="ln-badge ln-badge--neutral ln-badge--sm" style="font-size: 0.68rem;">Sắp có</span>
+                        </span>
                         <a href="{{ route('account.addresses.index') }}" class="account-nav-link {{ request()->routeIs('account.addresses.*') ? 'active' : '' }}">
                             <i class="bi bi-geo-alt me-2"></i> Sổ địa chỉ
                         </a>
-                        <a href="{{ route('account.orders.index') }}" class="account-nav-link {{ request()->routeIs('account.orders.*') ? 'active' : '' }}">
-                            <i class="bi bi-box-seam me-2"></i> Lịch sử đơn hàng
+                        <a href="{{ route('support.faq') }}" class="account-nav-link {{ request()->routeIs('support.*') ? 'active' : '' }}">
+                            <i class="bi bi-headset me-2"></i> Trung tâm hỗ trợ
+                        </a>
+                        <a href="{{ route('account.profile.edit') }}" class="account-nav-link {{ request()->routeIs('account.profile.*') ? 'active' : '' }}">
+                            <i class="bi bi-person me-2"></i> Thông tin cá nhân
                         </a>
                         <a href="{{ route('account.password.edit') }}" class="account-nav-link {{ request()->routeIs('account.password.*') ? 'active' : '' }}">
                             <i class="bi bi-shield-lock me-2"></i> Đổi mật khẩu

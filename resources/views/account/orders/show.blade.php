@@ -24,23 +24,8 @@
             </p>
         </div>
         <div class="d-flex align-items-center gap-2">
-            @php
-                $orderBadgeClass = match($order->order_status) {
-                    'pending' => 'bg-secondary-subtle text-secondary border border-secondary-subtle',
-                    'confirmed' => 'bg-info-subtle text-info border border-info-subtle',
-                    'processing' => 'bg-primary-subtle text-primary border border-primary-subtle',
-                    'shipping' => 'bg-warning-subtle text-warning border border-warning-subtle',
-                    'completed' => 'bg-success-subtle text-success border border-success-subtle',
-                    'cancelled' => 'bg-danger-subtle text-danger border border-danger-subtle',
-                    default => 'bg-secondary text-white',
-                };
-            @endphp
-            <span class="badge {{ $orderBadgeClass }} px-3 py-2">
-                {{ $order->order_status_label }}
-            </span>
-            <span class="badge bg-light text-dark border px-3 py-2">
-                {{ $order->payment_status_label }}
-            </span>
+            <x-ui.status-badge :status="$order->order_status" type="order" :label="$order->order_status_label" size="lg" />
+            <x-ui.status-badge :status="$order->payment_status" type="payment" :label="$order->payment_status_label" size="lg" />
         </div>
     </div>
 

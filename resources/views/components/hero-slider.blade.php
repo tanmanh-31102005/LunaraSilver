@@ -149,9 +149,7 @@ $slides = $slides ?? [
                     id="heroSliderPrev" 
                     aria-label="Slide trước"
                 >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <polyline points="15 18 9 12 15 6"></polyline>
-                    </svg>
+                    <i class="bi bi-chevron-left" aria-hidden="true"></i>
                 </button>
                 <button 
                     type="button" 
@@ -159,9 +157,7 @@ $slides = $slides ?? [
                     id="heroSliderNext" 
                     aria-label="Slide tiếp theo"
                 >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
+                    <i class="bi bi-chevron-right" aria-hidden="true"></i>
                 </button>
             </div>
         </div>

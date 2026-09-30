@@ -8,23 +8,23 @@
         body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
         table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
         img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
-        body { margin: 0; padding: 0; width: 100% !important; background-color: #f7f6f2; color: #1a1a1a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; }
-        .wrapper { width: 100%; table-layout: fixed; background-color: #f7f6f2; padding: 40px 16px; }
-        .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #ebe6df; border-radius: 4px; overflow: hidden; }
-        .header { text-align: center; padding: 36px 30px 24px; border-bottom: 1px solid #f0ece6; background-color: #ffffff; }
-        .header-logo-text { font-family: Georgia, 'Times New Roman', serif; font-size: 20px; letter-spacing: 0.25em; text-transform: uppercase; color: #1a1a1a; margin: 0; font-weight: normal; }
-        .header-subtext { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #8e8880; margin-top: 6px; }
+        body { margin: 0; padding: 0; width: 100% !important; background-color: #f8f6f2; color: #15171c; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; }
+        .wrapper { width: 100%; table-layout: fixed; background-color: #f8f6f2; padding: 40px 16px; }
+        .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 6px; overflow: hidden; }
+        .header { text-align: center; padding: 36px 30px 24px; border-bottom: 1px solid #e5e7eb; background-color: #ffffff; }
+        .header-logo-text { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; letter-spacing: 0.2em; text-transform: uppercase; color: #15171c; margin: 0; font-weight: 500; }
+        .header-subtext { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #717782; margin-top: 6px; }
         .content { padding: 36px 36px 28px; }
-        .footer { padding: 24px 30px; text-align: center; font-size: 12px; color: #8e8880; border-top: 1px solid #f0ece6; background-color: #faf9f6; }
-        .footer a { color: #5a554e; text-decoration: underline; }
-        .btn-primary { display: inline-block; background-color: #1a1a1a; color: #ffffff !important; padding: 12px 28px; text-decoration: none; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 2px; font-weight: 500; }
-        .badge { display: inline-block; padding: 4px 10px; font-size: 12px; letter-spacing: 0.05em; background-color: #f2eee8; color: #4a453f; border-radius: 2px; }
-        .meta-table { width: 100%; border-collapse: collapse; margin: 20px 0; background-color: #fcfbf9; border: 1px solid #ebe6df; border-radius: 2px; }
-        .meta-table td { padding: 10px 14px; font-size: 13px; border-bottom: 1px solid #f0ece6; }
-        .meta-table td.label { color: #8e8880; width: 35%; }
-        .meta-table td.value { color: #1a1a1a; font-weight: 500; }
+        .footer { padding: 24px 30px; text-align: center; font-size: 12px; color: #717782; border-top: 1px solid #e5e7eb; background-color: #f8f6f2; }
+        .footer a { color: #15171c; text-decoration: underline; }
+        .btn-primary { display: inline-block; background-color: #15171c; color: #ffffff !important; padding: 12px 28px; text-decoration: none; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 6px; font-weight: 500; }
+        .badge { display: inline-block; padding: 4px 10px; font-size: 12px; letter-spacing: 0.05em; background-color: #f1efec; color: #15171c; border-radius: 4px; }
+        .meta-table { width: 100%; border-collapse: collapse; margin: 20px 0; background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 6px; }
+        .meta-table td { padding: 10px 14px; font-size: 13px; border-bottom: 1px solid #e5e7eb; }
+        .meta-table td.label { color: #717782; width: 35%; }
+        .meta-table td.value { color: #15171c; font-weight: 500; }
         .meta-table tr:last-child td { border-bottom: none; }
-        .quote-box { background-color: #fbfaf7; border-left: 3px solid #bfa378; padding: 14px 18px; margin: 18px 0; font-size: 13px; color: #333333; line-height: 1.6; }
+        .quote-box { background-color: #f8f6f2; border-left: 3px solid #b59a75; padding: 14px 18px; margin: 18px 0; font-size: 13px; color: #15171c; line-height: 1.6; border-radius: 0 4px 4px 0; }
     </style>
 </head>
 <body>
