@@ -83,3 +83,9 @@ jobs:
           echo "Waiting 2 seconds before triggering sync_phase14.php..."
           sleep 2
           curl -s -L https://lunarasilver.infinityfreeapp.com/sync_phase14.php || true
+
+      - name: 🎟️ Auto-Sync Phase 15 Promotions & Coupons on Server
+        run: |
+          echo "Waiting 2 seconds before triggering sync_phase15.php..."
+          sleep 2
+          curl -s -L https://lunarasilver.infinityfreeapp.com/sync_phase15.php || true

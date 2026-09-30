@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Services\CartService;
+use App\Services\CouponService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -75,6 +77,72 @@ class CartController extends Controller
         return response()->json(
             $this->carts->clear($cart)
         );
+    }
+
+    public function applyCoupon(Request $request, CouponService $couponService): JsonResponse|RedirectResponse
+    {
+        $code = trim((string) $request->input('code', ''));
+        $cart = $this->getCart($request);
+
+        if (! $cart || $cart->items()->count() === 0) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Giỏ hàng của bạn đang trống.',
+                ], 422);
+            }
+
+            return back()->withErrors(['coupon' => 'Giỏ hàng của bạn đang trống.']);
+        }
+
+        $summary = $this->carts->summary($cart);
+        $subtotal = (float) $summary['subtotal'];
+
+        try {
+            $validation = $couponService->validate($code, $subtotal, $request->user());
+            $request->session()->put('coupon_code', $validation['code']);
+
+            $newSummary = $this->carts->summary($cart);
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => $validation['message'],
+                ] + $newSummary);
+            }
+
+            return back()->with('coupon_success', $validation['message']);
+        } catch (ValidationException $e) {
+            $request->session()->forget('coupon_code');
+
+            if ($request->wantsJson()) {
+                $errors = $e->errors();
+
+                return response()->json([
+                    'success' => false,
+                    'message' => reset($errors)[0] ?? 'Mã ưu đãi không hợp lệ.',
+                    'errors' => $errors,
+                ] + $this->carts->summary($cart), 422);
+            }
+
+            return back()->withErrors($e->errors())->withInput();
+        }
+    }
+
+    public function removeCoupon(Request $request): JsonResponse|RedirectResponse
+    {
+        $request->session()->forget('coupon_code');
+        $cart = $this->getCart($request);
+        $summary = $this->carts->summary($cart);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Đã gỡ bỏ mã ưu đãi.',
+            ] + $summary);
+        }
+
+        return back()->with('coupon_success', 'Đã gỡ bỏ mã ưu đãi.');
     }
 
     private function getCart(Request $request, bool $create = false): ?Cart

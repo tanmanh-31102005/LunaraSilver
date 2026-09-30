@@ -79,10 +79,24 @@ class CheckoutService
                 $subtotalCents += $unitCents * $item->quantity;
             }
 
+            $subtotalFloat = (float) ($subtotalCents / 100);
             $subtotalDecimal = $this->decimal($subtotalCents);
             $shippingFeeDecimal = '0.00';
-            $discountDecimal = '0.00';
-            $grandTotalDecimal = $this->decimal($subtotalCents);
+            $discountAmount = 0.0;
+            $appliedCoupon = null;
+
+            // Re-validate coupon server-side before order creation (Rule 15.12)
+            $couponCode = session('coupon_code') ?? ($customerData['coupon_code'] ?? null);
+            if ($couponCode) {
+                $couponValidation = app(CouponService::class)->validate($couponCode, $subtotalFloat, $user);
+                $discountAmount = $couponValidation['discount_amount'];
+                $appliedCoupon = $couponValidation['coupon'];
+            }
+
+            $grandTotalFloat = max(0.0, round($subtotalFloat - $discountAmount, 2));
+            $grandTotalCents = (int) round($grandTotalFloat * 100);
+            $discountDecimal = number_format($discountAmount, 2, '.', '');
+            $grandTotalDecimal = $this->decimal($grandTotalCents);
 
             // Generate unique, readable order code
             $orderCode = $this->generateOrderCode();
@@ -101,6 +115,7 @@ class CheckoutService
                 'shipping_note' => $customerData['shipping_note'] ?? null,
                 'shipping_method' => 'standard',
                 'subtotal' => $subtotalDecimal,
+                'coupon_code' => $appliedCoupon?->code,
                 'discount_amount' => $discountDecimal,
                 'shipping_fee' => $shippingFeeDecimal,
                 'grand_total' => $grandTotalDecimal,
@@ -110,6 +125,12 @@ class CheckoutService
                 'customer_note' => $customerData['customer_note'] ?? null,
                 'placed_at' => now(),
             ]);
+
+            // Record coupon usage and clear coupon from session (Rules 15.15, 15.16)
+            if ($appliedCoupon) {
+                app(CouponService::class)->recordUsage($appliedCoupon, $order, $user);
+                session()->forget('coupon_code');
+            }
 
             // Record initial order status history
             $initNote = $paymentMethod === 'vnpay'

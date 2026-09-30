@@ -220,7 +220,19 @@ class CartService
     public function summary(?Cart $cart): array
     {
         if (! $cart) {
-            return ['items' => [], 'cart_count' => 0, 'subtotal' => '0.00', 'subtotal_display' => '0 ₫'];
+            return [
+                'items' => [],
+                'cart_count' => 0,
+                'subtotal' => '0.00',
+                'subtotal_display' => '0 ₫',
+                'discount_amount' => '0.00',
+                'discount_display' => '0 ₫',
+                'coupon_code' => null,
+                'coupon_applied' => false,
+                'coupon' => null,
+                'grand_total' => '0.00',
+                'grand_total_display' => '0 ₫',
+            ];
         }
 
         $cart->load(['items' => fn ($query) => $query->orderByDesc('id'), 'items.product.images', 'items.product.bundleItems.component']);
@@ -252,11 +264,42 @@ class CartService
             ];
         }
 
+        $subtotalFloat = (float) ($subtotalCents / 100);
+        $discountAmount = 0.0;
+        $couponData = null;
+        $couponCode = session('coupon_code');
+
+        if ($couponCode && $subtotalFloat > 0) {
+            try {
+                $couponValidation = app(CouponService::class)->validate($couponCode, $subtotalFloat, auth()->user());
+                $discountAmount = $couponValidation['discount_amount'];
+                $couponData = [
+                    'code' => $couponValidation['code'],
+                    'type' => $couponValidation['type'],
+                    'value' => $couponValidation['value'],
+                    'discount_amount' => $discountAmount,
+                    'discount_display' => $couponValidation['discount_display'],
+                ];
+            } catch (ValidationException $e) {
+                session()->forget('coupon_code');
+            }
+        }
+
+        $grandTotalFloat = max(0.0, round($subtotalFloat - $discountAmount, 2));
+        $grandTotalCents = (int) round($grandTotalFloat * 100);
+
         return [
             'items' => $items,
             'cart_count' => $cartCount,
             'subtotal' => $this->decimal($subtotalCents),
             'subtotal_display' => $this->formatVnd($subtotalCents),
+            'discount_amount' => number_format($discountAmount, 2, '.', ''),
+            'discount_display' => $discountAmount > 0 ? '-'.number_format($discountAmount, 0, ',', '.').' ₫' : '0 ₫',
+            'coupon_code' => $couponData['code'] ?? null,
+            'coupon_applied' => $couponData !== null,
+            'coupon' => $couponData,
+            'grand_total' => $this->decimal($grandTotalCents),
+            'grand_total_display' => $this->formatVnd($grandTotalCents),
         ];
     }
 

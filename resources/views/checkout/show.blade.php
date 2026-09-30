@@ -224,13 +224,19 @@
                         <span>Tạm tính</span>
                         <strong>{{ $cartSummary['subtotal_display'] }}</strong>
                     </div>
+                    @if($cartSummary['coupon_applied'])
+                        <div class="d-flex justify-content-between py-2 border-top text-success">
+                            <span>Giảm giá (<span class="badge bg-success bg-opacity-10 text-success border border-success">{{ $cartSummary['coupon_code'] }}</span>)</span>
+                            <strong class="font-monospace">{{ $cartSummary['discount_display'] }}</strong>
+                        </div>
+                    @endif
                     <div class="d-flex justify-content-between py-2 border-top">
                         <span>Phí vận chuyển</span>
-                        <span>0 ₫</span>
+                        <span class="text-success fw-medium">Miễn phí</span>
                     </div>
                     <div class="d-flex justify-content-between py-3 border-top border-bottom">
                         <span class="h5 mb-0">Tổng thanh toán</span>
-                        <strong class="h5 mb-0 text-dark">{{ $cartSummary['subtotal_display'] }}</strong>
+                        <strong class="h5 mb-0 text-primary">{{ $cartSummary['grand_total_display'] }}</strong>
                     </div>
                 </div>
 

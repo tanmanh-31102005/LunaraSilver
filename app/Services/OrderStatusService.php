@@ -122,6 +122,9 @@ class OrderStatusService
             // Restore component inventory safely
             $restoreResult = $this->inventoryService->restoreInventory($lockedOrder);
 
+            // Release coupon usage if applied
+            app(CouponService::class)->releaseUsage($lockedOrder);
+
             $fromStatus = $lockedOrder->order_status;
             $lockedOrder->order_status = 'cancelled';
 

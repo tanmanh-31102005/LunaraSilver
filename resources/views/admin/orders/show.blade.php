@@ -199,10 +199,13 @@
                                 <span>Tạm tính hàng hóa:</span>
                                 <span class="font-monospace">{{ number_format($order->subtotal, 0, ',', '.') }}đ</span>
                             </div>
-                            @if ($order->discount_total > 0)
-                                <div class="d-flex justify-content-between py-1 text-danger">
-                                    <span>Giảm giá khuyến mãi:</span>
-                                    <span class="font-monospace">-{{ number_format($order->discount_total, 0, ',', '.') }}đ</span>
+                            @php
+                                $discountVal = (float) ($order->discount_amount ?? $order->discount_total ?? 0);
+                            @endphp
+                            @if ($discountVal > 0 || $order->coupon_code)
+                                <div class="d-flex justify-content-between py-1 text-success">
+                                    <span>Mã ưu đãi ({{ $order->coupon_code ?: 'Giảm giá' }}):</span>
+                                    <span class="font-monospace">-{{ number_format($discountVal, 0, ',', '.') }}đ</span>
                                 </div>
                             @endif
                             <div class="d-flex justify-content-between py-1 text-muted">

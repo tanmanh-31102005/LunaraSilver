@@ -181,10 +181,10 @@
                         <span>Tạm tính</span>
                         <span>{{ number_format($order->subtotal, 0, ',', '.') }} ₫</span>
                     </div>
-                    @if($order->discount_amount > 0)
-                        <div class="d-flex justify-content-between py-1 text-muted small">
-                            <span>Giảm giá</span>
-                            <span>-{{ number_format($order->discount_amount, 0, ',', '.') }} ₫</span>
+                    @if($order->discount_amount > 0 || $order->coupon_code)
+                        <div class="d-flex justify-content-between py-1 text-success small">
+                            <span>Giảm giá ({{ $order->coupon_code ?: 'Ưu đãi' }})</span>
+                            <span class="font-monospace">-{{ number_format($order->discount_amount, 0, ',', '.') }} ₫</span>
                         </div>
                     @endif
                     <div class="d-flex justify-content-between py-1 text-muted small">

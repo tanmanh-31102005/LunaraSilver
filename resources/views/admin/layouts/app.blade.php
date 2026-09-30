@@ -72,6 +72,16 @@
                 </div>
 
                 <div class="admin-nav-group">
+                    <div class="admin-nav-group__title">MARKETING</div>
+                    <a href="{{ route('admin.coupons.index') }}"
+                       class="admin-nav-item {{ request()->routeIs('admin.coupons.*') ? 'admin-nav-item--active' : '' }}"
+                       data-bs-toggle="tooltip" data-bs-placement="right" title="Mã giảm giá">
+                        <i class="bi bi-ticket-perforated"></i>
+                        <span>Mã giảm giá</span>
+                    </a>
+                </div>
+
+                <div class="admin-nav-group">
                     <div class="admin-nav-group__title">KHÁCH HÀNG</div>
                     <a href="{{ route('admin.support.index') }}"
                        class="admin-nav-item {{ request()->routeIs('admin.support.*') ? 'admin-nav-item--active' : '' }}"
@@ -134,6 +144,14 @@
                         <a href="{{ route('admin.orders.index') }}" class="admin-nav-item {{ request()->routeIs('admin.orders.*') ? 'admin-nav-item--active' : '' }}">
                             <i class="bi bi-receipt"></i>
                             <span>Đơn hàng</span>
+                        </a>
+                    </div>
+
+                    <div class="admin-nav-group">
+                        <div class="admin-nav-group__title text-white-50">MARKETING</div>
+                        <a href="{{ route('admin.coupons.index') }}" class="admin-nav-item {{ request()->routeIs('admin.coupons.*') ? 'admin-nav-item--active' : '' }}">
+                            <i class="bi bi-ticket-perforated"></i>
+                            <span>Mã giảm giá</span>
                         </a>
                     </div>
 

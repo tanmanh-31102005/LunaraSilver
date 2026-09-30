@@ -51,15 +51,21 @@
                         <div class="order-totals-box mt-3 pt-2">
                             <div class="d-flex justify-content-between py-1">
                                 <span class="text-muted">Tạm tính:</span>
-                                <span>{{ number_format((int) str_replace('.', '', $order->subtotal) / 100, 0, ',', '.') }} ₫</span>
+                                <span>{{ number_format((float) $order->subtotal, 0, ',', '.') }} ₫</span>
                             </div>
+                            @if((float) $order->discount_amount > 0 || $order->coupon_code)
+                                <div class="d-flex justify-content-between py-1 text-success">
+                                    <span>Giảm giá ({{ $order->coupon_code ?: 'Ưu đãi' }}):</span>
+                                    <span class="font-monospace">-{{ number_format((float) $order->discount_amount, 0, ',', '.') }} ₫</span>
+                                </div>
+                            @endif
                             <div class="d-flex justify-content-between py-1">
                                 <span class="text-muted">Phí vận chuyển:</span>
-                                <span>{{ number_format((int) str_replace('.', '', $order->shipping_fee) / 100, 0, ',', '.') }} ₫</span>
+                                <span>{{ (float) $order->shipping_fee > 0 ? number_format((float) $order->shipping_fee, 0, ',', '.') . ' ₫' : 'Miễn phí' }}</span>
                             </div>
                             <div class="d-flex justify-content-between py-2 border-top mt-2">
                                 <span class="h6 mb-0">Tổng thanh toán:</span>
-                                <strong class="h5 mb-0 text-dark">{{ number_format((int) str_replace('.', '', $order->grand_total) / 100, 0, ',', '.') }} ₫</strong>
+                                <strong class="h5 mb-0 text-primary">{{ number_format((float) $order->grand_total, 0, ',', '.') }} ₫</strong>
                             </div>
                         </div>
                     </div>

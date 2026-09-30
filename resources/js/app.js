@@ -43,6 +43,25 @@ function renderCart(data) {
 
     const pageSubtotal = document.querySelector('[data-cart-subtotal]');
     if (pageSubtotal) pageSubtotal.textContent = data.subtotal_display;
+
+    const discountRow = document.querySelector('[data-cart-discount-row]');
+    const discountVal = document.querySelector('[data-cart-discount]');
+    const couponCodeVal = document.querySelector('[data-cart-coupon-code]');
+    const grandTotalVal = document.querySelector('[data-cart-grandtotal]');
+
+    if (discountRow) {
+        if (data.coupon_applied) {
+            discountRow.style.setProperty('display', 'flex', 'important');
+            if (discountVal) discountVal.textContent = data.discount_display;
+            if (couponCodeVal && data.coupon_code) couponCodeVal.textContent = data.coupon_code;
+        } else {
+            discountRow.style.setProperty('display', 'none', 'important');
+        }
+    }
+    if (grandTotalVal) {
+        grandTotalVal.textContent = data.grand_total_display || data.subtotal_display;
+    }
+
     document.querySelectorAll('[data-cart-item]').forEach((row) => {
         const item = data.items.find((candidate) => candidate.id === Number(row.dataset.cartItem));
         if (!item) {

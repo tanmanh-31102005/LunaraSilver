@@ -38,7 +38,7 @@ class Order extends Model
     protected $fillable = [
         'user_id', 'order_code', 'customer_name', 'customer_email', 'customer_phone',
         'shipping_address', 'shipping_city', 'shipping_note', 'shipping_method',
-        'subtotal', 'discount_amount', 'shipping_fee', 'grand_total',
+        'subtotal', 'coupon_code', 'discount_amount', 'shipping_fee', 'grand_total',
         'payment_method', 'payment_status', 'order_status', 'inventory_restored_at',
         'customer_note', 'placed_at',
     ];
@@ -96,6 +96,16 @@ class Order extends Model
     public function statusHistories(): HasMany
     {
         return $this->hasMany(OrderStatusHistory::class)->orderBy('id', 'desc');
+    }
+
+    public function couponUsage(): HasOne
+    {
+        return $this->hasOne(CouponUsage::class);
+    }
+
+    public function coupon(): BelongsTo
+    {
+        return $this->belongsTo(Coupon::class, 'coupon_code', 'code');
     }
 
     public function isCancellable(): bool
@@ -169,5 +179,25 @@ class Order extends Model
             'bank_transfer' => 'Chuyển khoản',
             default => $this->payment_method ?? 'COD',
         };
+    }
+
+    public function getSubtotalDisplayAttribute(): string
+    {
+        return number_format((float) $this->subtotal, 0, ',', '.').' ₫';
+    }
+
+    public function getDiscountAmountDisplayAttribute(): string
+    {
+        return '-'.number_format((float) $this->discount_amount, 0, ',', '.').' ₫';
+    }
+
+    public function getShippingFeeDisplayAttribute(): string
+    {
+        return number_format((float) $this->shipping_fee, 0, ',', '.').' ₫';
+    }
+
+    public function getGrandTotalDisplayAttribute(): string
+    {
+        return number_format((float) $this->grand_total, 0, ',', '.').' ₫';
     }
 }
