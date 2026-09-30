@@ -181,27 +181,37 @@
                 <div class="row g-4">
                     @foreach($relatedPosts as $rel)
                         <div class="col-12 col-md-4">
-                            <article class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden bg-white">
-                                <a href="{{ route('blog.show', $rel->slug) }}" class="d-block overflow-hidden ratio ratio-16x9">
-                                    <img src="{{ $rel->cover_image }}" alt="{{ $rel->title }}" class="w-100 h-100 object-fit-cover" loading="lazy">
+                            <article class="blog-card">
+                                <a href="{{ route('blog.show', $rel->slug) }}" class="blog-card__media">
+                                    <img src="{{ $rel->cover_image }}" alt="{{ $rel->title }}" class="blog-card__img" loading="lazy">
+                                    @if($rel->category)
+                                        <span class="blog-card__category">
+                                            {{ $rel->category->name }}
+                                        </span>
+                                    @endif
                                 </a>
-                                <div class="card-body p-4 d-flex flex-column">
-                                    <div class="text-muted small mb-2">
-                                        <span>{{ $rel->published_at ? $rel->published_at->format('d/m/Y') : '' }}</span>
-                                        <span>•</span>
-                                        <span>{{ $rel->reading_time }} phút đọc</span>
+                                <div class="blog-card__body">
+                                    <div class="blog-meta mb-2">
+                                        <span class="blog-meta__item">{{ $rel->published_at ? $rel->published_at->format('d/m/Y') : '' }}</span>
+                                        <span class="blog-meta__divider">•</span>
+                                        <span class="blog-meta__item"><i class="bi bi-clock me-1" aria-hidden="true"></i>{{ $rel->reading_time }} phút đọc</span>
                                     </div>
-                                    <h3 class="h6 font-serif fw-normal mb-2 text-dark">
-                                        <a href="{{ route('blog.show', $rel->slug) }}" class="text-dark text-decoration-none">
+                                    <h3 class="blog-card__title">
+                                        <a href="{{ route('blog.show', $rel->slug) }}">
                                             {{ $rel->title }}
                                         </a>
                                     </h3>
-                                    <p class="text-muted small mb-3 flex-grow-1 line-clamp-2">
+                                    <p class="blog-card__excerpt">
                                         {{ $rel->excerpt ?: Str::limit(strip_tags($rel->content), 90) }}
                                     </p>
-                                    <a href="{{ route('blog.show', $rel->slug) }}" class="small text-dark fw-medium text-decoration-none">
-                                        Đọc tiếp <i class="bi bi-chevron-right small"></i>
-                                    </a>
+                                    <div class="blog-card__footer">
+                                        <span class="blog-card__author" title="Tác giả: {{ $rel->author->name ?? 'Lunara Editor' }}">
+                                            <i class="bi bi-feather me-1" aria-hidden="true"></i>{{ $rel->author->name ?? 'Lunara Editor' }}
+                                        </span>
+                                        <a href="{{ route('blog.show', $rel->slug) }}" class="blog-card__link">
+                                            Đọc tiếp <i class="bi bi-chevron-right ms-1" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </article>
                         </div>
