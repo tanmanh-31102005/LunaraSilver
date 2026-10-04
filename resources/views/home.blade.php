@@ -1,8 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Lunara Silver — Shine with your own moonlight')
-@section('meta_description', 'Khám phá trang sức bạc Lunara Silver lấy cảm hứng từ mặt trăng, các vì sao và dải ngân hà.')
+@section('title', 'Lunara Silver | Trang sức bạc tinh tế')
+@section('meta_description', 'Trang sức bạc 925 cao cấp Lunara Silver lấy cảm hứng từ vẻ đẹp huyền diệu của mặt trăng và các vì sao. Tinh tế, thanh lịch và tỏa sáng theo cách của riêng bạn.')
 @section('main_class', 'home-main')
+@section('canonical', route('home'))
+
+@push('schema')
+<x-seo.json-ld :schema="app(\App\Services\StructuredDataService::class)->organizationSchema()" />
+@endpush
 
 @section('content')
     <x-hero-slider />

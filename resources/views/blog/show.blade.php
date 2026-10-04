@@ -2,6 +2,14 @@
 
 @section('title', ($post->seo_title ?: $post->title) . ' | Lunara Journal')
 @section('meta_description', $post->seo_description ?: ($post->excerpt ?: Str::limit(strip_tags($post->content), 155)))
+@section('canonical', route('blog.show', $post->slug))
+@section('og_type', 'article')
+@section('og_image', $post->cover_image_url ?: $post->image_url)
+
+@push('schema')
+<x-seo.json-ld :schema="app(\App\Services\StructuredDataService::class)->blogPostingSchema($post)" />
+<x-seo.json-ld :schema="app(\App\Services\StructuredDataService::class)->breadcrumbSchema([['label' => 'Nhật ký Lunara', 'url' => route('blog.index')], ['label' => $post->category?->name ?? 'Bài viết', 'url' => $post->category ? route('blog.category', $post->category->slug) : route('blog.index')], ['label' => $post->title, 'url' => route('blog.show', $post->slug)]])" />
+@endpush
 
 @push('styles')
 <style>

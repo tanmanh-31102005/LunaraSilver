@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('title', 'Liên Hệ Với Chúng Tôi — Lunara Silver')
+@section('meta_description', 'Liên hệ với Lunara Silver tại 140 Lê Trọng Tấn, Tây Thạnh, Tân Phú, Ho Chi Minh City. Hotline: 0971 124 922, email: lunaraslivertrangsuc@gmail.com. Hỗ trợ khách hàng 24/7.')
+@section('canonical', route('contact'))
 
 @section('content')
 <div class="lunara-contact-page py-5">
@@ -21,19 +23,19 @@
                     <h3 class="font-serif fs-5 mb-4 text-dark">Thông Tin Hỗ Trợ</h3>
 
                     <div class="mb-4">
-                        <span class="d-block text-muted small text-uppercase tracking-wider mb-1">Địa chỉ trải nghiệm</span>
-                        <p class="mb-0 text-dark">Tầng 2, TTTM Lunara Flagship, Hà Nội, Việt Nam</p>
+                        <span class="d-block text-muted small text-uppercase tracking-wider mb-1">Địa chỉ cửa hàng</span>
+                        <p class="mb-0 text-dark">140 Lê Trọng Tấn, Tây Thạnh, Tân Phú, Ho Chi Minh City</p>
                     </div>
 
                     <div class="mb-4">
-                        <span class="d-block text-muted small text-uppercase tracking-wider mb-1">Đường dây nóng (Hotline)</span>
-                        <p class="mb-0 text-dark fw-medium">1900 8899 / 0988 123 456</p>
-                        <small class="text-muted">8:30 - 21:30 (Thứ 2 — Chủ Nhật)</small>
+                        <span class="d-block text-muted small text-uppercase tracking-wider mb-1">Hotline CSKH / Đặt hàng</span>
+                        <p class="mb-0 text-dark fw-medium"><a href="tel:0971124922" class="text-dark text-decoration-none">0971 124 922</a></p>
+                        <small class="text-muted">Thứ Hai — Thứ Bảy: 08:30 - 20:30 (Chủ Nhật: 09:00 - 18:00)</small>
                     </div>
 
                     <div class="mb-4">
                         <span class="d-block text-muted small text-uppercase tracking-wider mb-1">Thư điện tử (Email)</span>
-                        <p class="mb-0 text-dark">lunaraslivertrangsuc@gmail.com</p>
+                        <p class="mb-0 text-dark"><a href="mailto:lunaraslivertrangsuc@gmail.com" class="text-dark text-decoration-none">lunaraslivertrangsuc@gmail.com</a></p>
                     </div>
 
                     <hr class="my-4 border-secondary-subtle">

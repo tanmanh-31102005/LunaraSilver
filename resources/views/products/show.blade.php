@@ -1,11 +1,15 @@
 @extends('layouts.app')
 
-@section('title', e($product->name).' | Lunara Silver')
-@section('meta_description', e($metaDescription))
+@section('title', $product->seo_title ?: ($product->name.' | Lunara Silver'))
+@section('meta_description', $product->seo_description ?: ($metaDescription ?: ($product->name.' trang sức bạc 925 cao cấp từ Lunara Silver.')))
 @section('main_class', 'detail-main')
+@section('canonical', route('products.show', $product->slug))
+@section('og_type', 'product')
+@section('og_image', $product->primary_image_url ?: ($images->first()?->displayUrl() ?? null))
 
-@push('styles')
-    <link rel="canonical" href="{{ route('products.show', $product->slug) }}">
+@push('schema')
+<x-seo.json-ld :schema="app(\App\Services\StructuredDataService::class)->productSchema($product)" />
+<x-seo.json-ld :schema="app(\App\Services\StructuredDataService::class)->breadcrumbSchema([['label' => 'Sản phẩm', 'url' => route('products.index')], ['label' => $product->category->name, 'url' => route('products.category', $product->category->slug)], ['label' => $product->name, 'url' => route('products.show', $product->slug)]])" />
 @endpush
 
 @section('content')
@@ -259,6 +263,13 @@
                                 <li><strong>Đồng kiểm an tâm:</strong> Bạn được quyền mở kiện hàng kiểm tra trước khi thanh toán cho shipper.</li>
                                 <li><strong>Đổi mới trong 7 ngày:</strong> Đổi size hoặc đổi mẫu nếu chưa qua sử dụng và còn nguyên tem mác.</li>
                             </ul>
+                            <div class="detail-policy-contact mt-3 pt-3 border-top small" style="font-size: 0.8125rem; line-height: 1.6; color: var(--ln-color-muted);">
+                                <div class="fw-medium text-dark mb-1"><i class="bi bi-shield-check me-1 text-accent"></i> Hỗ trợ chính sách & Đổi trả / Bảo hành:</div>
+                                <div><i class="bi bi-geo-alt me-1"></i> <strong>Địa chỉ:</strong> 140 Lê Trọng Tấn, Tây Thạnh, Tân Phú, Ho Chi Minh City</div>
+                                <div><i class="bi bi-telephone me-1"></i> <strong>Hotline CSKH / Đặt hàng:</strong> <a href="tel:0971124922" class="text-dark fw-medium text-decoration-none">0971 124 922</a></div>
+                                <div><i class="bi bi-envelope me-1"></i> <strong>Email liên hệ:</strong> <a href="mailto:lunaraslivertrangsuc@gmail.com" class="text-dark text-decoration-none">lunaraslivertrangsuc@gmail.com</a></div>
+                                <div><i class="bi bi-clock me-1"></i> <strong>Giờ làm việc:</strong> Thứ Hai — Thứ Bảy: 08:30 - 20:30 (Chủ Nhật: 09:00 - 18:00)</div>
+                            </div>
                         </div>
                     </details>
 

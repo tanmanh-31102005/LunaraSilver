@@ -80,9 +80,53 @@
                                 <label class="form-check-label fw-semibold" for="is_active">Kích hoạt hiển thị</label>
                             </div>
                         </div>
+                    {{-- SEO Section --}}
+                    <div class="border-top pt-3 mt-4">
+                        <h3 class="h6 fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+                            <i class="bi bi-search text-primary"></i>
+                            <span>Tối ưu hóa tìm kiếm (SEO)</span>
+                        </h3>
+
+                        <div class="mb-3">
+                            <label for="seo_title" class="form-label fw-semibold small">Tiêu đề SEO (Meta Title)</label>
+                            <input type="text" class="form-control form-control-sm @error('seo_title') is-invalid @enderror" id="seo_title" name="seo_title" value="{{ old('seo_title') }}" placeholder="Nếu để trống sẽ dùng: {Tên danh mục} | Lunara Silver">
+                            <div class="form-text small">Khuyến nghị dưới 60 ký tự để hiển thị tốt nhất trên kết quả tìm kiếm Google.</div>
+                            @error('seo_title')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="seo_description" class="form-label fw-semibold small">Mô tả SEO (Meta Description)</label>
+                            <textarea class="form-control form-control-sm @error('seo_description') is-invalid @enderror" id="seo_description" name="seo_description" rows="2" placeholder="Tóm tắt nội dung danh mục xuất hiện trên Google...">{{ old('seo_description') }}</textarea>
+                            <div class="form-text small">Khuyến nghị dưới 160 ký tự.</div>
+                            @error('seo_description')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="seo_intro" class="form-label fw-semibold small">Đoạn giới thiệu biên tập (Editorial Intro)</label>
+                            <textarea class="form-control form-control-sm @error('seo_intro') is-invalid @enderror" id="seo_intro" name="seo_intro" rows="3" placeholder="Đoạn văn giới thiệu hữu ích 1-2 câu hiển thị ở đầu trang danh mục Storefront...">{{ old('seo_intro') }}</textarea>
+                            <div class="form-text small">Nội dung giá trị giúp khách hàng hiểu rõ về bộ sưu tập và nâng cao chất lượng content on-page.</div>
+                            @error('seo_intro')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <x-admin.seo-preview 
+                            titleInputId="seo_title" 
+                            fallbackTitleInputId="name" 
+                            descInputId="seo_description" 
+                            fallbackDescInputId="description" 
+                            slugInputId="slug" 
+                            urlPrefix="https://lunarasilver.infinityfreeapp.com/products/" 
+                            titleSuffix=" | Lunara Silver" 
+                            previewId="categoryCreateSerpPreview" 
+                        />
                     </div>
 
-                    <div class="d-flex justify-content-end gap-2 border-top pt-3">
+                    <div class="d-flex justify-content-end gap-2 border-top pt-3 mt-4">
                         <a href="{{ route('admin.categories.index') }}" class="btn btn-outline-secondary">Hủy bỏ</a>
                         <button type="submit" class="btn btn-primary px-4">
                             <i class="bi bi-save me-1"></i> Lưu danh mục

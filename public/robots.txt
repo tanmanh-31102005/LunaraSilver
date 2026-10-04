@@ -1,2 +1,9 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /admin/
+Disallow: /cart
+Disallow: /checkout
+Disallow: /account/
+Disallow: /order-success/
+
+Sitemap: https://lunarasilver.infinityfreeapp.com/sitemap.xml

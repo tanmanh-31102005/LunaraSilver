@@ -161,6 +161,15 @@ class Product extends Model
         return $regular > $sale ? intdiv(($regular - $sale) * 100, $regular) : null;
     }
 
+    public function getEffectivePriceAttribute(): float
+    {
+        if ($this->hasValidSalePrice()) {
+            return (float) $this->sale_price;
+        }
+
+        return (float) $this->regular_price;
+    }
+
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('is_active', true);

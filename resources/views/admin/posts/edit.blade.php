@@ -77,19 +77,33 @@
                     </h3>
                     <div class="mb-3">
                         <label for="seo_title" class="form-label fw-medium text-dark">Tiêu đề SEO (Meta Title)</label>
-                        <input type="text" name="seo_title" id="seo_title" class="form-control @error('seo_title') is-invalid @enderror" value="{{ old('seo_title', $post->seo_title) }}" placeholder="Nếu để trống sẽ sử dụng tiêu đề bài viết">
+                        <input type="text" name="seo_title" id="seo_title" class="form-control @error('seo_title') is-invalid @enderror" value="{{ old('seo_title', $post->seo_title) }}" placeholder="Nếu để trống sẽ dùng: {{ $post->title }} | Lunara Silver">
+                        <div class="form-text small">Khuyến nghị dưới 60 ký tự.</div>
                         @error('seo_title')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <div class="mb-0">
+                    <div class="mb-3">
                         <label for="seo_description" class="form-label fw-medium text-dark">Mô tả SEO (Meta Description)</label>
-                        <textarea name="seo_description" id="seo_description" rows="2" class="form-control @error('seo_description') is-invalid @enderror">{{ old('seo_description', $post->seo_description) }}</textarea>
+                        <textarea name="seo_description" id="seo_description" rows="2" class="form-control @error('seo_description') is-invalid @enderror" placeholder="Tóm tắt nội dung bài viết dưới 160 ký tự...">{{ old('seo_description', $post->seo_description) }}</textarea>
+                        <div class="form-text small">Khuyến nghị dưới 160 ký tự.</div>
                         @error('seo_description')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+
+                    <x-admin.seo-preview 
+                        titleInputId="seo_title" 
+                        fallbackTitleInputId="title" 
+                        descInputId="seo_description" 
+                        fallbackDescInputId="excerpt" 
+                        slugInputId="slug" 
+                        defaultSlug="{{ $post->slug }}" 
+                        urlPrefix="https://lunarasilver.infinityfreeapp.com/blog/" 
+                        titleSuffix=" | Lunara Silver" 
+                        previewId="postSerpPreview" 
+                    />
                 </div>
             </div>
 

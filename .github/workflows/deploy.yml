@@ -95,3 +95,9 @@ jobs:
           echo "Waiting 2 seconds before triggering sync_phase16.php..."
           sleep 2
           curl -s -L https://lunarasilver.infinityfreeapp.com/sync_phase16.php || true
+
+      - name: 🌐 Auto-Sync Phase 18 SEO System & Redirects on Server
+        run: |
+          echo "Waiting 2 seconds before triggering sync_phase18.php..."
+          sleep 2
+          curl -s -L https://lunarasilver.infinityfreeapp.com/sync_phase18.php || true

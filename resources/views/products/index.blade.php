@@ -1,8 +1,17 @@
 @extends('layouts.app')
 
-@section('title', $pageTitle.' | Lunara Silver')
-@section('meta_description', $category?->description ?: 'Khám phá sản phẩm Lunara Silver.')
+@section('title', $category?->seo_title ?: ($category ? $category->name.' Bạc 925 Cao Cấp | Lunara Silver' : 'Bộ Sưu Tập Trang Sức Bạc 925 Cao Cấp | Lunara Silver'))
+@section('meta_description', $category?->seo_description ?: ($category ? ($category->description ?: 'Khám phá các thiết kế '.$category->name.' bạc 925 cao cấp từ Lunara Silver.') : 'Khám phá toàn bộ tác phẩm trang sức bạc 925 cao cấp Lunara Silver.'))
 @section('main_class', 'listing-main')
+@section('canonical', $category ? route('products.category', $category->slug) : route('products.index'))
+
+@if(request()->anyFilled(['q', 'sort', 'material', 'stone', 'product_type', 'min_price', 'max_price', 'page']) || ($category && $products->total() === 0))
+@section('robots', 'noindex,follow')
+@endif
+
+@push('schema')
+<x-seo.json-ld :schema="app(\App\Services\StructuredDataService::class)->breadcrumbSchema($category ? [['label' => 'Sản phẩm', 'url' => route('products.index')], ['label' => $category->name, 'url' => route('products.category', $category->slug)]] : [['label' => 'Sản phẩm', 'url' => route('products.index')]])" />
+@endpush
 
 @section('content')
     <div class="lunara-container listing-page">
@@ -25,6 +34,11 @@
                 </span>
                 <h1 class="listing-banner__title">{{ $pageTitle }}</h1>
                 <p class="listing-banner__tagline">{{ $currentTagline }}</p>
+                @if($category && !empty($category->seo_intro))
+                    <div class="listing-banner__intro small text-muted mx-auto mt-2" style="max-width: 680px; font-size: 0.875rem; line-height: 1.6;">
+                        {{ $category->seo_intro }}
+                    </div>
+                @endif
                 <div class="listing-banner__meta">
                     <span class="listing-banner__count">{{ $products->total() }} thiết kế độc quyền</span>
                 </div>

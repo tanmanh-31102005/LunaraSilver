@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Product;
+use App\Models\SeoRedirect;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -38,12 +39,20 @@ class ProductService
     public function updateProduct(Product $product, array $data): Product
     {
         return DB::transaction(function () use ($product, $data): Product {
+            $oldSlug = $product->slug;
             $bundleItems = $data['bundle_items'] ?? [];
             $hasImages = array_key_exists('images', $data);
             $images = $data['images'] ?? [];
             unset($data['bundle_items'], $data['images']);
 
             $product->update($data);
+
+            if ($oldSlug && $product->slug && $oldSlug !== $product->slug) {
+                SeoRedirect::registerRedirect(
+                    '/product/'.$oldSlug,
+                    '/product/'.$product->slug
+                );
+            }
 
             if (in_array($product->product_type, ['collection', 'gift'], true)) {
                 $this->syncBundleItems($product, $bundleItems);

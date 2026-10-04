@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('title', 'Trung Tâm Hỗ Trợ & Câu Hỏi Thường Gặp (FAQ) — Lunara Silver')
+@section('meta_description', 'Trung tâm hỗ trợ khách hàng và giải đáp câu hỏi thường gặp về sản phẩm bạc 925, đặt hàng, thanh toán VNPay, chính sách bảo hành tại Lunara Silver.')
+@section('canonical', route('support.faq'))
+@if(filled($searchQuery) || filled($selectedCategory))
+@section('robots', 'noindex,follow')
+@endif
 
 @section('content')
 <div class="lunara-support-page py-5">

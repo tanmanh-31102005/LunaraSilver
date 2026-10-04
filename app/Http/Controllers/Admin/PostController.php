@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\PostCategory;
+use App\Models\SeoRedirect;
 use App\Services\CloudinaryService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -268,6 +269,14 @@ class PostController extends Controller
             'seo_description' => $validated['seo_description'] ?? null,
             'published_at' => $publishedAt,
         ]);
+
+        $oldSlug = $post->getOriginal('slug');
+        if ($oldSlug && $slug && $oldSlug !== $slug) {
+            SeoRedirect::registerRedirect(
+                '/blog/'.$oldSlug,
+                '/blog/'.$slug
+            );
+        }
 
         return redirect()->route('admin.posts.index')
             ->with('success', 'Đã cập nhật bài viết thành công.');

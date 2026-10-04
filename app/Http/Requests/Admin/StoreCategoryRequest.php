@@ -30,6 +30,9 @@ class StoreCategoryRequest extends FormRequest
             'parent_id' => ['nullable', 'integer', 'exists:categories,id'],
             'is_active' => ['boolean'],
             'sort_order' => ['integer', 'min:0'],
+            'seo_title' => ['nullable', 'string', 'max:255'],
+            'seo_description' => ['nullable', 'string', 'max:500'],
+            'seo_intro' => ['nullable', 'string', 'max:1000'],
         ];
     }
 

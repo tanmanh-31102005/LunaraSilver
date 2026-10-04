@@ -64,7 +64,7 @@ class FaqSeeder extends Seeder
             [
                 'category' => 'Đổi trả',
                 'question' => 'Chính sách đổi trả sản phẩm tại Lunara Silver?',
-                'answer' => 'Lunara chấp nhận đổi sản phẩm trong vòng 7 ngày kể từ khi quý khách nhận hàng, áp dụng với các sản phẩm còn nguyên tem mác, hộp đựng nguyên vẹn và chưa qua sử dụng. Nếu phát sinh lỗi kỹ thuật chế tác từ Lunara, chúng tôi đổi mới 100% miễn phí vận chuyển.',
+                'answer' => "Lunara chấp nhận đổi sản phẩm trong vòng 7 ngày kể từ khi quý khách nhận hàng, áp dụng với các sản phẩm còn nguyên tem mác, hộp đựng nguyên vẹn và chưa qua sử dụng. Nếu phát sinh lỗi kỹ thuật chế tác từ Lunara, chúng tôi đổi mới 100% miễn phí vận chuyển.\n\nThông tin liên hệ hỗ trợ chính sách & đổi trả:\n• Hotline CSKH / Đặt hàng: 0971 124 922\n• Email liên hệ: lunaraslivertrangsuc@gmail.com\n• Địa chỉ: 140 Lê Trọng Tấn, Tây Thạnh, Tân Phú, Ho Chi Minh City\n• Giờ làm việc: Thứ Hai — Thứ Bảy: 08:30 - 20:30 (Chủ Nhật: 09:00 - 18:00)",
                 'sort_order' => 1,
             ],
 

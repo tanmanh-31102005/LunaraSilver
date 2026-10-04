@@ -1,8 +1,17 @@
 @extends('layouts.app')
 
-@section('title', ($currentCategory ? $currentCategory->name . ' — ' : '') . 'Nhật ký Lunara | Editorial Journal & Jewelry Knowledge')
+@section('title', ($currentCategory ? $currentCategory->name . ' — ' : '') . 'Lunara Journal | Cẩm nang & cảm hứng trang sức')
 @section('meta_description', 'Khám phá thế giới trang sức bạc 925, cẩm nang bảo quản, bí quyết phối đồ và câu chuyện chế tác từ Lunara Silver.')
 @section('main_class', 'blog-main')
+@section('canonical', $currentCategory ? route('blog.category', $currentCategory->slug) : route('blog.index'))
+
+@if(request()->filled('q'))
+@section('robots', 'noindex,follow')
+@endif
+
+@push('schema')
+<x-seo.json-ld :schema="app(\App\Services\StructuredDataService::class)->breadcrumbSchema($currentCategory ? [['label' => 'Nhật ký Lunara', 'url' => route('blog.index')], ['label' => $currentCategory->name, 'url' => route('blog.category', $currentCategory->slug)]] : [['label' => 'Nhật ký Lunara', 'url' => route('blog.index')]])" />
+@endpush
 
 @section('content')
 <div class="lunara-container">

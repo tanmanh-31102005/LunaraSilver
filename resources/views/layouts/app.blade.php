@@ -4,13 +4,22 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="@yield('meta_description', 'Lunara Silver — Shine with your own moonlight.')">
-    <title>@yield('title', 'Lunara Silver')</title>
+    
+    <x-seo.meta 
+        :title="$__env->yieldContent('title') ?: 'Lunara Silver | Trang sức bạc tinh tế'"
+        :description="$__env->yieldContent('meta_description') ?: 'Trang sức bạc 925 cao cấp Lunara Silver lấy cảm hứng từ vẻ đẹp huyền diệu của mặt trăng và các vì sao. Tinh tế, thanh lịch và tỏa sáng theo cách của riêng bạn.'"
+        :canonical="$__env->yieldContent('canonical')"
+        :robots="$__env->yieldContent('robots')"
+        :ogType="$__env->yieldContent('og_type')"
+        :ogImage="$__env->yieldContent('og_image')"
+    />
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
+    @stack('schema')
 </head>
 <body>
     <a class="skip-link" href="#main-content">Chuyển đến nội dung</a>
@@ -116,6 +125,12 @@
                 </a>
                 <p class="site-footer__slogan">Shine with your own moonlight.</p>
                 <p class="site-footer__about">Trang sức bạc 925 cao cấp lấy cảm hứng từ vẻ đẹp huyền diệu của mặt trăng và các vì sao. Tinh tế, thanh lịch và tỏa sáng theo cách của riêng bạn.</p>
+                <div class="site-footer__contact-info small text-muted mt-3" style="font-size: 0.8125rem; line-height: 1.6;">
+                    <p class="mb-1"><i class="bi bi-geo-alt me-1 text-accent"></i> 140 Lê Trọng Tấn, Tây Thạnh, Tân Phú, Ho Chi Minh City</p>
+                    <p class="mb-1"><i class="bi bi-telephone me-1 text-accent"></i> Hotline CSKH / Đặt hàng: <a href="tel:0971124922" class="text-white text-decoration-none">0971 124 922</a></p>
+                    <p class="mb-1"><i class="bi bi-envelope me-1 text-accent"></i> Email: <a href="mailto:lunaraslivertrangsuc@gmail.com" class="text-white text-decoration-none">lunaraslivertrangsuc@gmail.com</a></p>
+                    <p class="mb-0 text-muted" style="font-size: 0.75rem;"><i class="bi bi-clock me-1"></i> Thứ Hai — Thứ Bảy: 08:30 - 20:30 (Chủ Nhật: 09:00 - 18:00)</p>
+                </div>
             </div>
             <div>
                 <h2>Bộ sưu tập</h2>
@@ -132,6 +147,7 @@
                 <a href="{{ route('account.addresses.index') }}">Sổ địa chỉ</a>
                 <a href="{{ route('cart.index') }}">Giỏ hàng</a>
                 <a href="{{ route('support.faq') }}">Trung tâm hỗ trợ & FAQ</a>
+                <a href="{{ route('support.faq', ['category' => 'Đổi trả']) }}">Chính sách đổi trả & bảo hành</a>
                 <a href="{{ route('contact') }}">Liên hệ chúng tôi</a>
                 <a href="{{ route('blog.index') }}">Nhật ký Lunara (Blog)</a>
                 <a href="{{ route('home') }}#story">Câu chuyện Lunara</a>

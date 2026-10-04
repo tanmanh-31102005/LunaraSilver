@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreCategoryRequest;
 use App\Http\Requests\Admin\UpdateCategoryRequest;
 use App\Models\Category;
+use App\Models\SeoRedirect;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 
@@ -55,7 +56,15 @@ class CategoryController extends Controller
 
     public function update(UpdateCategoryRequest $request, Category $category): RedirectResponse
     {
+        $oldSlug = $category->slug;
         $category->update($request->validated());
+
+        if ($oldSlug && $category->slug && $oldSlug !== $category->slug) {
+            SeoRedirect::registerRedirect(
+                '/products/'.$oldSlug,
+                '/products/'.$category->slug
+            );
+        }
 
         return redirect()
             ->route('admin.categories.index')

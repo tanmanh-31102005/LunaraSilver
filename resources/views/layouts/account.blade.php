@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@section('robots', 'noindex,follow')
 @section('main_class', 'account-main')
 
 @section('content')

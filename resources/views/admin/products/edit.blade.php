@@ -226,18 +226,41 @@
             {{-- SEO Metadata --}}
             <div class="admin-card mb-4">
                 <div class="admin-card-header bg-white py-2 px-3">
-                    <h2 class="h6 mb-0 fw-bold">Tối ưu hóa SEO</h2>
+                    <h2 class="h6 mb-0 fw-bold d-flex align-items-center gap-2">
+                        <i class="bi bi-search text-primary"></i>
+                        <span>Tối ưu hóa SEO</span>
+                    </h2>
                 </div>
                 <div class="admin-card-body">
                     <div class="mb-3">
-                        <label for="seo_title" class="form-label fw-semibold small">Tiêu đề SEO</label>
-                        <input type="text" class="form-control form-control-sm" id="seo_title" name="seo_title" value="{{ old('seo_title', $product->seo_title) }}">
+                        <label for="seo_title" class="form-label fw-semibold small">Tiêu đề SEO (Meta Title)</label>
+                        <input type="text" class="form-control form-control-sm @error('seo_title') is-invalid @enderror" id="seo_title" name="seo_title" value="{{ old('seo_title', $product->seo_title) }}" placeholder="Nếu để trống sẽ dùng: {{ $product->name }} | Lunara Silver">
+                        <div class="form-text small">Khuyến nghị dưới 60 ký tự.</div>
+                        @error('seo_title')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
-                    <div class="mb-0">
-                        <label for="seo_description" class="form-label fw-semibold small">Mô tả SEO</label>
-                        <textarea class="form-control form-control-sm" id="seo_description" name="seo_description" rows="3">{{ old('seo_description', $product->seo_description) }}</textarea>
+                    <div class="mb-3">
+                        <label for="seo_description" class="form-label fw-semibold small">Mô tả SEO (Meta Description)</label>
+                        <textarea class="form-control form-control-sm @error('seo_description') is-invalid @enderror" id="seo_description" name="seo_description" rows="3" placeholder="Tóm tắt ngắn gọn dưới 160 ký tự hiển thị trên Google...">{{ old('seo_description', $product->seo_description) }}</textarea>
+                        <div class="form-text small">Khuyến nghị dưới 160 ký tự.</div>
+                        @error('seo_description')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
+
+                    <x-admin.seo-preview 
+                        titleInputId="seo_title" 
+                        fallbackTitleInputId="name" 
+                        descInputId="seo_description" 
+                        fallbackDescInputId="description" 
+                        slugInputId="slug" 
+                        defaultSlug="{{ $product->slug }}" 
+                        urlPrefix="https://lunarasilver.infinityfreeapp.com/product/" 
+                        titleSuffix=" | Lunara Silver" 
+                        previewId="productSerpPreview" 
+                    />
                 </div>
             </div>
 
