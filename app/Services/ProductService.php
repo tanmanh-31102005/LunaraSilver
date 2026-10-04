@@ -186,4 +186,16 @@ class ProductService
 
         return Product::whereIn('id', $productIds)->update(['is_active' => $isActive]);
     }
+
+    /**
+     * Bulk soft delete multiple products.
+     */
+    public function bulkDelete(array $productIds): int
+    {
+        if (empty($productIds)) {
+            return 0;
+        }
+
+        return Product::whereIn('id', $productIds)->delete();
+    }
 }

@@ -4,20 +4,66 @@
 @endphp
 
 @if (!$isEdit)
-    <div class="admin-card mb-4">
-        <div class="admin-card-header bg-white py-2 px-3">
-            <h2 class="h6 mb-0 fw-bold d-flex align-items-center gap-2">
-                <i class="bi bi-images text-primary"></i>
-                <span>5. Hình ảnh sản phẩm (Cloudinary & Local Media)</span>
-            </h2>
+    <div class="admin-card mb-4" id="createProductImageCard">
+        <div class="admin-card-header bg-white py-2 px-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div>
+                <h2 class="h6 mb-0 fw-bold d-flex align-items-center gap-2">
+                    <i class="bi bi-images text-primary"></i>
+                    <span>4. Hình ảnh sản phẩm (Cloudinary & Local Media)</span>
+                    <span class="badge bg-secondary rounded-pill d-none" id="createImageCountBadge">0 ảnh</span>
+                </h2>
+                <div class="text-muted small">Tải lên ảnh sản phẩm ngay khi tạo mới. Tự động đồng bộ lên Cloudinary khi lưu.</div>
+            </div>
+            <div>
+                @if ($cloudinaryConfigured)
+                    <span class="badge bg-success-subtle text-success border border-success-subtle d-inline-flex align-items-center gap-1">
+                        <i class="bi bi-cloud-check-fill"></i> Cloudinary Sẵn sàng
+                    </span>
+                @else
+                    <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle d-inline-flex align-items-center gap-1" title="Chưa cấu hình Cloudinary trong .env. Ảnh sẽ lưu trữ nội bộ (Local Media).">
+                        <i class="bi bi-hdd-fill"></i> Lưu trữ Local Media
+                    </span>
+                @endif
+            </div>
         </div>
-        <div class="admin-card-body p-4 text-center">
-            <div class="p-3 bg-light rounded border border-dashed">
-                <i class="bi bi-cloud-arrow-up text-primary fs-3 d-block mb-2"></i>
-                <h6 class="fw-bold mb-1">Tải lên Cloudinary khả dụng sau khi lưu sản phẩm</h6>
-                <p class="text-muted small mb-0">
-                    Vui lòng điền các thông tin cần thiết và bấm <strong>"Lưu sản phẩm"</strong> trước. Sau đó bạn có thể tải lên nhiều ảnh trực tiếp lên Cloudinary, cấu hình vai trò <strong>Primary / Hover / Gallery</strong> và sắp xếp thứ tự hiển thị.
+
+        <div class="admin-card-body p-3">
+            {{-- Hidden Actual File Input --}}
+            <input type="file" 
+                   name="product_images[]" 
+                   id="createProductFileInput" 
+                   class="d-none" 
+                   accept="image/jpeg,image/png,image/webp" 
+                   multiple>
+            <input type="hidden" name="primary_image_index" id="primaryImageIndex" value="0">
+            <input type="hidden" name="hover_image_index" id="hoverImageIndex" value="1">
+
+            {{-- Dropzone Area --}}
+            <div class="p-4 bg-light rounded border border-2 border-dashed text-center" id="createDropzone" style="cursor: pointer; transition: all 0.2s ease;">
+                <i class="bi bi-cloud-arrow-up text-primary fs-2 d-block mb-2"></i>
+                <h6 class="fw-bold mb-1">Chọn ảnh sản phẩm hoặc kéo thả vào đây</h6>
+                <p class="text-muted small mb-3">
+                    Hỗ trợ chọn nhiều ảnh cùng lúc: JPG, PNG, WEBP (Tối đa 5MB/ảnh).<br>
+                    <span class="text-secondary">Ảnh đầu tiên mặc định là <strong>Primary (Ảnh chính)</strong>, ảnh thứ hai là <strong>Hover (Ảnh lướt)</strong>. Bạn có thể đổi vai trò trực tiếp sau khi chọn.</span>
                 </p>
+                <button type="button" class="btn btn-sm btn-primary px-4 fw-semibold" id="btnBrowseCreateImages">
+                    <i class="bi bi-folder2-open me-1"></i> Chọn tệp ảnh từ máy tính
+                </button>
+            </div>
+
+            {{-- Selected Images Previews Container --}}
+            <div id="createPreviewsWrapper" class="mt-3 d-none">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-semibold small text-dark d-flex align-items-center gap-2">
+                        <i class="bi bi-check-circle-fill text-success"></i>
+                        <span>Danh sách ảnh đã chọn (<span id="createFileCountText">0</span> ảnh)</span>
+                    </span>
+                    <button type="button" class="btn btn-xs btn-outline-danger" id="btnClearAllCreateImages">
+                        <i class="bi bi-trash me-1"></i> Xóa tất cả
+                    </button>
+                </div>
+
+                <div class="row g-2" id="createPreviewsGrid"></div>
             </div>
         </div>
     </div>
@@ -27,7 +73,7 @@
             <div>
                 <h2 class="h6 mb-0 fw-bold d-flex align-items-center gap-2">
                     <i class="bi bi-images text-primary"></i>
-                    <span>5. Hình ảnh sản phẩm</span>
+                    <span>4. Hình ảnh sản phẩm (Cloudinary & Local Media)</span>
                     <span class="badge bg-secondary rounded-pill" id="imageCountBadge">{{ $product->images->count() }} ảnh</span>
                 </h2>
                 <div class="text-muted small">Quản lý kho ảnh Cloudinary chính thức và ảnh nội bộ fallback.</div>
@@ -218,7 +264,254 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const isEdit = {{ $isEdit ? 'true' : 'false' }};
-    if (!isEdit) return;
+    if (!isEdit) {
+        initProductCreateImages();
+        return;
+    }
+
+    function initProductCreateImages() {
+        const fileInput = document.getElementById('createProductFileInput');
+        const dropzone = document.getElementById('createDropzone');
+        const btnBrowse = document.getElementById('btnBrowseCreateImages');
+        const previewsWrapper = document.getElementById('createPreviewsWrapper');
+        const previewsGrid = document.getElementById('createPreviewsGrid');
+        const fileCountText = document.getElementById('createFileCountText');
+        const countBadge = document.getElementById('createImageCountBadge');
+        const btnClearAll = document.getElementById('btnClearAllCreateImages');
+        const primaryIndexInput = document.getElementById('primaryImageIndex');
+        const hoverIndexInput = document.getElementById('hoverImageIndex');
+
+        if (!fileInput || !dropzone) return;
+
+        let selectedFiles = [];
+        let primaryIndex = 0;
+        let hoverIndex = 1;
+
+        function formatBytes(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+
+        function syncFileInput() {
+            try {
+                const dt = new DataTransfer();
+                selectedFiles.forEach(file => dt.items.add(file));
+                fileInput.files = dt.files;
+            } catch (err) {
+                console.warn('DataTransfer not fully supported:', err);
+            }
+
+            if (selectedFiles.length === 0) {
+                primaryIndex = 0;
+                hoverIndex = 1;
+            } else {
+                if (primaryIndex >= selectedFiles.length) primaryIndex = 0;
+                if (hoverIndex >= selectedFiles.length) hoverIndex = selectedFiles.length > 1 ? 1 : -1;
+                if (primaryIndex === hoverIndex && selectedFiles.length > 1) {
+                    hoverIndex = primaryIndex === 0 ? 1 : 0;
+                }
+            }
+
+            if (primaryIndexInput) primaryIndexInput.value = primaryIndex;
+            if (hoverIndexInput) hoverIndexInput.value = hoverIndex;
+        }
+
+        function renderPreviews() {
+            previewsGrid.innerHTML = '';
+            const count = selectedFiles.length;
+
+            if (count === 0) {
+                previewsWrapper.classList.add('d-none');
+                countBadge.classList.add('d-none');
+                countBadge.textContent = '0 ảnh';
+                return;
+            }
+
+            previewsWrapper.classList.remove('d-none');
+            countBadge.classList.remove('d-none');
+            countBadge.textContent = `${count} ảnh`;
+            if (fileCountText) fileCountText.textContent = count;
+
+            selectedFiles.forEach((file, index) => {
+                const objectUrl = URL.createObjectURL(file);
+                const isPrimary = (index === primaryIndex);
+                const isHover = (index === hoverIndex);
+
+                let roleBadge = '<span class="badge bg-light text-secondary border">Gallery</span>';
+                if (isPrimary) {
+                    roleBadge = '<span class="badge bg-primary"><i class="bi bi-star-fill me-1"></i>Primary (Chính)</span>';
+                } else if (isHover) {
+                    roleBadge = '<span class="badge bg-info text-dark"><i class="bi bi-cursor-fill me-1"></i>Hover (Lướt)</span>';
+                }
+
+                const col = document.createElement('div');
+                col.className = 'col-6 col-sm-4 col-md-3 col-lg-2';
+                col.innerHTML = `
+                    <div class="card h-100 shadow-sm border ${isPrimary ? 'border-primary border-2' : ''} ${isHover ? 'border-info border-2' : ''}">
+                        <div class="position-relative bg-light rounded-top text-center overflow-hidden" style="height: 110px;">
+                            <img src="${objectUrl}" class="w-100 h-100" style="object-fit: cover;" alt="${file.name}">
+                            <div class="position-absolute top-0 start-0 m-1">
+                                ${roleBadge}
+                            </div>
+                            <button type="button" class="btn btn-danger btn-xs position-absolute top-0 end-0 m-1 rounded-circle p-0 d-flex align-items-center justify-content-center btn-remove-preview" data-index="${index}" title="Xóa ảnh này" style="width: 22px; height: 22px;">
+                                <i class="bi bi-x-lg" style="font-size: 10px;"></i>
+                            </button>
+                        </div>
+                        <div class="card-body p-2 d-flex flex-column justify-content-between">
+                            <div class="mb-2">
+                                <div class="text-truncate fw-semibold text-dark small" title="${file.name}" style="font-size: 0.76rem;">${file.name}</div>
+                                <div class="text-muted" style="font-size: 0.68rem;">${formatBytes(file.size)}</div>
+                            </div>
+                            <div class="d-flex align-items-center gap-1 w-100">
+                                <div class="btn-group btn-group-sm flex-grow-1" role="group">
+                                    <button type="button" class="btn btn-xs ${isPrimary ? 'btn-primary' : 'btn-outline-secondary'} py-1 px-1 btn-set-primary" data-index="${index}" title="Đặt làm ảnh chính" style="font-size: 0.7rem;">
+                                        Chính
+                                    </button>
+                                    <button type="button" class="btn btn-xs ${isHover ? 'btn-info text-dark' : 'btn-outline-secondary'} py-1 px-1 btn-set-hover" data-index="${index}" title="Đặt làm ảnh lướt (hover)" style="font-size: 0.7rem;">
+                                        Lướt
+                                    </button>
+                                </div>
+                                <button type="button" class="btn btn-xs btn-outline-danger py-1 px-2 btn-remove-preview" data-index="${index}" title="Xóa ảnh này">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                previewsGrid.appendChild(col);
+            });
+        }
+
+        function addFiles(newFiles) {
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+            const maxSizeBytes = 5 * 1024 * 1024;
+            let rejectedCount = 0;
+            let sizeError = false;
+
+            Array.from(newFiles).forEach(file => {
+                if (!allowedTypes.includes(file.type)) {
+                    rejectedCount++;
+                    return;
+                }
+                if (file.size > maxSizeBytes) {
+                    sizeError = true;
+                    return;
+                }
+                const exists = selectedFiles.some(f => f.name === file.name && f.size === file.size);
+                if (!exists) {
+                    selectedFiles.push(file);
+                }
+            });
+
+            if (rejectedCount > 0) {
+                alert(`Có ${rejectedCount} tệp không đúng định dạng JPG, PNG hoặc WEBP bị bỏ qua.`);
+            }
+            if (sizeError) {
+                alert('Một số tệp có dung lượng vượt quá 5MB đã bị bỏ qua.');
+            }
+
+            syncFileInput();
+            renderPreviews();
+        }
+
+        if (btnBrowse) {
+            btnBrowse.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                fileInput.click();
+            });
+        }
+
+        dropzone.addEventListener('click', function (e) {
+            if (e.target !== btnBrowse && !btnBrowse.contains(e.target)) {
+                fileInput.click();
+            }
+        });
+
+        fileInput.addEventListener('change', function () {
+            if (fileInput.files && fileInput.files.length > 0) {
+                addFiles(fileInput.files);
+            }
+        });
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropzone.addEventListener(eventName, function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropzone.classList.add('border-primary', 'bg-light');
+            });
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropzone.classList.remove('border-primary', 'bg-light');
+            });
+        });
+
+        dropzone.addEventListener('drop', function (e) {
+            if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                addFiles(e.dataTransfer.files);
+            }
+        });
+
+        if (btnClearAll) {
+            btnClearAll.addEventListener('click', function () {
+                selectedFiles = [];
+                primaryIndex = 0;
+                hoverIndex = 1;
+                syncFileInput();
+                renderPreviews();
+            });
+        }
+
+        previewsGrid.addEventListener('click', function (e) {
+            const removeBtn = e.target.closest('.btn-remove-preview');
+            if (removeBtn) {
+                const idx = parseInt(removeBtn.getAttribute('data-index'), 10);
+                selectedFiles.splice(idx, 1);
+                if (primaryIndex === idx) {
+                    primaryIndex = 0;
+                } else if (primaryIndex > idx) {
+                    primaryIndex--;
+                }
+                if (hoverIndex === idx) {
+                    hoverIndex = selectedFiles.length > 1 ? (primaryIndex === 0 ? 1 : 0) : -1;
+                } else if (hoverIndex > idx) {
+                    hoverIndex--;
+                }
+                syncFileInput();
+                renderPreviews();
+                return;
+            }
+
+            const primaryBtn = e.target.closest('.btn-set-primary');
+            if (primaryBtn) {
+                const idx = parseInt(primaryBtn.getAttribute('data-index'), 10);
+                primaryIndex = idx;
+                if (hoverIndex === primaryIndex) {
+                    hoverIndex = selectedFiles.length > 1 ? (primaryIndex === 0 ? 1 : 0) : -1;
+                }
+                syncFileInput();
+                renderPreviews();
+                return;
+            }
+
+            const hoverBtn = e.target.closest('.btn-set-hover');
+            if (hoverBtn) {
+                const idx = parseInt(hoverBtn.getAttribute('data-index'), 10);
+                hoverIndex = idx;
+                if (primaryIndex === hoverIndex) {
+                    primaryIndex = (hoverIndex === 0 ? 1 : 0);
+                }
+                syncFileInput();
+                renderPreviews();
+                return;
+            }
+        });
+    }
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
     const uploadUrl = @json($isEdit ? route('admin.products.images.store', $product) : '');

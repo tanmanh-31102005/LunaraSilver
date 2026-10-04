@@ -132,7 +132,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('categories', AdminCategoryController::class)->except(['show']);
 
-    Route::post('products/bulk-action', [AdminProductController::class, 'bulkAction'])->name('products.bulk-action');
+    Route::match(['get', 'post'], 'products/bulk-action', [AdminProductController::class, 'bulkAction'])->name('products.bulk-action');
     Route::patch('products/{product}/toggle-status', [AdminProductController::class, 'toggleStatus'])->name('products.toggle-status');
     Route::patch('products/{product}/quick-stock', [AdminProductController::class, 'quickStock'])->name('products.quick-stock');
     Route::post('products/{product}/duplicate', [AdminProductController::class, 'duplicate'])->name('products.duplicate');

@@ -149,26 +149,34 @@
         @endif
     </div>
 
-    {{-- Bulk Action Bar (Hidden by default, shown when items are checked) --}}
-    <form method="POST" action="{{ route('admin.products.bulk-action') }}" id="bulkActionForm">
+    {{-- Standalone Hidden Form for Bulk Action --}}
+    <form id="bulkActionForm" method="POST" action="{{ route('admin.products.bulk-action') }}" class="d-none">
         @csrf
-        <div id="bulkActionBar" class="p-2 bg-primary-subtle border-bottom d-none align-items-center justify-content-between flex-wrap gap-2">
-            <div class="d-flex align-items-center gap-2 small">
-                <i class="bi bi-check2-square text-primary fs-6"></i>
-                <span class="fw-semibold text-primary" id="selectedCountText">Đã chọn 0 sản phẩm</span>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-                <button type="submit" name="action" value="activate" class="btn btn-sm btn-success py-1 px-2" onclick="return confirmBulkAction('kích hoạt mở bán')">
-                    <i class="bi bi-eye me-1"></i> Kích hoạt
-                </button>
-                <button type="submit" name="action" value="deactivate" class="btn btn-sm btn-warning py-1 px-2" onclick="return confirmBulkAction('tạm ẩn')">
-                    <i class="bi bi-eye-slash me-1"></i> Tạm ẩn
-                </button>
-                <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-2" id="btnCancelBulk">
-                    Bỏ chọn
-                </button>
-            </div>
+        <input type="hidden" name="action" id="bulkActionInput" value="">
+        <div id="bulkActionInputsContainer"></div>
+    </form>
+
+    {{-- Bulk Action Bar (Hidden by default, shown when items are checked) --}}
+    <div id="bulkActionBar" class="p-2 bg-primary-subtle border-bottom d-none align-items-center justify-content-between flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-2 small">
+            <i class="bi bi-check2-square text-primary fs-6"></i>
+            <span class="fw-semibold text-primary" id="selectedCountText">Đã chọn 0 sản phẩm</span>
         </div>
+        <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn btn-sm btn-success py-1 px-2 btn-bulk-action" data-action="activate" data-label="kích hoạt mở bán">
+                <i class="bi bi-eye me-1"></i> Kích hoạt
+            </button>
+            <button type="button" class="btn btn-sm btn-warning py-1 px-2 btn-bulk-action" data-action="deactivate" data-label="tạm ẩn">
+                <i class="bi bi-eye-slash me-1"></i> Tạm ẩn
+            </button>
+            <button type="button" class="btn btn-sm btn-danger py-1 px-2 btn-bulk-action" data-action="delete" data-label="xóa (chuyển vào thùng rác)">
+                <i class="bi bi-trash me-1"></i> Xóa đã chọn
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-2" id="btnCancelBulk">
+                Bỏ chọn
+            </button>
+        </div>
+    </div>
 
         {{-- Product Table --}}
         <div class="table-responsive">
@@ -326,7 +334,6 @@
                 </tbody>
             </table>
         </div>
-    </form>
 
     {{-- Compact Pagination Footer --}}
     @if ($products->hasPages() || $products->total() > 0)
@@ -425,17 +432,40 @@ document.addEventListener('DOMContentLoaded', function () {
             updateBulkState();
         });
     }
-});
 
-// Modal Confirmation for Bulk Action
-function confirmBulkAction(actionName) {
-    const count = document.querySelectorAll('.product-select-checkbox:checked').length;
-    if (count === 0) {
-        alert('Vui lòng chọn ít nhất một sản phẩm!');
-        return false;
-    }
-    return confirm('Bạn có chắc chắn muốn ' + actionName + ' cho ' + count + ' sản phẩm đã chọn?');
-}
+    // Bulk Action Submissions
+    document.querySelectorAll('.btn-bulk-action').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const action = this.getAttribute('data-action');
+            const label = this.getAttribute('data-label') || 'thực hiện';
+            const checkedBoxes = document.querySelectorAll('.product-select-checkbox:checked');
+
+            if (checkedBoxes.length === 0) {
+                alert('Vui lòng chọn ít nhất một sản phẩm!');
+                return;
+            }
+
+            if (!confirm(`Bạn có chắc chắn muốn ${label} cho ${checkedBoxes.length} sản phẩm đã chọn?`)) {
+                return;
+            }
+
+            const form = document.getElementById('bulkActionForm');
+            document.getElementById('bulkActionInput').value = action;
+            const container = document.getElementById('bulkActionInputsContainer');
+            container.innerHTML = '';
+
+            checkedBoxes.forEach(cb => {
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'product_ids[]';
+                hiddenInput.value = cb.value;
+                container.appendChild(hiddenInput);
+            });
+
+            form.submit();
+        });
+    });
+});
 
 // Modal Confirmation for Delete
 function confirmDelete(id, name) {

@@ -7,16 +7,19 @@ use App\Http\Requests\Admin\StoreProductRequest;
 use App\Http\Requests\Admin\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\CloudinaryService;
 use App\Services\ProductService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class ProductController extends Controller
 {
     public function __construct(
-        protected ProductService $productService
+        protected ProductService $productService,
+        protected CloudinaryService $cloudinary
     ) {}
 
     /**
@@ -111,6 +114,64 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request): RedirectResponse
     {
         $product = $this->productService->createProduct($request->validated());
+
+        if ($request->hasFile('product_images')) {
+            $files = $request->file('product_images', []);
+            $primaryIndex = (int) $request->input('primary_image_index', 0);
+            $hoverIndex = (int) $request->input('hover_image_index', 1);
+            $folder = $this->cloudinary->generateFolder('products', $product->sku);
+
+            foreach ($files as $index => $file) {
+                if (! $file->isValid()) {
+                    continue;
+                }
+
+                $role = 'gallery';
+                if ($index === $primaryIndex) {
+                    $role = 'primary';
+                } elseif ($index === $hoverIndex) {
+                    $role = 'hover';
+                }
+
+                if ($this->cloudinary->isConfigured()) {
+                    try {
+                        $uploadResult = $this->cloudinary->uploadFile($file, $folder, null, [
+                            'transformation' => [
+                                'quality' => 'auto',
+                                'fetch_format' => 'auto',
+                            ],
+                        ]);
+                        $product->images()->create([
+                            'cloudinary_public_id' => $uploadResult['public_id'],
+                            'image_url' => $uploadResult['secure_url'],
+                            'image_role' => $role,
+                            'sort_order' => $index + 1,
+                            'alt_text' => $product->name,
+                        ]);
+                    } catch (\Throwable $e) {
+                        Log::error('Cloudinary store upload failed on product create', [
+                            'product_id' => $product->id,
+                            'error' => $e->getMessage(),
+                        ]);
+                        $path = $file->store('products', 'public');
+                        $product->images()->create([
+                            'image_url' => asset('storage/'.$path),
+                            'image_role' => $role,
+                            'sort_order' => $index + 1,
+                            'alt_text' => $product->name,
+                        ]);
+                    }
+                } else {
+                    $path = $file->store('products', 'public');
+                    $product->images()->create([
+                        'image_url' => asset('storage/'.$path),
+                        'image_role' => $role,
+                        'sort_order' => $index + 1,
+                        'alt_text' => $product->name,
+                    ]);
+                }
+            }
+        }
 
         return redirect()
             ->route('admin.products.index')
@@ -238,16 +299,26 @@ class ProductController extends Controller
      */
     public function bulkAction(Request $request): RedirectResponse
     {
+        if ($request->isMethod('get')) {
+            return redirect()->route('admin.products.index');
+        }
+
         $validated = $request->validate([
-            'action' => ['required', 'string', 'in:activate,deactivate'],
+            'action' => ['required', 'string', 'in:activate,deactivate,delete'],
             'product_ids' => ['required', 'array', 'min:1'],
             'product_ids.*' => ['integer', 'exists:products,id'],
         ]);
 
+        if ($validated['action'] === 'delete') {
+            $count = $this->productService->bulkDelete($validated['product_ids']);
+
+            return redirect()->back()->with('success', "Đã chuyển thành công {$count} sản phẩm được chọn vào thùng rác.");
+        }
+
         $isActive = $validated['action'] === 'activate';
         $count = $this->productService->bulkUpdateStatus($validated['product_ids'], $isActive);
 
-        $actionText = $isActive ? 'Kích hoạt mở bán' : 'Tạm ẩn';
+        $actionText = $isActive ? 'kích hoạt mở bán' : 'tạm ẩn';
 
         return redirect()->back()->with('success', "Đã {$actionText} thành công {$count} sản phẩm được chọn.");
     }

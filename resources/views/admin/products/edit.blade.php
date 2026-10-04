@@ -151,9 +151,6 @@
             {{-- Section 3: Bundle Components --}}
             @include('admin.products.partials.bundle-editor')
 
-            {{-- Section 4: Image Management --}}
-            @include('admin.products.partials.image-manager')
-
             {{-- Section 5: Descriptions & Specifications --}}
             <div class="admin-card mb-4">
                 <div class="admin-card-header bg-white py-2 px-3">
@@ -197,7 +194,7 @@
                 </div>
             </div>
 
-            {{-- Section 5: Product Images (Cloudinary & Local Media) --}}
+            {{-- Section 4: Product Images (Cloudinary & Local Media) --}}
             @include('admin.products.partials.image-manager', ['product' => $product])
         </div>
 
@@ -292,11 +289,19 @@
             <span class="text-muted small d-none d-sm-inline" id="unsavedChangesStatus">Chưa có thay đổi</span>
         </div>
         <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn btn-sm btn-outline-danger" onclick="if(confirm('Bạn có chắc chắn muốn xóa sản phẩm này? Sản phẩm sẽ được chuyển vào thùng rác.')) { document.getElementById('deleteProductFormInEdit').submit(); }">
+                <i class="bi bi-trash me-1"></i> Xóa sản phẩm
+            </button>
             <button type="submit" class="btn btn-sm btn-primary px-4 fw-semibold" id="btnSubmitForm">
                 <i class="bi bi-check2 me-1"></i> Cập nhật sản phẩm
             </button>
         </div>
     </div>
+</form>
+
+<form id="deleteProductFormInEdit" method="POST" action="{{ route('admin.products.destroy', $product) }}" class="d-none">
+    @csrf
+    @method('DELETE')
 </form>
 @endsection
 

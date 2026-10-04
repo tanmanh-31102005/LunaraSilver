@@ -58,6 +58,12 @@ class StoreProductRequest extends FormRequest
             'images.*.image_role' => ['required_with:images', 'string', 'in:primary,hover,gallery'],
             'images.*.sort_order' => ['nullable', 'integer', 'min:0'],
             'images.*.alt_text' => ['nullable', 'string', 'max:255'],
+
+            // Direct file uploads on product create
+            'product_images' => ['nullable', 'array'],
+            'product_images.*' => ['file', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+            'primary_image_index' => ['nullable', 'integer', 'min:0'],
+            'hover_image_index' => ['nullable', 'integer', 'min:0'],
         ];
     }
 
@@ -102,6 +108,9 @@ class StoreProductRequest extends FormRequest
             'sale_price.min' => 'Giá khuyến mãi không được âm.',
             'bundle_items.*.product_id.distinct' => 'Không được chọn trùng lặp cùng một sản phẩm thành phần.',
             'bundle_items.*.quantity.min' => 'Số lượng thành phần phải lớn hơn hoặc bằng 1.',
+            'product_images.*.image' => 'Tệp tải lên phải là hình ảnh hợp lệ.',
+            'product_images.*.mimes' => 'Hình ảnh sản phẩm chỉ chấp nhận định dạng JPG, JPEG, PNG hoặc WEBP.',
+            'product_images.*.max' => 'Mỗi hình ảnh không được vượt quá 5MB.',
         ];
     }
 }

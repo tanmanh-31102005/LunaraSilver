@@ -11,7 +11,7 @@
 @endsection
 
 @section('content')
-<form method="POST" action="{{ route('admin.products.store') }}" id="productForm">
+<form method="POST" action="{{ route('admin.products.store') }}" id="productForm" enctype="multipart/form-data">
     @csrf
 
     <div class="row g-4 mb-5">
@@ -137,9 +137,6 @@
             {{-- Section 3: Bundle Components --}}
             @include('admin.products.partials.bundle-editor')
 
-            {{-- Section 4: Image Management --}}
-            @include('admin.products.partials.image-manager')
-
             {{-- Section 5: Descriptions & Specifications --}}
             <div class="admin-card mb-4">
                 <div class="admin-card-header bg-white py-2 px-3">
@@ -183,7 +180,7 @@
                 </div>
             </div>
 
-            {{-- Section 5: Product Images Guidance --}}
+            {{-- Section 4: Product Images (Cloudinary & Local Media) --}}
             @include('admin.products.partials.image-manager')
         </div>
 

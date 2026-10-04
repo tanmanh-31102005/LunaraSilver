@@ -233,4 +233,52 @@ class ProductCrudTest extends TestCase
         $this->actingAs($this->user)->put(route('admin.products.update', $product), ['name' => 'Update'])->assertForbidden();
         $this->actingAs($this->user)->delete(route('admin.products.destroy', $product))->assertForbidden();
     }
+
+    public function test_admin_can_bulk_deactivate_and_activate_products(): void
+    {
+        $products = Product::take(2)->get();
+        $ids = $products->pluck('id')->toArray();
+
+        // Deactivate
+        $response = $this->actingAs($this->admin)->post(route('admin.products.bulk-action'), [
+            'action' => 'deactivate',
+            'product_ids' => $ids,
+        ]);
+        $response->assertRedirect();
+        foreach ($ids as $id) {
+            $this->assertDatabaseHas('products', ['id' => $id, 'is_active' => false]);
+        }
+
+        // Activate
+        $response = $this->actingAs($this->admin)->post(route('admin.products.bulk-action'), [
+            'action' => 'activate',
+            'product_ids' => $ids,
+        ]);
+        $response->assertRedirect();
+        foreach ($ids as $id) {
+            $this->assertDatabaseHas('products', ['id' => $id, 'is_active' => true]);
+        }
+    }
+
+    public function test_admin_can_bulk_delete_products(): void
+    {
+        $products = Product::take(2)->get();
+        $ids = $products->pluck('id')->toArray();
+
+        $response = $this->actingAs($this->admin)->post(route('admin.products.bulk-action'), [
+            'action' => 'delete',
+            'product_ids' => $ids,
+        ]);
+        $response->assertRedirect();
+
+        foreach ($ids as $id) {
+            $this->assertSoftDeleted('products', ['id' => $id]);
+        }
+    }
+
+    public function test_bulk_action_get_redirects_gracefully(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.products.bulk-action'));
+        $response->assertRedirect(route('admin.products.index'));
+    }
 }
