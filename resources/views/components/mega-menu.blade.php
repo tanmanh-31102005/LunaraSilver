@@ -12,10 +12,10 @@
                 <div class="mega-menu__col">
                     <span class="mega-menu__heading">Khám phá</span>
                     <ul class="mega-menu__list">
-                        <li><a href="{{ route('products.index') }}" class="mega-menu__link fw-semibold">Tất cả sản phẩm</a></li>
-                        <li><a href="{{ route('products.index', ['sort' => 'newest']) }}" class="mega-menu__link"><span class="badge-dot me-1"></span> Hàng mới về</a></li>
-                        <li><a href="{{ route('products.index', ['sort' => 'price_desc']) }}" class="mega-menu__link">Bán chạy nhất</a></li>
-                        <li><a href="{{ route('products.index', ['material' => 'Bạc 925']) }}" class="mega-menu__link">Bạc S925 Tuyển chọn</a></li>
+                        <li><a href="{{ route('products.index') }}" class="mega-menu__link fw-semibold"><span>Tất cả sản phẩm</span></a></li>
+                        <li><a href="{{ route('products.index', ['sort' => 'newest']) }}" class="mega-menu__link"><span class="badge-dot"></span><span>Hàng mới về</span></a></li>
+                        <li><a href="{{ route('products.index', ['sort' => 'price_desc']) }}" class="mega-menu__link"><span>Bán chạy nhất</span></a></li>
+                        <li><a href="{{ route('products.index', ['material' => 'Bạc 925']) }}" class="mega-menu__link"><span>Bạc S925 Tuyển chọn</span></a></li>
                     </ul>
                 </div>
 
@@ -25,7 +25,7 @@
                     <ul class="mega-menu__list">
                         @foreach($navData['categories'] ?? [] as $cat)
                             <li>
-                                <a href="{{ $cat['url'] }}" class="mega-menu__link d-flex justify-content-between align-items-center">
+                                <a href="{{ $cat['url'] }}" class="mega-menu__link mega-menu__link--between">
                                     <span>{{ $cat['name'] }}</span>
                                     @if(!empty($cat['count']))
                                         <small class="text-muted mega-menu__count">{{ $cat['count'] }}</small>
@@ -44,7 +44,7 @@
                             <a href="{{ $fp['url'] }}" class="mega-product-card">
                                 <div class="mega-product-card__thumb">
                                     @if($fp['image_url'])
-                                        <img src="{{ $fp['image_url'] }}" alt="{{ $fp['name'] }}" loading="lazy" width="64" height="64">
+                                        <img src="{{ $fp['image_url'] }}" alt="{{ $fp['name'] }}" loading="lazy" width="58" height="58">
                                     @else
                                         <div class="mega-product-card__placeholder"><i class="bi bi-gem"></i></div>
                                     @endif
@@ -82,8 +82,8 @@
                 {{-- Col 1: Cảm hứng --}}
                 <div class="mega-menu__col">
                     <span class="mega-menu__heading">Bộ sưu tập độc quyền</span>
-                    <h3 class="h4 font-serif text-dark mb-2">Celestial Whispers</h3>
-                    <p class="text-muted small mb-4" style="line-height: 1.7;">
+                    <h3 class="mega-editorial-card__title text-dark mb-2">Celestial Whispers</h3>
+                    <p class="text-muted small mb-4" style="line-height: 1.7; font-family: var(--font-sans);">
                         Lấy cảm hứng từ sự huyền bí của dải ngân hà và ánh trăng thanh khiết. Mỗi thiết kế là một tác phẩm kim hoàn tôn vinh vẻ đẹp tự tại của người phụ nữ.
                     </p>
                     <a href="{{ route('products.category', 'bo-trang-suc') }}" class="lunara-button lunara-button--dark py-2 px-3 small">
@@ -99,7 +99,7 @@
                             <a href="{{ $col['url'] }}" class="mega-product-card">
                                 <div class="mega-product-card__thumb">
                                     @if($col['image_url'])
-                                        <img src="{{ $col['image_url'] }}" alt="{{ $col['name'] }}" loading="lazy" width="64" height="64">
+                                        <img src="{{ $col['image_url'] }}" alt="{{ $col['name'] }}" loading="lazy" width="58" height="58">
                                     @else
                                         <div class="mega-product-card__placeholder"><i class="bi bi-stars"></i></div>
                                     @endif
@@ -139,13 +139,13 @@
                 <div class="mega-menu__col">
                     <span class="mega-menu__heading">Gợi ý quà tặng</span>
                     <ul class="mega-menu__list">
-                        <li><a href="{{ route('products.category', 'set-qua-tang') }}" class="mega-menu__link fw-semibold">Tất cả set quà tặng</a></li>
-                        <li><a href="{{ route('products.category', 'set-qua-tang') }}" class="mega-menu__link">Quà sinh nhật & Dịp kỷ niệm</a></li>
-                        <li><a href="{{ route('products.category', 'nhan') }}" class="mega-menu__link">Nhẫn trao gửi yêu thương</a></li>
+                        <li><a href="{{ route('products.category', 'set-qua-tang') }}" class="mega-menu__link fw-semibold"><span>Tất cả set quà tặng</span></a></li>
+                        <li><a href="{{ route('products.category', 'set-qua-tang') }}" class="mega-menu__link"><span>Quà sinh nhật &amp; Dịp kỷ niệm</span></a></li>
+                        <li><a href="{{ route('products.category', 'nhan') }}" class="mega-menu__link"><span>Nhẫn trao gửi yêu thương</span></a></li>
                     </ul>
-                    <div class="p-3 bg-light rounded-2 mt-3 border">
-                        <small class="text-dark fw-semibold d-block mb-1">✦ Đặc quyền quà tặng Lunara</small>
-                        <small class="text-muted d-block" style="line-height: 1.5;">Tặng kèm hộp nhung Lunara sang trọng, túi xách cao cấp và thiệp viết tay theo yêu cầu.</small>
+                    <div class="mega-feature-box mt-3">
+                        <span class="mega-feature-box__title">✦ Đặc quyền quà tặng Lunara</span>
+                        <span class="mega-feature-box__desc">Tặng kèm hộp nhung Lunara sang trọng, túi xách cao cấp và thiệp viết tay theo yêu cầu.</span>
                     </div>
                 </div>
 
@@ -157,7 +157,7 @@
                             <a href="{{ $gift['url'] }}" class="mega-product-card">
                                 <div class="mega-product-card__thumb">
                                     @if($gift['image_url'])
-                                        <img src="{{ $gift['image_url'] }}" alt="{{ $gift['name'] }}" loading="lazy" width="64" height="64">
+                                        <img src="{{ $gift['image_url'] }}" alt="{{ $gift['name'] }}" loading="lazy" width="58" height="58">
                                     @else
                                         <div class="mega-product-card__placeholder"><i class="bi bi-gift"></i></div>
                                     @endif
@@ -197,10 +197,10 @@
                 <div class="mega-menu__col">
                     <span class="mega-menu__heading">Chuyên mục cẩm nang</span>
                     <ul class="mega-menu__list">
-                        <li><a href="{{ route('blog.index') }}" class="mega-menu__link fw-semibold">Tất cả bài viết</a></li>
+                        <li><a href="{{ route('blog.index') }}" class="mega-menu__link fw-semibold"><span>Tất cả bài viết</span></a></li>
                         @foreach($navData['blogCategories'] ?? [] as $bcat)
                             <li>
-                                <a href="{{ $bcat['url'] }}" class="mega-menu__link d-flex justify-content-between align-items-center">
+                                <a href="{{ $bcat['url'] }}" class="mega-menu__link mega-menu__link--between">
                                     <span>{{ $bcat['name'] }}</span>
                                     @if(!empty($bcat['count']))
                                         <small class="text-muted mega-menu__count">{{ $bcat['count'] }}</small>
@@ -214,11 +214,11 @@
                 {{-- Col 2: Cảm hứng bài viết --}}
                 <div class="mega-menu__col">
                     <span class="mega-menu__heading">Nhật ký trang sức</span>
-                    <p class="text-muted small mb-3" style="line-height: 1.6;">
+                    <p class="text-muted small mb-3" style="line-height: 1.6; font-family: var(--font-sans);">
                         Nơi chia sẻ kiến thức kim hoàn, cách nhận biết độ tinh khiết bạc S925, bí quyết bảo quản và phong cách phối trang sức đón đầu xu hướng.
                     </p>
                     <a href="{{ route('blog.index') }}" class="mega-menu__link fw-semibold text-dark">
-                        Xem bài viết mới nhất →
+                        <span>Xem bài viết mới nhất →</span>
                     </a>
                 </div>
 
@@ -238,37 +238,45 @@
             </div>
         </div>
 
-
         {{-- Panel 5: GIỚI THIỆU --}}
         <div class="mega-menu__panel" id="mega-panel-gioi-thieu" data-mega-panel="gioi-thieu" role="tabpanel" aria-labelledby="nav-item-gioi-thieu" hidden>
             <div class="mega-menu__grid mega-menu__grid--compact">
                 <div class="mega-menu__col">
                     <span class="mega-menu__heading">Thương hiệu</span>
                     <ul class="mega-menu__list">
-                        <li><a href="{{ route('home') }}#story" class="mega-menu__link fw-semibold">Câu chuyện Lunara</a></li>
-                        <li><a href="{{ route('contact') }}" class="mega-menu__link">Liên hệ & Showroom</a></li>
+                        <li><a href="{{ route('home') }}#story" class="mega-menu__link fw-semibold"><span>Câu chuyện Lunara</span></a></li>
+                        <li><a href="{{ route('contact') }}" class="mega-menu__link"><span>Liên hệ &amp; Showroom</span></a></li>
                     </ul>
                 </div>
                 <div class="mega-menu__col">
                     <span class="mega-menu__heading">Chăm sóc khách hàng</span>
                     <ul class="mega-menu__list">
-                        <li><a href="{{ route('support.faq') }}" class="mega-menu__link">Trung tâm hỗ trợ & FAQ</a></li>
-                        <li><a href="{{ route('support.faq', ['category' => 'Đổi trả']) }}" class="mega-menu__link">Chính sách đổi trả & bảo hành</a></li>
-                        <li><a href="tel:0971124922" class="mega-menu__link text-dark fw-semibold"><i class="bi bi-telephone me-1 text-muted"></i> Hotline: 0971 124 922</a></li>
+                        <li><a href="{{ route('support.faq') }}" class="mega-menu__link"><span>Trung tâm hỗ trợ &amp; FAQ</span></a></li>
+                        <li><a href="{{ route('support.faq', ['category' => 'Đổi trả']) }}" class="mega-menu__link"><span>Chính sách đổi trả &amp; bảo hành</span></a></li>
+                        <li>
+                            <a href="tel:0971124922" class="mega-menu__link text-dark fw-semibold">
+                                <i class="bi bi-telephone text-muted" aria-hidden="true"></i>
+                                <span>Hotline: 0971 124 922</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 <div class="mega-menu__col mega-menu__col--editorial">
-                    <div class="p-4 bg-light rounded-2 border">
-                        <span class="d-block small text-uppercase tracking-widest text-muted mb-1">✦ SHINE WITH YOUR MOONLIGHT ✦</span>
-                        <h4 class="h5 font-serif text-dark mb-2">Trang Sức Bạc 925 Tuyển Chọn</h4>
-                        <p class="text-muted small mb-0" style="line-height: 1.6;">
-                            Lunara mang đến trải nghiệm trang sức tinh tế, chuẩn xác về tuổi bạc và sự chu đáo trong từng điểm chạm dịch vụ.
-                        </p>
+                    <div class="mega-editorial-card">
+                        <div class="mega-editorial-card__media">
+                            <img src="{{ asset('media-previews/hero-3.webp') }}" alt="Lunara Atelier" loading="lazy">
+                        </div>
+                        <div class="mega-editorial-card__body">
+                            <span class="mega-editorial-card__eyebrow">✦ SHINE WITH YOUR MOONLIGHT ✦</span>
+                            <h3 class="mega-editorial-card__title">Trang Sức Bạc 925 Tuyển Chọn</h3>
+                            <p class="mega-editorial-card__desc">
+                                Lunara mang đến trải nghiệm trang sức tinh tế, chuẩn xác về tuổi bạc và sự chu đáo trong từng điểm chạm dịch vụ.
+                            </p>
+                            <a href="{{ route('home') }}#story" class="mega-editorial-card__action">Khám phá câu chuyện Lunara →</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-

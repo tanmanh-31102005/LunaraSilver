@@ -466,14 +466,16 @@ h3 { font-size: clamp(1.4rem, 1.8vw, 1.9rem); }
 
 .mega-menu__link {
     color: var(--lunara-text);
-    font-size: 0.9rem;
+    font-family: var(--font-sans);
+    font-size: 0.88rem;
     font-weight: 500;
     text-decoration: none;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
     transition: color var(--transition-fast), transform var(--transition-fast);
-    padding-block: 2px;
+    padding-block: 3px;
 }
 
 .mega-menu__link:hover {
@@ -481,12 +483,20 @@ h3 { font-size: clamp(1.4rem, 1.8vw, 1.9rem); }
     transform: translateX(3px);
 }
 
+.mega-menu__link.mega-menu__link--between,
+.mega-menu__link:has(.mega-menu__count) {
+    justify-content: space-between;
+}
+
 .mega-menu__count {
     font-size: 0.72rem;
+    font-weight: 500;
+    font-family: var(--font-sans);
     background: var(--lunara-surface-alt);
     padding: 2px 7px;
     border-radius: var(--radius-pill);
     color: var(--lunara-muted);
+    flex-shrink: 0;
 }
 
 .badge-dot {
@@ -495,8 +505,37 @@ h3 { font-size: clamp(1.4rem, 1.8vw, 1.9rem); }
     height: 6px;
     border-radius: 50%;
     background: var(--lunara-accent);
-    vertical-align: middle;
+    flex-shrink: 0;
 }
+
+.mega-menu__link i {
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+.mega-feature-box {
+    padding: 14px 16px;
+    background: #FAF9F7;
+    border: 1px solid var(--lunara-line);
+    border-radius: var(--radius-md);
+    font-family: var(--font-sans);
+}
+
+.mega-feature-box__title {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--lunara-midnight);
+    margin-bottom: 4px;
+}
+
+.mega-feature-box__desc {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--lunara-muted);
+    line-height: 1.5;
+}
+
 
 /* Product Cards */
 .mega-menu__products {
@@ -625,33 +664,36 @@ h3 { font-size: clamp(1.4rem, 1.8vw, 1.9rem); }
 }
 
 .mega-editorial-card__eyebrow {
-    font-size: 0.66rem;
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
     font-weight: 600;
     letter-spacing: 0.12em;
     color: var(--lunara-accent);
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 5px;
 }
 
 .mega-editorial-card__title {
     font-family: var(--font-serif);
-    font-size: 1.28rem;
-    font-weight: 400;
+    font-size: 1.32rem;
+    font-weight: 500;
     color: var(--lunara-midnight);
     margin: 0 0 6px;
     line-height: 1.25;
 }
 
 .mega-editorial-card__desc {
-    font-size: 0.8rem;
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
     color: var(--lunara-muted);
-    line-height: 1.5;
+    line-height: 1.55;
     margin-bottom: 12px;
 }
 
 .mega-editorial-card__action {
     margin-top: auto;
-    font-size: 0.8rem;
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
     font-weight: 600;
     color: var(--lunara-midnight);
     text-decoration: none;
@@ -665,6 +707,7 @@ h3 { font-size: clamp(1.4rem, 1.8vw, 1.9rem); }
     color: var(--lunara-accent);
     transform: translateX(3px);
 }
+
 
 /* Mega Post Card */
 .mega-post-card {
