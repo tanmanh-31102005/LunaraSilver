@@ -154,5 +154,13 @@ function updateWishlistButtons(productId, isWishlisted) {
 function updateWishlistCount(count) {
     document.querySelectorAll('[data-wishlist-count]').forEach(el => {
         el.textContent = count;
+        if (el.classList.contains('wishlist-count')) {
+            if (Number(count) > 0) {
+                el.classList.remove('d-none');
+            } else {
+                el.classList.add('d-none');
+            }
+        }
     });
 }
+

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Services\NavigationService;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -17,5 +18,7 @@ class DatabaseSeeder extends Seeder
         DB::transaction(function (): void {
             $this->call([CategorySeeder::class, ProductSeeder::class, BundleSeeder::class]);
         });
+
+        app(NavigationService::class)->warmCache();
     }
 }

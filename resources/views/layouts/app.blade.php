@@ -33,19 +33,56 @@
             <a class="site-header__logo" href="{{ route('home') }}" aria-label="Lunara Silver — Trang chủ">
                 <img src="{{ route('media.show', ['path' => 'lunara-logo-light.svg']) }}" alt="Lunara Silver" width="180" height="75">
             </a>
-            <nav class="site-header__nav d-none d-lg-flex" aria-label="Điều hướng chính">
-                <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.index') && !request()->route('category') ? 'active' : '' }}">Sản phẩm</a>
-                <a href="{{ route('products.category', 'day-chuyen') }}" class="{{ request()->routeIs('products.category') && request()->route('category') === 'day-chuyen' ? 'active' : '' }}">Dây chuyền</a>
-                <a href="{{ route('products.category', 'nhan') }}" class="{{ request()->routeIs('products.category') && request()->route('category') === 'nhan' ? 'active' : '' }}">Nhẫn</a>
-                <a href="{{ route('products.category', 'vong-tay') }}" class="{{ request()->routeIs('products.category') && request()->route('category') === 'vong-tay' ? 'active' : '' }}">Vòng tay</a>
-                <a href="{{ route('products.category', 'bo-trang-suc') }}" class="{{ request()->routeIs('products.category') && request()->route('category') === 'bo-trang-suc' ? 'active' : '' }}">Bộ sưu tập</a>
-                <a href="{{ route('products.category', 'set-qua-tang') }}" class="{{ request()->routeIs('products.category') && request()->route('category') === 'set-qua-tang' ? 'active' : '' }}">Quà tặng</a>
-                <a href="{{ route('blog.index') }}" class="{{ request()->routeIs('blog.*') ? 'active' : '' }}">Blog</a>
-                <a href="{{ route('home') }}#story">Giới thiệu</a>
+            <nav class="site-header__nav d-none d-lg-flex" aria-label="Điều hướng chính" id="mainNavigation">
+                <a href="{{ route('products.index') }}"
+                   class="nav-link-mega {{ request()->routeIs('products.*') && !in_array(request()->route('category'), ['bo-trang-suc', 'set-qua-tang']) ? 'active' : '' }}"
+                   data-mega-trigger="trang-suc"
+                   id="nav-item-trang-suc"
+                   aria-haspopup="true"
+                   aria-expanded="false"
+                   aria-controls="mega-panel-trang-suc">
+                    Trang sức
+                </a>
+                <a href="{{ route('products.category', 'bo-trang-suc') }}"
+                   class="nav-link-mega {{ request()->routeIs('products.category') && request()->route('category') === 'bo-trang-suc' ? 'active' : '' }}"
+                   data-mega-trigger="bo-suu-tap"
+                   id="nav-item-bo-suu-tap"
+                   aria-haspopup="true"
+                   aria-expanded="false"
+                   aria-controls="mega-panel-bo-suu-tap">
+                    Bộ sưu tập
+                </a>
+                <a href="{{ route('products.category', 'set-qua-tang') }}"
+                   class="nav-link-mega {{ request()->routeIs('products.category') && request()->route('category') === 'set-qua-tang' ? 'active' : '' }}"
+                   data-mega-trigger="qua-tang"
+                   id="nav-item-qua-tang"
+                   aria-haspopup="true"
+                   aria-expanded="false"
+                   aria-controls="mega-panel-qua-tang">
+                    Quà tặng
+                </a>
+                <a href="{{ route('blog.index') }}"
+                   class="nav-link-mega {{ request()->routeIs('blog.*') ? 'active' : '' }}"
+                   data-mega-trigger="blog"
+                   id="nav-item-blog"
+                   aria-haspopup="true"
+                   aria-expanded="false"
+                   aria-controls="mega-panel-blog">
+                    Blog
+                </a>
+                <a href="{{ route('home') }}#story"
+                   class="nav-link-mega"
+                   data-mega-trigger="gioi-thieu"
+                   id="nav-item-gioi-thieu"
+                   aria-haspopup="true"
+                   aria-expanded="false"
+                   aria-controls="mega-panel-gioi-thieu">
+                    Giới thiệu
+                </a>
             </nav>
             <div class="site-header__actions">
                 <button class="icon-button" type="button" data-search-open aria-label="Tìm kiếm"><i class="bi bi-search" aria-hidden="true"></i></button>
-                <a class="icon-button position-relative d-none d-lg-inline-flex" href="{{ route('account.wishlist') }}" aria-label="Danh sách yêu thích" title="Sản phẩm yêu thích">
+                <a class="icon-button position-relative wishlist-trigger d-none d-lg-inline-flex" href="{{ route('account.wishlist') }}" aria-label="Danh sách yêu thích" title="Sản phẩm yêu thích">
                     <i class="bi bi-heart" aria-hidden="true"></i>
                     <span class="wishlist-count {{ ($headerWishlistCount ?? 0) > 0 ? '' : 'd-none' }}" data-wishlist-count>{{ $headerWishlistCount ?? 0 }}</span>
                 </a>
@@ -58,7 +95,9 @@
                 <button class="icon-button cart-trigger" type="button" data-bs-toggle="offcanvas" data-bs-target="#miniCart" aria-controls="miniCart" aria-label="Mở giỏ hàng"><i class="bi bi-bag" aria-hidden="true"></i><span class="cart-count" data-cart-count>{{ $headerCart['cart_count'] }}</span></button>
             </div>
         </div>
+        <x-mega-menu :navData="$navData ?? []" />
     </header>
+    <div class="mega-menu-backdrop" id="megaMenuBackdrop" hidden></div>
 
     <div class="offcanvas offcanvas-start mobile-navigation" tabindex="-1" id="mobileNavigation" aria-labelledby="mobileNavigationTitle">
         <div class="offcanvas-header">
@@ -66,15 +105,27 @@
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Đóng menu"></button>
         </div>
         <nav class="offcanvas-body" aria-label="Điều hướng di động">
-            <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.index') && !request()->route('category') ? 'active' : '' }}">Sản phẩm</a>
-            <a href="{{ route('products.category', 'day-chuyen') }}" class="{{ request()->routeIs('products.category') && request()->route('category') === 'day-chuyen' ? 'active' : '' }}">Dây chuyền</a>
-            <a href="{{ route('products.category', 'nhan') }}" class="{{ request()->routeIs('products.category') && request()->route('category') === 'nhan' ? 'active' : '' }}">Nhẫn</a>
-            <a href="{{ route('products.category', 'vong-tay') }}" class="{{ request()->routeIs('products.category') && request()->route('category') === 'vong-tay' ? 'active' : '' }}">Vòng tay</a>
-            <a href="{{ route('products.category', 'bo-trang-suc') }}" class="{{ request()->routeIs('products.category') && request()->route('category') === 'bo-trang-suc' ? 'active' : '' }}">Bộ sưu tập</a>
-            <a href="{{ route('products.category', 'set-qua-tang') }}" class="{{ request()->routeIs('products.category') && request()->route('category') === 'set-qua-tang' ? 'active' : '' }}">Quà tặng</a>
-            <a href="{{ route('blog.index') }}" class="{{ request()->routeIs('blog.*') ? 'active' : '' }}">Nhật ký Lunara (Blog)</a>
-            <a href="{{ route('home') }}#story">Giới thiệu</a>
-            <div class="mobile-navigation__divider"></div>
+            <div class="mobile-nav-group mb-2">
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                    <a href="{{ route('products.index') }}" class="fw-semibold text-dark text-decoration-none">TRANG SỨC</a>
+                    <button class="btn btn-sm btn-link text-muted p-0 text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#mobileTrangSucCollapse" aria-expanded="false" aria-controls="mobileTrangSucCollapse">
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                </div>
+                <div class="collapse show mt-2 ps-2" id="mobileTrangSucCollapse">
+                    <a href="{{ route('products.index') }}" class="d-block py-1 text-muted text-decoration-none small">✦ Tất cả sản phẩm</a>
+                    @foreach($navData['categories'] ?? [] as $mCat)
+                        <a href="{{ $mCat['url'] }}" class="d-block py-1 text-muted text-decoration-none small">• {{ $mCat['name'] }}</a>
+                    @endforeach
+                </div>
+            </div>
+
+            <a href="{{ route('products.category', 'bo-trang-suc') }}" class="d-block py-2 border-bottom text-dark fw-semibold text-decoration-none">BỘ SƯU TẬP</a>
+            <a href="{{ route('products.category', 'set-qua-tang') }}" class="d-block py-2 border-bottom text-dark fw-semibold text-decoration-none">QUÀ TẶNG</a>
+            <a href="{{ route('blog.index') }}" class="d-block py-2 border-bottom text-dark fw-semibold text-decoration-none">NHẬT KÝ LUNARA (BLOG)</a>
+            <a href="{{ route('home') }}#story" class="d-block py-2 border-bottom text-dark fw-semibold text-decoration-none">GIỚI THIỆU</a>
+
+            <div class="mobile-navigation__divider my-3"></div>
             @auth
                 <div class="mobile-navigation__user-info mb-2 px-1">
                     <span class="text-muted small d-block">Đăng nhập bởi:</span>
@@ -87,7 +138,7 @@
                 <a href="{{ route('login') }}"><i class="bi bi-box-arrow-in-right me-2"></i>Đăng nhập</a>
                 <a href="{{ route('register') }}"><i class="bi bi-person-plus me-2"></i>Đăng ký tài khoản</a>
             @endauth
-            <a href="{{ route('account.wishlist') }}" class="mt-2"><i class="bi bi-heart me-2"></i>Yêu thích <span class="badge bg-dark-subtle text-dark rounded-pill ms-1" data-wishlist-count>{{ $headerWishlistCount ?? 0 }}</span></a>
+            <a href="{{ route('account.wishlist') }}" class="mt-2"><i class="bi bi-heart me-2"></i>Yêu thích <span class="badge bg-dark rounded-pill ms-1" data-wishlist-count>{{ $headerWishlistCount ?? 0 }}</span></a>
         </nav>
     </div>
 

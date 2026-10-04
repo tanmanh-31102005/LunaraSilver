@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\CartService;
+use App\Services\NavigationService;
 use App\Services\WishlistService;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\View;
@@ -34,6 +35,9 @@ class AppServiceProvider extends ServiceProvider
             $wishlists = app(WishlistService::class);
             $sessionWishlist = $request->session()->get('guest_wishlist', []);
             $view->with('headerWishlistCount', $wishlists->count($request->user(), is_array($sessionWishlist) ? $sessionWishlist : []));
+
+            $navigationService = app(NavigationService::class);
+            $view->with('navData', $navigationService->getNavigationData());
         });
     }
 }
