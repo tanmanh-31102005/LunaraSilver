@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SitemapController;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schema;
@@ -56,6 +57,17 @@ try {
     $clearOutput = Artisan::output();
     echo "<pre style='background:#1e293b;color:#f8fafc;padding:1rem;border-radius:8px;font-size:0.85rem;overflow:auto;'>".htmlspecialchars($clearOutput).'</pre>';
     echo "<p style='color:#16a34a;'>✅ Đã làm mới cache hệ thống.</p>";
+
+    echo '<h3>🗺️ 4. Tự động kết xuất file tĩnh sitemap.xml...</h3>';
+    try {
+        $sitemapController = $app->make(SitemapController::class);
+        $xmlContent = $sitemapController->index()->getContent();
+        file_put_contents(__DIR__.'/public/sitemap.xml', $xmlContent);
+        file_put_contents(__DIR__.'/sitemap.xml', $xmlContent);
+        echo "<p style='color:#16a34a;'>✅ Đã xuất sitemap.xml tĩnh ra thư mục gốc và thư mục public (tăng tốc độ phản hồi cho Googlebot).</p>";
+    } catch (Throwable $se) {
+        echo "<p style='color:#f59e0b;'>⚠️ Không thể tạo file tĩnh sitemap: ".htmlspecialchars($se->getMessage()).' (vẫn phục vụ qua route động Laravel bình thường).</p>';
+    }
 
     echo "<p style='margin-top:1.5rem;color:#16a34a;font-weight:bold;'>🎉 HOÀN TẤT ĐỒNG BỘ PHASE 18 (SEO ARCHITECTURE) TRÊN INFINITYFREE!</p>";
 } catch (Throwable $e) {
