@@ -5723,4 +5723,544 @@ textarea.form-control {
     }
 }
 
+/* ==========================================================================
+   LUNARA CONCIERGE & SUPPORT / FAQ PAGES (EDITORIAL MAKEOVER)
+   ========================================================================== */
+
+/* Page Scaffolding Overrides */
+.contact-main,
+.support-main {
+    width: 100%;
+    min-height: 65vh;
+    padding-top: 48px;
+    padding-bottom: 96px;
+    background-color: var(--lunara-surface);
+}
+
+/* Header & Hero */
+.contact-hero,
+.faq-hero {
+    max-width: 760px;
+    margin: 0 auto 48px;
+    text-align: center;
+}
+
+.contact-eyebrow,
+.faq-eyebrow {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.74rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--lunara-accent);
+    margin-bottom: 12px;
+}
+
+.contact-title,
+.faq-title {
+    font-family: var(--font-serif);
+    font-size: clamp(2.2rem, 3.8vw, 3.2rem);
+    font-weight: 400;
+    color: var(--lunara-midnight);
+    line-height: 1.15;
+    margin-bottom: 16px;
+}
+
+.contact-desc,
+.faq-desc {
+    font-family: var(--font-sans);
+    font-size: 0.98rem;
+    color: var(--lunara-muted);
+    line-height: 1.7;
+    margin: 0 auto;
+}
+
+/* Contact Form Card */
+.contact-form-card {
+    background: #FFFFFF;
+    border: 1px solid var(--lunara-line);
+    border-radius: var(--radius-lg);
+    padding: clamp(28px, 4vw, 48px);
+    box-shadow: 0 10px 36px rgba(21, 23, 28, 0.04);
+}
+
+.contact-label {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.74rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--lunara-midnight);
+    margin-bottom: 6px;
+}
+
+.contact-input,
+.contact-select,
+.contact-textarea {
+    width: 100%;
+    background: #FAF9F7;
+    border: 1px solid var(--lunara-line);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-family: var(--font-sans);
+    font-size: 0.92rem;
+    color: var(--lunara-midnight);
+    transition: background-color var(--transition-fast),
+                border-color var(--transition-fast),
+                box-shadow var(--transition-fast);
+}
+
+.contact-input:focus,
+.contact-select:focus,
+.contact-textarea:focus {
+    background: #FFFFFF;
+    border-color: var(--lunara-accent);
+    box-shadow: 0 0 0 3px rgba(181, 154, 117, 0.14);
+    outline: none;
+}
+
+.contact-input::placeholder,
+.contact-textarea::placeholder {
+    color: #9CA3AF;
+    font-size: 0.88rem;
+}
+
+.contact-submit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--lunara-midnight);
+    color: #FFFFFF;
+    font-family: var(--font-sans);
+    font-size: 0.84rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 14px 36px;
+    border-radius: var(--radius-pill);
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(17, 24, 39, 0.16);
+    transition: background-color var(--transition-fast),
+                transform var(--transition-fast),
+                box-shadow var(--transition-fast);
+}
+
+.contact-submit-btn:hover {
+    background: #000000;
+    color: #FFFFFF;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(17, 24, 39, 0.25);
+}
+
+/* Contact Concierge Sidebar */
+.contact-concierge-card {
+    background: linear-gradient(180deg, #FAF9F7 0%, #F5F3EF 100%);
+    border: 1px solid var(--lunara-line);
+    border-radius: var(--radius-lg);
+    padding: clamp(28px, 3.5vw, 42px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.03);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-concierge-card__eyebrow {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--lunara-accent);
+    margin-bottom: 6px;
+}
+
+.contact-concierge-card__title {
+    font-family: var(--font-serif);
+    font-size: 1.55rem;
+    font-weight: 500;
+    color: var(--lunara-midnight);
+    margin-bottom: 8px;
+}
+
+.contact-concierge-card__desc {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: var(--lunara-muted);
+    line-height: 1.6;
+    margin-bottom: 28px;
+}
+
+.contact-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    margin-bottom: 32px;
+}
+
+.contact-info-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.contact-info-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: 1px solid var(--lunara-line);
+    display: grid;
+    place-items: center;
+    color: var(--lunara-accent);
+    font-size: 1.15rem;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.contact-info-content {
+    min-width: 0;
+    flex: 1;
+}
+
+.contact-info-label {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--lunara-muted);
+    margin-bottom: 3px;
+}
+
+.contact-info-value {
+    font-family: var(--font-sans);
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--lunara-midnight);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.contact-info-value a {
+    color: var(--lunara-midnight);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.contact-info-value a:hover {
+    color: var(--lunara-accent);
+}
+
+.contact-info-sub {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    color: var(--lunara-muted);
+    margin-top: 3px;
+    line-height: 1.45;
+}
+
+.contact-quick-faq {
+    margin-top: auto;
+    background: #FFFFFF;
+    border: 1px solid var(--lunara-line);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
+}
+
+.contact-quick-faq__title {
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--lunara-midnight);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.contact-quick-faq__desc {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    color: var(--lunara-muted);
+    line-height: 1.55;
+    margin-bottom: 14px;
+}
+
+.contact-quick-faq__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 10px 16px;
+    background: transparent;
+    border: 1px solid var(--lunara-line);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--lunara-midnight);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+}
+
+.contact-quick-faq__btn:hover {
+    background: var(--lunara-midnight);
+    color: #FFFFFF;
+    border-color: var(--lunara-midnight);
+}
+
+/* ==========================================================================
+   FAQ & HELP CENTER STYLES
+   ========================================================================== */
+
+/* Search bar */
+.faq-search-box {
+    max-width: 580px;
+    margin: 28px auto 0;
+    position: relative;
+    background: #FFFFFF;
+    border: 1px solid var(--lunara-line);
+    border-radius: var(--radius-pill);
+    padding: 6px 8px 6px 22px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 8px 24px rgba(21, 23, 28, 0.05);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.faq-search-box:focus-within {
+    border-color: var(--lunara-accent);
+    box-shadow: 0 10px 30px rgba(181, 154, 117, 0.16);
+}
+
+.faq-search-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    flex: 1;
+    font-family: var(--font-sans);
+    font-size: 0.92rem;
+    color: var(--lunara-midnight);
+}
+
+.faq-search-input::placeholder {
+    color: #9CA3AF;
+}
+
+.faq-search-btn {
+    border: none;
+    background: var(--lunara-midnight);
+    color: #FFFFFF;
+    border-radius: var(--radius-pill);
+    padding: 10px 22px;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.faq-search-btn:hover {
+    background: #000000;
+}
+
+/* Filter Chips */
+.faq-chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 48px;
+}
+
+.faq-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 18px;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-sans);
+    font-size: 0.84rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--lunara-text);
+    background: #FFFFFF;
+    border: 1px solid var(--lunara-line);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    transition: all var(--transition-fast);
+}
+
+.faq-chip:hover {
+    color: var(--lunara-accent);
+    border-color: var(--lunara-accent);
+    transform: translateY(-1px);
+}
+
+.faq-chip.is-active {
+    background: var(--lunara-midnight);
+    color: #FFFFFF;
+    border-color: var(--lunara-midnight);
+    box-shadow: 0 4px 12px rgba(17, 24, 39, 0.16);
+}
+
+/* Category Section Header */
+.faq-category-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--lunara-line);
+}
+
+.faq-category-header__tag {
+    font-family: var(--font-sans);
+    font-size: 0.74rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--lunara-accent);
+}
+
+.faq-category-header__count {
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    color: var(--lunara-muted);
+    background: #FAF9F7;
+    padding: 2px 8px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--lunara-line);
+}
+
+/* Accordion Card */
+.faq-card {
+    background: #FFFFFF;
+    border: 1px solid var(--lunara-line);
+    border-radius: var(--radius-md);
+    margin-bottom: 12px;
+    box-shadow: 0 3px 12px rgba(21, 23, 28, 0.02);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    overflow: hidden;
+}
+
+.faq-card:hover {
+    border-color: #D1D5DB;
+    box-shadow: 0 6px 18px rgba(21, 23, 28, 0.05);
+}
+
+.faq-card__trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 22px;
+    background: transparent;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 0.94rem;
+    font-weight: 600;
+    color: var(--lunara-midnight);
+    transition: color var(--transition-fast);
+}
+
+.faq-card__trigger:hover {
+    color: var(--lunara-accent);
+}
+
+.faq-card__chevron {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #FAF9F7;
+    border: 1px solid var(--lunara-line);
+    display: grid;
+    place-items: center;
+    color: var(--lunara-muted);
+    font-size: 0.82rem;
+    flex-shrink: 0;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color var(--transition-fast),
+                color var(--transition-fast);
+}
+
+.faq-card__trigger[aria-expanded="true"] .faq-card__chevron {
+    transform: rotate(180deg);
+    background: var(--lunara-midnight);
+    color: #FFFFFF;
+    border-color: var(--lunara-midnight);
+}
+
+.faq-card__body {
+    padding: 0 22px 20px;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    color: #4B5563;
+    line-height: 1.75;
+    border-top: 1px solid #F3F4F6;
+    padding-top: 14px;
+}
+
+/* FAQ Bottom CTA */
+.faq-cta-card {
+    margin-top: 56px;
+    background: linear-gradient(135deg, #FAF9F7 0%, #F5F3EF 100%);
+    border: 1px solid var(--lunara-line);
+    border-radius: var(--radius-lg);
+    padding: 48px 36px;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.03);
+}
+
+.faq-cta-card__eyebrow {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--lunara-accent);
+    margin-bottom: 8px;
+}
+
+.faq-cta-card__title {
+    font-family: var(--font-serif);
+    font-size: 1.85rem;
+    font-weight: 500;
+    color: var(--lunara-midnight);
+    margin-bottom: 10px;
+}
+
+.faq-cta-card__desc {
+    font-family: var(--font-sans);
+    font-size: 0.92rem;
+    color: var(--lunara-muted);
+    max-width: 520px;
+    margin: 0 auto 28px;
+    line-height: 1.65;
+}
+
+.faq-cta-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+
 

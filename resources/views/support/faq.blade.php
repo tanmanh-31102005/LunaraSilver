@@ -3,44 +3,50 @@
 @section('title', 'Trung Tâm Hỗ Trợ & Câu Hỏi Thường Gặp (FAQ) — Lunara Silver')
 @section('meta_description', 'Trung tâm hỗ trợ khách hàng và giải đáp câu hỏi thường gặp về sản phẩm bạc 925, đặt hàng, thanh toán VNPay, chính sách bảo hành tại Lunara Silver.')
 @section('canonical', route('support.faq'))
+@section('main_class', 'support-main')
+
 @if(filled($searchQuery) || filled($selectedCategory))
 @section('robots', 'noindex,follow')
 @endif
 
 @section('content')
-<div class="lunara-support-page py-5">
-    <div class="lunara-container">
+<div class="lunara-support-page">
+    <div class="lunara-container" style="max-width: 1080px;">
         {{-- Hero Header --}}
-        <div class="text-center max-w-700 mx-auto mb-5">
-            <span class="text-uppercase tracking-widest small text-muted d-block mb-2">Lunara Customer Care</span>
-            <h1 class="display-6 font-serif fw-normal mb-3">Trung Tâm Hỗ Trợ</h1>
-            <p class="text-muted leading-relaxed">
-                Quý khách cần giải đáp thông tin về sản phẩm, chính sách thanh toán hay chế độ bảo hành? Khám phá các câu hỏi thường gặp dưới đây hoặc kết nối trực tiếp với chuyên viên tư vấn.
+        <div class="faq-hero">
+            <span class="faq-eyebrow">✦ LUNARA HELP CENTER ✦</span>
+            <h1 class="faq-title">Trung Tâm Hỗ Trợ</h1>
+            <p class="faq-desc">
+                Quý khách cần giải đáp thông tin về sản phẩm bạc 925, chính sách thanh toán hay chế độ bảo hành? Khám phá các câu hỏi thường gặp dưới đây hoặc kết nối trực tiếp với chuyên viên tư vấn.
             </p>
 
-            {{-- Search Box --}}
-            <form action="{{ route('support.faq') }}" method="GET" class="mt-4 mx-auto" style="max-width: 540px;">
+            {{-- Editorial Search Box --}}
+            <form action="{{ route('support.faq') }}" method="GET" class="faq-search-box">
                 @if($selectedCategory)
                     <input type="hidden" name="category" value="{{ $selectedCategory }}">
                 @endif
-                <div class="input-group input-group-lg shadow-sm border rounded-pill overflow-hidden bg-white">
-                    <input type="search" name="q" value="{{ $searchQuery }}" class="form-control border-0 ps-4 fs-6" placeholder="Tìm kiếm câu hỏi (đặt hàng, VNPay, đổi trả...)" aria-label="Tìm kiếm câu hỏi">
-                    <button class="ln-btn ln-btn--primary px-4 text-uppercase tracking-wider" style="border-radius: 0 var(--ln-radius-pill) var(--ln-radius-pill) 0;" type="submit">
-                        <i class="bi bi-search me-1"></i> Tìm kiếm
-                    </button>
-                </div>
+                <i class="bi bi-search text-muted fs-6 me-2" aria-hidden="true"></i>
+                <input type="search"
+                       name="q"
+                       value="{{ $searchQuery }}"
+                       class="faq-search-input"
+                       placeholder="Tìm kiếm câu hỏi (đặt hàng, VNPay, đổi trả, kích thước...)"
+                       aria-label="Tìm kiếm câu hỏi">
+                <button class="faq-search-btn" type="submit">
+                    <span>Tìm kiếm</span>
+                </button>
             </form>
         </div>
 
-        {{-- Category Pills --}}
-        <div class="d-flex flex-wrap justify-content-center gap-2 mb-5">
+        {{-- Category Filter Chips --}}
+        <div class="faq-chip-group">
             <a href="{{ route('support.faq', $searchQuery ? ['q' => $searchQuery] : []) }}"
-               class="ln-btn ln-btn--sm {{ empty($selectedCategory) ? 'ln-btn--primary' : 'ln-btn--secondary' }}" style="border-radius: var(--ln-radius-pill);">
+               class="faq-chip {{ empty($selectedCategory) ? 'is-active' : '' }}">
                 Tất cả chủ đề
             </a>
             @foreach($categories as $cat)
                 <a href="{{ route('support.faq', array_filter(['category' => $cat, 'q' => $searchQuery])) }}"
-                   class="ln-btn ln-btn--sm {{ $selectedCategory === $cat ? 'ln-btn--primary' : 'ln-btn--secondary' }}" style="border-radius: var(--ln-radius-pill);">
+                   class="faq-chip {{ $selectedCategory === $cat ? 'is-active' : '' }}">
                     {{ $cat }}
                 </a>
             @endforeach
@@ -48,32 +54,46 @@
 
         {{-- FAQ Accordion List --}}
         <div class="row justify-content-center">
-            <div class="col-lg-9 col-xl-8">
+            <div class="col-lg-10 col-xl-9">
                 @if($faqs->isEmpty())
-                    <div class="text-center py-5 border border-dashed rounded-2 bg-light-subtle">
+                    <div class="text-center py-5 px-4 border rounded-3 bg-white shadow-sm my-4">
                         <i class="bi bi-question-circle fs-1 text-muted d-block mb-3"></i>
                         <h2 class="h5 text-dark mb-2">Không tìm thấy câu hỏi phù hợp</h2>
-                        <p class="text-muted small mb-4">Không có kết quả nào trùng khớp với từ khóa "{{ $searchQuery }}". Quý khách vui lòng thử tìm kiếm với từ khóa khác hoặc liên hệ trực tiếp với chúng tôi.</p>
-                        <a href="{{ route('support.faq') }}" class="btn btn-sm btn-outline-dark">Xem tất cả câu hỏi</a>
+                        <p class="text-muted small mb-4 mx-auto" style="max-width: 480px;">
+                            Không có kết quả nào trùng khớp với từ khóa "{{ $searchQuery }}". Quý khách vui lòng thử tìm kiếm với từ khóa khác hoặc liên hệ trực tiếp với chúng tôi.
+                        </p>
+                        <a href="{{ route('support.faq') }}" class="lunara-button lunara-button--outline py-2 px-4">
+                            Xem tất cả câu hỏi
+                        </a>
                     </div>
                 @else
                     @foreach($faqs as $categoryName => $categoryFaqs)
                         <div class="mb-5">
-                            <h2 class="h6 text-uppercase tracking-widest text-muted border-bottom pb-2 mb-3">
-                                {{ $categoryName }}
-                            </h2>
+                            {{-- Category Section Header --}}
+                            <div class="faq-category-header">
+                                <span class="faq-category-header__tag">{{ $categoryName }}</span>
+                                <span class="faq-category-header__count">{{ count($categoryFaqs) }} câu hỏi</span>
+                            </div>
 
-                            <div class="accordion accordion-flush" id="faqAccordion-{{ Str::slug($categoryName) }}">
+                            <div class="faq-accordion-list" id="faqAccordion-{{ Str::slug($categoryName) }}">
                                 @foreach($categoryFaqs as $index => $faq)
                                     @php $collapseId = 'collapse-' . $faq->id; @endphp
-                                    <div class="accordion-item border-bottom mb-2 bg-transparent">
-                                        <h3 class="accordion-header" id="heading-{{ $faq->id }}">
-                                            <button class="accordion-button collapsed px-3 py-3 fw-medium text-dark bg-transparent shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#{{ $collapseId }}" aria-expanded="false" aria-controls="{{ $collapseId }}" style="font-size: 0.98rem;">
-                                                <span class="me-2 text-muted">&bull;</span> {{ $faq->question }}
+                                    <div class="faq-card">
+                                        <h3 class="m-0" id="heading-{{ $faq->id }}">
+                                            <button class="faq-card__trigger collapsed"
+                                                    type="button"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#{{ $collapseId }}"
+                                                    aria-expanded="false"
+                                                    aria-controls="{{ $collapseId }}">
+                                                <span>{{ $faq->question }}</span>
+                                                <span class="faq-card__chevron">
+                                                    <i class="bi bi-chevron-down"></i>
+                                                </span>
                                             </button>
                                         </h3>
                                         <div id="{{ $collapseId }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ $faq->id }}">
-                                            <div class="accordion-body px-4 pb-4 pt-1 text-secondary" style="font-size: 0.925rem; line-height: 1.7;">
+                                            <div class="faq-card__body">
                                                 {!! nl2br(e($faq->answer)) !!}
                                             </div>
                                         </div>
@@ -84,19 +104,22 @@
                     @endforeach
                 @endif
 
-                {{-- Contact CTA Card --}}
-                <div class="mt-5 p-4 p-md-5 border rounded-3 text-center shadow-sm" style="background-color: var(--ln-color-ivory);">
-                    <h3 class="font-serif fs-4 mb-2">Quý khách cần hỗ trợ thêm?</h3>
-                    <p class="text-muted small mb-4 mx-auto" style="max-width: 500px;">
-                        Đội ngũ chăm sóc khách hàng của Lunara Silver luôn sẵn sàng lắng nghe và giải đáp mọi yêu cầu của quý khách.
+                {{-- Bottom Contact CTA Card --}}
+                <div class="faq-cta-card">
+                    <span class="faq-cta-card__eyebrow">✦ DỊCH VỤ KHÁCH HÀNG ✦</span>
+                    <h2 class="faq-cta-card__title">Quý khách vẫn cần hỗ trợ thêm?</h2>
+                    <p class="faq-cta-card__desc">
+                        Đội ngũ chăm sóc khách hàng của Lunara Silver luôn sẵn sàng lắng nghe, tư vấn kích thước và giải đáp mọi yêu cầu của quý khách.
                     </p>
-                    <div class="d-flex flex-wrap justify-content-center gap-3">
-                        <x-ui.button variant="primary" :href="route('contact')" class="px-4 py-2">
-                            Gửi yêu cầu liên hệ
-                        </x-ui.button>
-                        <x-ui.button variant="secondary" class="px-4 py-2" onclick="window.LunaraChat && window.LunaraChat.open()">
-                            <i class="bi bi-chat-dots me-1"></i> Trò chuyện trực tuyến
-                        </x-ui.button>
+                    <div class="faq-cta-card__actions">
+                        <a href="{{ route('contact') }}" class="lunara-button lunara-button--dark py-2 px-4">
+                            <span>Gửi yêu cầu liên hệ</span>
+                            <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                        <button type="button" class="lunara-button lunara-button--outline py-2 px-4" onclick="window.LunaraChat && window.LunaraChat.open()">
+                            <i class="bi bi-chat-dots me-1"></i>
+                            <span>Trò chuyện trực tuyến</span>
+                        </button>
                     </div>
                 </div>
             </div>
