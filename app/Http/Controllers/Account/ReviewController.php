@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Services\ReviewService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -32,17 +33,21 @@ class ReviewController extends Controller
     /**
      * Dedicated review submission form for a purchased order item.
      */
-    public function create(Request $request, OrderItem $item): View
+    public function create(Request $request, OrderItem $item): View|RedirectResponse
     {
         $user = $request->user();
 
         abort_unless(
             $item->order->user_id === $user->id
-            && $item->order->order_status === Order::STATUS_COMPLETED
-            && ! $item->review,
+            && $item->order->order_status === Order::STATUS_COMPLETED,
             403,
-            'Sản phẩm này không hợp lệ để đánh giá hoặc đã được đánh giá.'
+            'Sản phẩm này không thuộc đơn hàng hoàn tất của bạn.'
         );
+
+        if ($item->review) {
+            return redirect()->route('account.reviews.index', ['tab' => 'reviewed'])
+                ->with('info', 'Sản phẩm này đã được bạn gửi đánh giá trước đó.');
+        }
 
         $item->load(['product.images', 'order']);
 

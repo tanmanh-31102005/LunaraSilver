@@ -76,7 +76,11 @@ class ReviewController extends Controller
                 ]);
             }
 
-            return redirect()->back()->with('success', $message);
+            if ($request->input('return_to') === 'account' || str_contains($request->headers->get('referer', ''), 'account/reviews')) {
+                return redirect()->route('account.reviews.index', ['tab' => 'reviewed'])->with('success', $message);
+            }
+
+            return redirect()->to(route('products.show', $product->slug).'#reviews')->with('success', $message);
         } catch (ValidationException $e) {
             throw $e;
         } catch (\Throwable $e) {

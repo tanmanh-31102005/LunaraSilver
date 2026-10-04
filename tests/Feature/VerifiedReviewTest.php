@@ -143,9 +143,11 @@ class VerifiedReviewTest extends TestCase
             'rating' => 5,
             'title' => 'Nhẫn sáng đẹp hoàn hảo',
             'content' => 'Nhẫn bạc S925 rất sáng, đeo vừa tay, hộp đựng sang trọng. Rất đáng tiền!',
+            'return_to' => 'account',
         ]);
 
         $response->assertSessionHas('success');
+        $response->assertRedirect(route('account.reviews.index', ['tab' => 'reviewed']));
         $this->assertDatabaseHas('reviews', [
             'product_id' => $this->product->id,
             'user_id' => $this->user->id,
@@ -169,6 +171,11 @@ class VerifiedReviewTest extends TestCase
         ])->assertSessionHas('success');
 
         $this->assertDatabaseCount('reviews', 1);
+
+        // Visiting create page for already reviewed item should redirect gracefully to reviewed tab (no 403)
+        $this->actingAs($this->user)->get(route('account.reviews.create', $orderItem))
+            ->assertRedirect(route('account.reviews.index', ['tab' => 'reviewed']))
+            ->assertSessionHas('info');
 
         // Second review for the same purchase
         $response = $this->actingAs($this->user)->post(route('reviews.store', $this->product), [

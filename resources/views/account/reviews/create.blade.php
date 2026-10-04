@@ -32,6 +32,7 @@
         <form action="{{ route('reviews.store', $prod->slug) }}" method="post" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="order_item_id" value="{{ $item->id }}">
+            <input type="hidden" name="return_to" value="account">
 
             {{-- Star Rating Picker --}}
             <div class="mb-4">
