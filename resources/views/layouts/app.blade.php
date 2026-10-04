@@ -70,8 +70,8 @@
                    aria-controls="mega-panel-blog">
                     Blog
                 </a>
-                <a href="{{ route('home') }}#story"
-                   class="nav-link-mega"
+                <a href="{{ route('about') }}"
+                   class="nav-link-mega {{ request()->routeIs('about') ? 'active' : '' }}"
                    data-mega-trigger="gioi-thieu"
                    id="nav-item-gioi-thieu"
                    aria-haspopup="true"
@@ -123,7 +123,7 @@
             <a href="{{ route('products.category', 'bo-trang-suc') }}" class="d-block py-2 border-bottom text-dark fw-semibold text-decoration-none">BỘ SƯU TẬP</a>
             <a href="{{ route('products.category', 'set-qua-tang') }}" class="d-block py-2 border-bottom text-dark fw-semibold text-decoration-none">QUÀ TẶNG</a>
             <a href="{{ route('blog.index') }}" class="d-block py-2 border-bottom text-dark fw-semibold text-decoration-none">NHẬT KÝ LUNARA (BLOG)</a>
-            <a href="{{ route('home') }}#story" class="d-block py-2 border-bottom text-dark fw-semibold text-decoration-none">GIỚI THIỆU</a>
+            <a href="{{ route('about') }}" class="d-block py-2 border-bottom text-dark fw-semibold text-decoration-none {{ request()->routeIs('about') ? 'active' : '' }}">GIỚI THIỆU</a>
 
             <div class="mobile-navigation__divider my-3"></div>
             @auth
@@ -209,7 +209,7 @@
                 <a href="{{ route('support.faq', ['category' => 'Đổi trả']) }}">Chính sách đổi trả & bảo hành</a>
                 <a href="{{ route('contact') }}">Liên hệ chúng tôi</a>
                 <a href="{{ route('blog.index') }}">Nhật ký Lunara (Blog)</a>
-                <a href="{{ route('home') }}#story">Câu chuyện Lunara</a>
+                <a href="{{ route('about') }}">Câu chuyện Lunara</a>
             </div>
             <div class="site-footer__pledges">
                 <h2>Cam kết chất lượng</h2>

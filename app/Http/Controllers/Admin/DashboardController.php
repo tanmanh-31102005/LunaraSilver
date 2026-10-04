@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\ContactMessage;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Review;
 use App\Models\SupportMessage;
 use Illuminate\Contracts\View\View;
 
@@ -99,8 +100,8 @@ class DashboardController extends Controller
 
         $unresolvedSupport = ContactMessage::whereIn('status', [ContactMessage::STATUS_NEW, ContactMessage::STATUS_IN_PROGRESS])->count();
         $unreadChatMessages = SupportMessage::where('sender_type', SupportMessage::SENDER_CUSTOMER)->whereNull('read_at')->count();
-        $pendingReviewsCount = \App\Models\Review::where('status', 'pending')->count();
-        $approvedReviewsAvg = round((float) (\App\Models\Review::where('status', 'approved')->avg('rating') ?: 0), 1);
+        $pendingReviewsCount = Review::where('status', 'pending')->count();
+        $approvedReviewsAvg = round((float) (Review::where('status', 'approved')->avg('rating') ?: 0), 1);
 
         return view('admin.dashboard', [
             'metrics' => [

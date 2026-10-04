@@ -6,6 +6,7 @@ import { initWishlist } from './wishlist';
 import { initCartDrawer } from './cart-drawer';
 import { initMobileStickyBar } from './mobile-sticky-bar';
 import { initMegaMenu } from './mega-menu';
+import { initAboutPage } from './pages/about';
 
 const csrf = document.querySelector('meta[name="csrf-token"]')?.content;
 
@@ -347,6 +348,7 @@ function initApp() {
     initMobileStickyBar();
     initHeroSlider();
     initMegaMenu();
+    initAboutPage();
 }
 
 if (document.readyState === 'loading') {

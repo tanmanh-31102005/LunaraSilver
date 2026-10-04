@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\ProductDiscoveryService;
 use App\Services\RecentlyViewedService;
+use App\Services\ReviewService;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -29,8 +32,8 @@ class ProductController extends Controller
             'bundleItems.component.images',
         ]);
 
-        $reviewService = app(\App\Services\ReviewService::class);
-        $discoveryService = app(\App\Services\ProductDiscoveryService::class);
+        $reviewService = app(ReviewService::class);
+        $discoveryService = app(ProductDiscoveryService::class);
 
         $ratingSummary = $product->ratingSummary();
         $hasApprovedReviews = $ratingSummary['total'] > 0;
@@ -40,7 +43,7 @@ class ProductController extends Controller
 
         $reviews = $hasApprovedReviews
             ? $reviewService->getApprovedReviewsForProduct($product, $ratingFilter, $sort, 10)
-            : new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10, 1, ['path' => $request->url(), 'query' => $request->query()]);
+            : new LengthAwarePaginator([], 0, 10, 1, ['path' => $request->url(), 'query' => $request->query()]);
 
         $customerGallery = $hasApprovedReviews
             ? $reviewService->getCustomerMediaGallery($product, 8)

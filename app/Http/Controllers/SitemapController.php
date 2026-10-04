@@ -28,7 +28,15 @@ class SitemapController extends Controller
             'priority' => '1.0',
         ];
 
-        // 2. Products Catalog Root
+        // 2. About / Brand Story
+        $urls[] = [
+            'loc' => $baseUrl.'/about',
+            'lastmod' => now()->toDateString(),
+            'changefreq' => 'monthly',
+            'priority' => '0.8',
+        ];
+
+        // 3. Products Catalog Root
         $urls[] = [
             'loc' => $baseUrl.'/products',
             'lastmod' => now()->toDateString(),

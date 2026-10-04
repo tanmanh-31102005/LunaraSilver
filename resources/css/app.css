@@ -1,6 +1,7 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 @import './tokens.css';
+@import './pages/about.css';
 
 /* ==========================================================================
    LUNARA SILVER — CELESTIAL LUXURY MINIMALISM DESIGN SYSTEM (PHASE 17)
@@ -6262,5 +6263,15 @@ textarea.form-control {
     gap: 12px;
 }
 
-
-
+/* ==========================================================================
+   SUPPORT CONCIERGE WIDGET — DRAWER / OFFCANVAS COLLISION PREVENTION
+   ========================================================================== */
+body:has(.offcanvas.show) .lunara-support-widget,
+body:has(.modal.show) .lunara-support-widget,
+body.modal-open .lunara-support-widget,
+.lunara-support-widget.is-hidden-by-drawer {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: translateY(16px) scale(0.96) !important;
+}

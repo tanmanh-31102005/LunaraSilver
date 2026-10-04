@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Account\AddressController;
 use App\Http\Controllers\Account\DashboardController;
 use App\Http\Controllers\Account\OrderController;
@@ -36,6 +37,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('/', HomeController::class)->name('home');
+Route::get('/about', [AboutController::class, 'index'])->name('about');
 
 // Search System (Phase 19)
 Route::get('/search', [SearchController::class, 'index'])->name('search');

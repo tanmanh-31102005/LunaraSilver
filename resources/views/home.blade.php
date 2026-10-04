@@ -177,57 +177,64 @@
         </section>
     @endif
 
-    <section class="story-section" id="story" aria-labelledby="story-title">
-        <div class="lunara-container story-section__inner">
-            <div class="story-section__visual">
-                <div class="story-mark-showcase">
-                    <div class="story-mark-halo" aria-hidden="true"></div>
-                    <div class="story-mark-ring" aria-hidden="true"></div>
-                    <div class="story-moon-stars" aria-hidden="true">
-                        <span class="star star--1">✦</span>
-                        <span class="star star--2">✦</span>
-                        <span class="star star--3">✦</span>
-                    </div>
-                    <img 
-                        src="{{ route('media.show', ['path' => 'lunara-mark.svg']) }}" 
-                        alt="Biểu tượng Lunara Silver" 
-                        class="story-mark-img"
-                        width="240" 
-                        height="240"
-                    >
-                    <span class="story-moon-tag">LUNARA · EMBLEM</span>
-                </div>
-            </div>
-            <div class="story-section__copy">
-                <p class="eyebrow eyebrow--light">CÂU CHUYỆN LUNARA</p>
-                <h2 id="story-title">Một ánh sáng<br><em>của riêng bạn.</em></h2>
-                <p>Lunara Silver ra đời từ tình yêu với ánh trăng — nguồn sáng dịu dàng nhưng luôn hiện diện, soi rọi mọi hành trình dù đêm tối nhất.</p>
+    <section class="story-section story-section--cinematic" id="story" aria-labelledby="story-title">
+        <div class="story-section__media" aria-hidden="true">
+            <video
+                autoplay
+                muted
+                loop
+                playsinline
+                preload="metadata"
+                poster="{{ is_file(public_path('media-previews/hero.webp')) ? asset('media-previews/hero.webp') : route('media.show', ['path' => 'banner.jpg']) }}"
+                class="story-section__video"
+            >
+                <source src="{{ route('media.show', ['path' => 'Animationbanner.mp4']) }}" type="video/mp4">
+            </video>
+            <div class="story-section__overlay"></div>
+        </div>
 
-                <div class="story-pillars mt-4">
-                    <div class="story-pillar">
-                        <span class="story-pillar__icon">✦</span>
-                        <div class="story-pillar__text">
+        <div class="lunara-container story-section__container">
+            <div class="story-section__content">
+                <p class="eyebrow eyebrow--light">CÂU CHUYỆN LUNARA</p>
+                <h2 id="story-title" class="story-section__title">
+                    Một ánh sáng<br>
+                    <em>của riêng bạn.</em>
+                </h2>
+                <p class="story-section__lead">
+                    Lunara Silver ra đời từ tình yêu với ánh trăng — nguồn sáng dịu dàng nhưng luôn hiện diện, soi rọi mọi hành trình dù đêm tối nhất.
+                </p>
+
+                <div class="story-pillars-editorial mt-4">
+                    <div class="story-pillar-editorial">
+                        <span class="story-pillar-editorial__num">01</span>
+                        <div class="story-pillar-editorial__body">
                             <strong>Bạc 925 Tuyển Chọn</strong>
                             <small>Độ sáng bóng bền lâu, an toàn với làn da</small>
                         </div>
                     </div>
-                    <div class="story-pillar">
-                        <span class="story-pillar__icon">✦</span>
-                        <div class="story-pillar__text">
+                    <div class="story-pillar-editorial">
+                        <span class="story-pillar-editorial__num">02</span>
+                        <div class="story-pillar-editorial__body">
                             <strong>Chế Tác Tinh Xảo</strong>
                             <small>Đường nét mềm mại, hoàn thiện thủ công tỉ mỉ</small>
                         </div>
                     </div>
-                    <div class="story-pillar">
-                        <span class="story-pillar__icon">✦</span>
-                        <div class="story-pillar__text">
+                    <div class="story-pillar-editorial">
+                        <span class="story-pillar-editorial__num">03</span>
+                        <div class="story-pillar-editorial__body">
                             <strong>Cảm Hứng Thiên Văn</strong>
                             <small>Mỗi món trang sức là một câu chuyện vì sao</small>
                         </div>
                     </div>
                 </div>
 
-                <p class="story-section__slogan mt-4 mb-0">Shine with your own moonlight</p>
+                <div class="story-section__footer mt-4 pt-2">
+                    <p class="story-section__slogan mb-3">Shine with your own moonlight</p>
+                    <a href="{{ route('about') }}" class="story-section__cta">
+                        <span>Khám phá toàn bộ câu chuyện</span>
+                        <i class="bi bi-arrow-right ms-2" aria-hidden="true"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </section>

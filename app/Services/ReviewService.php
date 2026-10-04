@@ -95,8 +95,6 @@ class ReviewService
 
     /**
      * Get reviews submitted by this user (Account Review Center: Đã đánh giá).
-     *
-     * @return LengthAwarePaginator
      */
     public function getUserReviews(User $user, int $perPage = 10): LengthAwarePaginator
     {

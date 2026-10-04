@@ -1,5 +1,5 @@
 {{-- Lunara Silver Concierge / Live Support Widget --}}
-<div id="lunaraSupportWidget" class="lunara-support-widget" style="position: fixed; bottom: 24px; right: 24px; z-index: 1050; font-family: var(--ln-font-ui);">
+<div id="lunaraSupportWidget" class="lunara-support-widget" style="position: fixed; bottom: 24px; right: 24px; z-index: 1035; font-family: var(--ln-font-ui); transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.25s ease;">
     {{-- Launcher Button --}}
     <button id="lunaraChatLauncher"
             class="ln-btn ln-btn--primary shadow-lg d-flex align-items-center gap-2 px-4 py-2 border-0"
@@ -246,6 +246,34 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         })
         .catch(err => console.error('Send error:', err));
+    });
+
+    // Auto-hide support widget when offcanvas (e.g. cart drawer) or modal opens
+    const widgetContainer = document.getElementById('lunaraSupportWidget');
+    document.addEventListener('show.bs.offcanvas', function () {
+        if (widgetContainer) {
+            widgetContainer.classList.add('is-hidden-by-drawer');
+            if (isOpen) closeChat();
+        }
+    });
+
+    document.addEventListener('hidden.bs.offcanvas', function () {
+        if (!document.querySelector('.offcanvas.show') && widgetContainer) {
+            widgetContainer.classList.remove('is-hidden-by-drawer');
+        }
+    });
+
+    document.addEventListener('show.bs.modal', function () {
+        if (widgetContainer) {
+            widgetContainer.classList.add('is-hidden-by-drawer');
+            if (isOpen) closeChat();
+        }
+    });
+
+    document.addEventListener('hidden.bs.modal', function () {
+        if (!document.querySelector('.modal.show') && widgetContainer) {
+            widgetContainer.classList.remove('is-hidden-by-drawer');
+        }
     });
 
     window.LunaraChat = {

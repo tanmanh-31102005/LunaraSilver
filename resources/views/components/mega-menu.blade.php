@@ -244,7 +244,7 @@
                 <div class="mega-menu__col">
                     <span class="mega-menu__heading">Thương hiệu</span>
                     <ul class="mega-menu__list">
-                        <li><a href="{{ route('home') }}#story" class="mega-menu__link fw-semibold"><span>Câu chuyện Lunara</span></a></li>
+                        <li><a href="{{ route('about') }}" class="mega-menu__link fw-semibold"><span>Câu chuyện Lunara</span></a></li>
                         <li><a href="{{ route('contact') }}" class="mega-menu__link"><span>Liên hệ &amp; Showroom</span></a></li>
                     </ul>
                 </div>
@@ -272,7 +272,7 @@
                             <p class="mega-editorial-card__desc">
                                 Lunara mang đến trải nghiệm trang sức tinh tế, chuẩn xác về tuổi bạc và sự chu đáo trong từng điểm chạm dịch vụ.
                             </p>
-                            <a href="{{ route('home') }}#story" class="mega-editorial-card__action">Khám phá câu chuyện Lunara →</a>
+                            <a href="{{ route('about') }}" class="mega-editorial-card__action">Khám phá câu chuyện Lunara →</a>
                         </div>
                     </div>
                 </div>

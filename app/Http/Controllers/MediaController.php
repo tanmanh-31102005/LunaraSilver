@@ -14,7 +14,7 @@ class MediaController extends Controller
 
         abort_unless(
             $root && $file && str_starts_with($file, $root.DIRECTORY_SEPARATOR)
-                && is_file($file) && in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png', 'webp', 'svg'], true),
+                && is_file($file) && in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png', 'webp', 'svg', 'mp4'], true),
             Response::HTTP_NOT_FOUND,
         );
 
