@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\CartService;
+use App\Services\WishlistService;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -29,6 +30,10 @@ class AppServiceProvider extends ServiceProvider
             $carts = app(CartService::class);
             $cart = $carts->resolveCart($request->user(), $request->session()->get('lunara_cart_token'));
             $view->with('headerCart', $carts->summary($cart));
+
+            $wishlists = app(WishlistService::class);
+            $sessionWishlist = $request->session()->get('guest_wishlist', []);
+            $view->with('headerWishlistCount', $wishlists->count($request->user(), is_array($sessionWishlist) ? $sessionWishlist : []));
         });
     }
 }

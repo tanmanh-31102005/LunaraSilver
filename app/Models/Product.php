@@ -85,6 +85,11 @@ class Product extends Model
         return $this->hasMany(Review::class);
     }
 
+    public function wishlistItems(): HasMany
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
     public function bundleItems(): HasMany
     {
         return $this->hasMany(BundleItem::class, 'bundle_product_id')->orderBy('sort_order');

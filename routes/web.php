@@ -24,13 +24,28 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\VNPayController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('/', HomeController::class)->name('home');
+
+// Search System (Phase 19)
+Route::get('/search', [SearchController::class, 'index'])->name('search');
+Route::get('/api/search/suggestions', [SearchController::class, 'suggestions'])->name('api.search.suggestions');
+Route::get('/search/suggestions', [SearchController::class, 'suggestions'])->name('search.suggestions');
+
+// Wishlist System (Phase 19)
+Route::get('/account/wishlist', [WishlistController::class, 'index'])->name('account.wishlist');
+Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+Route::get('/wishlist/status', [WishlistController::class, 'status'])->name('wishlist.status');
+Route::post('/wishlist/{product}', [WishlistController::class, 'toggle'])->whereNumber('product')->name('wishlist.toggle');
+Route::delete('/wishlist/{product}', [WishlistController::class, 'destroy'])->whereNumber('product')->name('wishlist.destroy');
+
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{category:slug}', [ProductController::class, 'index'])->name('products.category');
 Route::get('/product/{product:slug}', [ProductController::class, 'show'])->name('products.show');

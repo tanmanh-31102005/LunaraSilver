@@ -48,10 +48,9 @@
                         <a href="{{ route('account.orders.index') }}" class="account-nav-link {{ request()->routeIs('account.orders.*') ? 'active' : '' }}">
                             <i class="bi bi-box-seam me-2"></i> Đơn mua
                         </a>
-                        <span class="account-nav-link text-muted d-flex align-items-center justify-content-between" style="opacity: 0.65; cursor: default;">
-                            <span><i class="bi bi-heart me-2"></i> Yêu thích</span>
-                            <span class="ln-badge ln-badge--neutral ln-badge--sm" style="font-size: 0.68rem;">Sắp có</span>
-                        </span>
+                        <a href="{{ route('account.wishlist') }}" class="account-nav-link {{ request()->routeIs('account.wishlist*') ? 'active' : '' }}">
+                            <i class="bi bi-heart me-2"></i> Sản phẩm yêu thích
+                        </a>
                         <a href="{{ route('account.addresses.index') }}" class="account-nav-link {{ request()->routeIs('account.addresses.*') ? 'active' : '' }}">
                             <i class="bi bi-geo-alt me-2"></i> Sổ địa chỉ
                         </a>

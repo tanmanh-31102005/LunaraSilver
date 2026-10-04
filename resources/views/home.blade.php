@@ -164,6 +164,19 @@
         </section>
     @endif
 
+    @if(!empty($recentlyViewed) && $recentlyViewed->isNotEmpty())
+        <section class="home-section home-section--soft" id="recently-viewed" aria-labelledby="recent-title">
+            <div class="lunara-container">
+                <x-section-heading eyebrow="ĐÃ XEM GẦN ĐÂY" title="Tiếp tục khám phá" description="Những thiết kế bạn đã quan tâm trong các chuyến ghé thăm trước." id="recent-title" />
+                <div class="product-grid">
+                    @foreach($recentlyViewed as $recent)
+                        <x-product-card :product="$recent" />
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
     <section class="story-section" id="story" aria-labelledby="story-title">
         <div class="lunara-container story-section__inner">
             <div class="story-section__visual">

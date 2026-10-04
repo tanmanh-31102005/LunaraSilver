@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Services\CartService;
+use App\Services\WishlistService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,7 +12,7 @@ use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
-    public function register(Request $request, CartService $carts): RedirectResponse
+    public function register(Request $request, CartService $carts, WishlistService $wishlists): RedirectResponse
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -24,11 +25,12 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
         $this->mergeGuestCart($request, $carts);
+        $this->mergeGuestWishlist($request, $wishlists);
 
         return redirect()->intended(route('home'));
     }
 
-    public function login(Request $request, CartService $carts): RedirectResponse
+    public function login(Request $request, CartService $carts, WishlistService $wishlists): RedirectResponse
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
@@ -41,6 +43,7 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
         $this->mergeGuestCart($request, $carts);
+        $this->mergeGuestWishlist($request, $wishlists);
 
         if ($request->user()?->isAdmin()) {
             return redirect()->intended(route('admin.dashboard'));
@@ -65,6 +68,15 @@ class AuthController extends Controller
         $request->session()->forget('lunara_cart_token');
         if ($warning) {
             $request->session()->flash('cart_warning', $warning);
+        }
+    }
+
+    private function mergeGuestWishlist(Request $request, WishlistService $wishlists): void
+    {
+        $guestWishlist = $request->session()->get('guest_wishlist', []);
+        if (! empty($guestWishlist) && is_array($guestWishlist)) {
+            $wishlists->mergeGuestWishlist($request->user(), $guestWishlist);
+            $request->session()->forget('guest_wishlist');
         }
     }
 }

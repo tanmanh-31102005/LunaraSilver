@@ -23,7 +23,7 @@
         @else
             <span class="product-badge product-badge--soldout product-card__badge">Hết hàng</span>
         @endif
-        <button class="product-card__wishlist icon-button" type="button" disabled aria-label="Yêu thích {{ $product->name }} chưa khả dụng" title="Yêu thích sẽ được bổ sung"><i class="bi bi-heart" aria-hidden="true"></i></button>
+        <x-wishlist-button :productId="$product->id" />
         <div class="product-card__quick-bar">
             <a href="{{ route('products.show', $product->slug) }}" class="product-card__quick-action" title="Xem chi tiết {{ $product->name }}">
                 <i class="bi bi-eye me-1"></i> <span>Xem nhanh</span>

@@ -4,15 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\RecentlyViewedService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class ProductController extends Controller
 {
-    public function show(Product $product): View
+    public function show(Product $product, Request $request): View
     {
         abort_unless($product->is_active, 404);
+
+        $recentService = app(RecentlyViewedService::class);
+        $recentSession = (array) $request->session()->get(RecentlyViewedService::SESSION_KEY, []);
+        $recentlyViewed = $recentService->getProducts($recentSession, $product->id, 4);
+
+        $recentService->record($product->id, $recentSession);
+        $request->session()->put(RecentlyViewedService::SESSION_KEY, $recentSession);
 
         $product->load(['category', 'images', 'bundleItems.component.category', 'bundleItems.component.images']);
 
@@ -46,7 +54,7 @@ class ProductController extends Controller
 
         $metaDescription = Str::limit(strip_tags($product->short_description ?: $product->description ?: ''), 160, '');
 
-        return view('products.show', compact('product', 'images', 'specifications', 'relatedProducts', 'metaDescription'));
+        return view('products.show', compact('product', 'images', 'specifications', 'relatedProducts', 'recentlyViewed', 'metaDescription'));
     }
 
     public function index(Request $request, ?Category $category = null): View

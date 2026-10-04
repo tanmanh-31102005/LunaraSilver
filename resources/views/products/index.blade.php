@@ -51,7 +51,9 @@
             </aside>
             <div class="listing-results">
                 <div class="listing-toolbar">
-                    <button class="btn listing-mobile-filter d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#listingFilters" aria-controls="listingFilters" aria-label="Mở bộ lọc"><i class="bi bi-sliders" aria-hidden="true"></i> Bộ lọc</button>
+                    <button class="btn listing-mobile-filter d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#listingFilters" aria-controls="listingFilters" aria-label="Mở bộ lọc">
+                        <i class="bi bi-sliders" aria-hidden="true"></i> Bộ lọc @if(!empty($activeFilters))<span class="badge bg-dark rounded-pill ms-1">{{ count($activeFilters) }}</span>@endif
+                    </button>
                     <span class="listing-count">@if($products->total()) Hiển thị {{ $products->firstItem() }}–{{ $products->lastItem() }} trong {{ $products->total() }} sản phẩm @else 0 sản phẩm @endif</span>
                     <form method="get" action="{{ $baseRoute }}" class="listing-sort">
                         @foreach($filters as $key => $value)@if($value !== null)<input type="hidden" name="{{ $key }}" value="{{ $value }}">@endif @endforeach
@@ -71,7 +73,7 @@
                         @foreach($activeFilters as $key => $value)
                             <a href="{{ $removeUrls[$key] }}" aria-label="Bỏ bộ lọc {{ $key }}: {{ $value }}">{{ ['q' => 'Tìm', 'min_price' => 'Từ', 'max_price' => 'Đến', 'type' => 'Loại', 'material' => 'Chất liệu', 'stone' => 'Đá'][$key] }}: {{ $value }} <i class="bi bi-x" aria-hidden="true"></i></a>
                         @endforeach
-                        <a class="listing-chips__clear" href="{{ route('products.index') }}">Xóa bộ lọc</a>
+                        <a class="listing-chips__clear" href="{{ $category ? route('products.category', $category->slug) : route('products.index') }}">Xóa tất cả</a>
                     </div>
                 @endif
 

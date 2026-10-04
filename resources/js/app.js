@@ -1,5 +1,10 @@
 import './bootstrap';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import './toast';
+import { initSearchOverlay } from './search-overlay';
+import { initWishlist } from './wishlist';
+import { initCartDrawer } from './cart-drawer';
+import { initMobileStickyBar } from './mobile-sticky-bar';
 
 const csrf = document.querySelector('meta[name="csrf-token"]')?.content;
 
@@ -7,39 +12,9 @@ function renderCart(data) {
     document.querySelectorAll('[data-cart-count]').forEach((element) => {
         element.textContent = data.cart_count;
     });
-    const subtotal = document.querySelector('#miniCartSubtotal');
-    if (subtotal) subtotal.textContent = data.subtotal_display;
-
-    const mini = document.querySelector('#miniCartItems');
-    if (mini) {
-        mini.replaceChildren();
-        if (!data.items.length) {
-            const empty = document.createElement('p');
-            empty.textContent = 'Giỏ hàng đang trống.';
-            mini.append(empty);
-        }
-        data.items.slice(0, 3).forEach((item) => {
-            const row = document.createElement('div');
-            row.className = 'mini-cart__item';
-            if (item.image_url) {
-                const image = document.createElement('img');
-                image.src = item.image_url;
-                image.alt = item.name;
-                image.width = 64;
-                image.height = 80;
-                row.append(image);
-            }
-            const details = document.createElement('div');
-            const link = document.createElement('a');
-            link.href = item.url;
-            link.textContent = item.name;
-            const quantity = document.createElement('small');
-            quantity.textContent = `${item.quantity} × ${item.unit_price_display}`;
-            details.append(link, quantity);
-            row.append(details);
-            mini.append(row);
-        });
-    }
+    document.querySelectorAll('[data-drawer-count]').forEach((element) => {
+        element.textContent = data.cart_count;
+    });
 
     const pageSubtotal = document.querySelector('[data-cart-subtotal]');
     if (pageSubtotal) pageSubtotal.textContent = data.subtotal_display;
@@ -68,8 +43,10 @@ function renderCart(data) {
             row.remove();
             return;
         }
-        row.querySelector('[name="quantity"]').value = item.quantity;
-        row.querySelector('[data-line-subtotal]').textContent = item.line_subtotal_display;
+        const qInput = row.querySelector('[name="quantity"]');
+        if (qInput) qInput.value = item.quantity;
+        const subtotalEl = row.querySelector('[data-line-subtotal]');
+        if (subtotalEl) subtotalEl.textContent = item.line_subtotal_display;
     });
     if (document.querySelector('#cartLayout') && !data.items.length) window.location.reload();
 }
@@ -78,7 +55,7 @@ async function cartRequest(url, method, payload, feedback) {
     try {
         const response = await fetch(url, {
             method,
-            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf },
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf || '' },
             body: payload ? JSON.stringify(payload) : undefined,
         });
         const data = await response.json();
@@ -89,17 +66,7 @@ async function cartRequest(url, method, payload, feedback) {
     }
 }
 
-document.querySelectorAll('[data-add-cart]').forEach((form) => {
-    form.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const values = new FormData(form);
-        cartRequest(form.action, 'POST', {
-            product_id: Number(values.get('product_id')),
-            quantity: Number(values.get('quantity')),
-        }, form.querySelector('.cart-feedback'));
-    });
-});
-
+// Full /cart page update forms
 document.querySelectorAll('[data-cart-update]').forEach((form) => {
     form.addEventListener('submit', (event) => {
         event.preventDefault();
@@ -108,9 +75,11 @@ document.querySelectorAll('[data-cart-update]').forEach((form) => {
 });
 
 document.querySelectorAll('[data-cart-remove]').forEach((button) => {
-    button.addEventListener('click', () => {
-        cartRequest(button.dataset.url, 'DELETE', null, document.querySelector('#cartPageFeedback'));
-    });
+    if (!button.closest('#miniCart')) {
+        button.addEventListener('click', () => {
+            cartRequest(button.dataset.url, 'DELETE', null, document.querySelector('#cartPageFeedback'));
+        });
+    }
 });
 
 document.querySelectorAll('[data-cart-clear]').forEach((button) => {
@@ -121,6 +90,7 @@ document.querySelectorAll('[data-cart-clear]').forEach((button) => {
     });
 });
 
+// Checkout form submission loading state
 const checkoutForm = document.querySelector('#checkoutForm');
 if (checkoutForm) {
     checkoutForm.addEventListener('submit', () => {
@@ -132,6 +102,7 @@ if (checkoutForm) {
     });
 }
 
+// Saved address selector on checkout
 const savedAddressSelect = document.querySelector('#savedAddressSelect');
 if (savedAddressSelect) {
     savedAddressSelect.addEventListener('change', (e) => {
@@ -150,7 +121,7 @@ if (savedAddressSelect) {
     });
 }
 
-// Quantity Stepper Widget
+// Quantity Stepper Widget (for product detail page stepper)
 document.querySelectorAll('[data-stepper]').forEach((button) => {
     button.addEventListener('click', () => {
         const input = button.closest('.stepper-widget')?.querySelector('.stepper-input');
@@ -168,7 +139,7 @@ document.querySelectorAll('[data-stepper]').forEach((button) => {
     });
 });
 
-// "Mua ngay" (Buy Now) Button
+// "Mua ngay" (Buy Now) Button -> add to cart & redirect directly to checkout
 document.querySelectorAll('[data-buy-now]').forEach((button) => {
     button.addEventListener('click', async () => {
         const form = button.closest('form');
@@ -181,7 +152,7 @@ document.querySelectorAll('[data-buy-now]').forEach((button) => {
         try {
             const response = await fetch(form.action, {
                 method: 'POST',
-                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf },
+                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf || '' },
                 body: JSON.stringify({
                     product_id: Number(values.get('product_id')),
                     quantity: Number(values.get('quantity')),
@@ -203,44 +174,7 @@ document.querySelectorAll('[data-buy-now]').forEach((button) => {
     });
 });
 
-// Quick Add from Product Cards
-document.querySelectorAll('[data-quick-add]').forEach((button) => {
-    button.addEventListener('click', async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const productId = Number(button.dataset.quickAdd);
-        if (!productId) return;
-        const originalHtml = button.innerHTML;
-        button.disabled = true;
-        button.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
-        try {
-            const response = await fetch('/cart/items', {
-                method: 'POST',
-                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf },
-                body: JSON.stringify({ product_id: productId, quantity: 1 }),
-            });
-            const data = await response.json();
-            if (data.items) {
-                renderCart(data);
-                button.innerHTML = '<i class="bi bi-check2 me-1"></i> Đã thêm';
-                setTimeout(() => {
-                    button.disabled = false;
-                    button.innerHTML = originalHtml;
-                }, 1600);
-            } else {
-                button.disabled = false;
-                button.innerHTML = originalHtml;
-            }
-        } catch {
-            button.disabled = false;
-            button.innerHTML = originalHtml;
-        }
-    });
-});
-
-// ==========================================================================
 // Lunara Premium Hero Slider (3-Slide Carousel)
-// ==========================================================================
 function initHeroSlider() {
     const slider = document.querySelector('#heroSlider');
     if (!slider) return;
@@ -318,14 +252,12 @@ function initHeroSlider() {
         startAutoplay();
     }
 
-    // Indicator clicks
     indicators.forEach((indicator, idx) => {
         indicator.addEventListener('click', () => {
             handleUserAction(() => goToSlide(idx));
         });
     });
 
-    // Prev / Next clicks
     if (prevBtn) {
         prevBtn.addEventListener('click', () => {
             handleUserAction(() => goToSlide(currentIndex - 1));
@@ -338,7 +270,6 @@ function initHeroSlider() {
         });
     }
 
-    // Accessible pause button
     if (pauseBtn) {
         pauseBtn.addEventListener('click', () => {
             manualPaused = !manualPaused;
@@ -352,27 +283,15 @@ function initHeroSlider() {
         });
     }
 
-    // Hover pause (desktop)
-    slider.addEventListener('mouseenter', () => {
-        isPaused = true;
-    });
-
-    slider.addEventListener('mouseleave', () => {
-        isPaused = false;
-    });
-
-    // Keyboard focus pause
-    slider.addEventListener('focusin', () => {
-        isPaused = true;
-    });
-
+    slider.addEventListener('mouseenter', () => { isPaused = true; });
+    slider.addEventListener('mouseleave', () => { isPaused = false; });
+    slider.addEventListener('focusin', () => { isPaused = true; });
     slider.addEventListener('focusout', (e) => {
         if (!slider.contains(e.relatedTarget)) {
             isPaused = false;
         }
     });
 
-    // Arrow keys navigation
     slider.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowLeft') {
             e.preventDefault();
@@ -383,7 +302,6 @@ function initHeroSlider() {
         }
     });
 
-    // Touch swipe gestures (mobile)
     let touchStartX = 0;
     let touchStartY = 0;
 
@@ -400,8 +318,6 @@ function initHeroSlider() {
         const diffY = touchEndY - touchStartY;
 
         isPaused = false;
-
-        // Horizontal swipe if X travel > 45px and greater than Y travel
         if (Math.abs(diffX) > 45 && Math.abs(diffX) > Math.abs(diffY)) {
             if (diffX < 0) {
                 handleUserAction(() => goToSlide(currentIndex + 1));
@@ -411,7 +327,6 @@ function initHeroSlider() {
         }
     }, { passive: true });
 
-    // Page visibility change
     document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'hidden') {
             stopAutoplay();
@@ -420,14 +335,20 @@ function initHeroSlider() {
         }
     });
 
-    // Start on load
     startAutoplay();
 }
 
-// Initialize on DOM ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initHeroSlider);
-} else {
+// Master Initialization for Phase 19 Modern Architecture
+function initApp() {
+    initSearchOverlay();
+    initWishlist();
+    initCartDrawer();
+    initMobileStickyBar();
     initHeroSlider();
 }
 
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initApp);
+} else {
+    initApp();
+}

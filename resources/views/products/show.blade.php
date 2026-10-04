@@ -143,6 +143,7 @@
                             <button class="lunara-button lunara-button--buy-now detail-cta__buynow-btn" type="button" data-buy-now @disabled(! $product->isInStock())>
                                 <i class="bi bi-lightning-charge me-1"></i> Mua ngay
                             </button>
+                            <x-wishlist-button :productId="$product->id" :detail="true" />
                         </div>
                     </div>
 
@@ -347,5 +348,24 @@
                 </div>
             </section>
         @endif
+
+        {{-- Recently Viewed / Bạn vừa xem (Phase 19.25 - 19.29) --}}
+        @if(!empty($recentlyViewed) && $recentlyViewed->isNotEmpty())
+            <section class="detail-section detail-recently-viewed my-5" aria-labelledby="recently-viewed-heading">
+                <div class="d-flex justify-content-between align-items-end mb-4 border-bottom pb-3">
+                    <div>
+                        <span class="text-uppercase tracking-widest small text-muted d-block mb-1">Đã xem gần đây</span>
+                        <h2 id="recently-viewed-heading" class="h4 font-serif mb-0">Bạn Vừa Xem</h2>
+                    </div>
+                </div>
+                <div class="product-grid">
+                    @foreach($recentlyViewed as $recentItem)
+                        <x-product-card :product="$recentItem" />
+                    @endforeach
+                </div>
+            </section>
+        @endif
     </div>
+
+    @include('products._sticky_bar', ['product' => $product])
 @endsection

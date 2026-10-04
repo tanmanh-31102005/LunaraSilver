@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Product;
+use App\Services\RecentlyViewedService;
 use Illuminate\Contracts\View\View;
 
 class HomeController extends Controller
@@ -63,6 +64,9 @@ class HomeController extends Controller
             ->take(3)
             ->get();
 
+        $recentSession = (array) request()->session()->get(RecentlyViewedService::SESSION_KEY, []);
+        $recentlyViewed = app(RecentlyViewedService::class)->getProducts($recentSession, null, 4);
+
         return view('home', [
             'categories' => $categories,
             'featured' => $featured,
@@ -72,6 +76,7 @@ class HomeController extends Controller
             'collections' => $collections,
             'gifts' => $gifts,
             'latestPosts' => $latestPosts,
+            'recentlyViewed' => $recentlyViewed,
         ]);
     }
 }

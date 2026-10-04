@@ -44,8 +44,11 @@
                 <a href="{{ route('home') }}#story">Giới thiệu</a>
             </nav>
             <div class="site-header__actions">
-                <button class="icon-button" type="button" data-bs-toggle="modal" data-bs-target="#siteSearch" aria-label="Tìm kiếm"><i class="bi bi-search" aria-hidden="true"></i></button>
-                <button class="icon-button d-none d-lg-inline-flex" type="button" disabled aria-label="Danh sách yêu thích chưa khả dụng" title="Danh sách yêu thích sẽ được bổ sung"><i class="bi bi-heart" aria-hidden="true"></i></button>
+                <button class="icon-button" type="button" data-search-open aria-label="Tìm kiếm"><i class="bi bi-search" aria-hidden="true"></i></button>
+                <a class="icon-button position-relative d-none d-lg-inline-flex" href="{{ route('account.wishlist') }}" aria-label="Danh sách yêu thích" title="Sản phẩm yêu thích">
+                    <i class="bi bi-heart" aria-hidden="true"></i>
+                    <span class="wishlist-count {{ ($headerWishlistCount ?? 0) > 0 ? '' : 'd-none' }}" data-wishlist-count>{{ $headerWishlistCount ?? 0 }}</span>
+                </a>
                 @auth
                     <a class="icon-button d-none d-lg-inline-flex" href="{{ route('account.dashboard') }}" aria-label="Tài khoản của tôi" title="Tài khoản của tôi"><i class="bi bi-person-check" aria-hidden="true"></i></a>
                     <form method="post" action="{{ route('logout') }}" class="d-none d-lg-block">@csrf<button class="icon-button" type="submit" aria-label="Đăng xuất" title="Đăng xuất"><i class="bi bi-box-arrow-right" aria-hidden="true"></i></button></form>
@@ -84,34 +87,17 @@
                 <a href="{{ route('login') }}"><i class="bi bi-box-arrow-in-right me-2"></i>Đăng nhập</a>
                 <a href="{{ route('register') }}"><i class="bi bi-person-plus me-2"></i>Đăng ký tài khoản</a>
             @endauth
-            <span class="nav-unavailable mt-2" aria-label="Danh sách yêu thích chưa mở"><i class="bi bi-heart me-2"></i>Yêu thích (Sắp ra mắt)</span>
+            <a href="{{ route('account.wishlist') }}" class="mt-2"><i class="bi bi-heart me-2"></i>Yêu thích <span class="badge bg-dark-subtle text-dark rounded-pill ms-1" data-wishlist-count>{{ $headerWishlistCount ?? 0 }}</span></a>
         </nav>
     </div>
 
-    <div class="offcanvas offcanvas-end mini-cart" tabindex="-1" id="miniCart" aria-labelledby="miniCartTitle">
-        <div class="offcanvas-header"><h2 class="offcanvas-title h4 mb-0" id="miniCartTitle">Giỏ hàng</h2><button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Đóng giỏ hàng"></button></div>
-        <div class="offcanvas-body">
-            <div id="miniCartItems">
-                @forelse(array_slice($headerCart['items'], 0, 3) as $item)
-                    <div class="mini-cart__item">
-                        @if($item['image_url'])<img src="{{ $item['image_url'] }}" alt="{{ $item['name'] }}" width="64" height="80">@endif
-                        <div><a href="{{ route('products.show', $item['slug']) }}">{{ $item['name'] }}</a><small>{{ $item['quantity'] }} × {{ $item['unit_price_display'] }}</small></div>
-                    </div>
-                @empty
-                    <p>Giỏ hàng đang trống.</p>
-                @endforelse
-            </div>
-            <div class="mini-cart__footer"><p>Tạm tính <strong id="miniCartSubtotal">{{ $headerCart['subtotal_display'] }}</strong></p><a class="lunara-button lunara-button--dark" href="{{ route('cart.index') }}">Xem giỏ hàng</a></div>
-        </div>
-    </div>
+    <x-cart-drawer :headerCart="$headerCart" />
+
+    <x-search-overlay />
 
     @if(session('cart_warning'))
         <div class="lunara-container alert alert-warning my-3" role="alert">{{ session('cart_warning') }} <a href="{{ route('cart.index') }}">Xem giỏ hàng</a></div>
     @endif
-
-    <div class="modal fade" id="siteSearch" tabindex="-1" aria-labelledby="siteSearchTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h2 class="modal-title h5" id="siteSearchTitle">Tìm sản phẩm</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng tìm kiếm"></button></div><form action="{{ route('products.index') }}" method="get"><div class="modal-body"><label class="form-label" for="siteSearchQuery">Tên, SKU hoặc mô tả</label><input id="siteSearchQuery" class="form-control" type="search" name="q" required></div><div class="modal-footer"><button class="btn btn-dark" type="submit">Tìm kiếm</button></div></form></div></div>
-    </div>
 
     <main id="main-content" class="@yield('main_class', 'page-main')">
         @yield('content')
@@ -195,6 +181,7 @@
             <span>Shine with your own moonlight</span>
         </div>
     </footer>
+    <x-toast-container />
     @include('partials.support_widget')
     @stack('scripts')
 </body>
