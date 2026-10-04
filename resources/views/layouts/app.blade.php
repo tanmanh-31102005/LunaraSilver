@@ -125,11 +125,33 @@
                 </a>
                 <p class="site-footer__slogan">Shine with your own moonlight.</p>
                 <p class="site-footer__about">Trang sức bạc 925 cao cấp lấy cảm hứng từ vẻ đẹp huyền diệu của mặt trăng và các vì sao. Tinh tế, thanh lịch và tỏa sáng theo cách của riêng bạn.</p>
-                <div class="site-footer__contact-info small text-muted mt-3" style="font-size: 0.8125rem; line-height: 1.6;">
-                    <p class="mb-1"><i class="bi bi-geo-alt me-1 text-accent"></i> 140 Lê Trọng Tấn, Tây Thạnh, Tân Phú, Ho Chi Minh City</p>
-                    <p class="mb-1"><i class="bi bi-telephone me-1 text-accent"></i> Hotline CSKH / Đặt hàng: <a href="tel:0971124922" class="text-white text-decoration-none">0971 124 922</a></p>
-                    <p class="mb-1"><i class="bi bi-envelope me-1 text-accent"></i> Email: <a href="mailto:lunaraslivertrangsuc@gmail.com" class="text-white text-decoration-none">lunaraslivertrangsuc@gmail.com</a></p>
-                    <p class="mb-0 text-muted" style="font-size: 0.75rem;"><i class="bi bi-clock me-1"></i> Thứ Hai — Thứ Bảy: 08:30 - 20:30 (Chủ Nhật: 09:00 - 18:00)</p>
+                <div class="site-footer__contact">
+                    <div class="site-footer__contact-item">
+                        <i class="bi bi-geo-alt site-footer__contact-icon"></i>
+                        <div class="site-footer__contact-text">
+                            <span>140 Lê Trọng Tấn, Tây Thạnh, Tân Phú, Ho Chi Minh City</span>
+                        </div>
+                    </div>
+                    <div class="site-footer__contact-item">
+                        <i class="bi bi-telephone site-footer__contact-icon"></i>
+                        <div class="site-footer__contact-text">
+                            <span class="site-footer__contact-label">Hotline CSKH / Đặt hàng: </span>
+                            <a href="tel:0971124922">0971 124 922</a>
+                        </div>
+                    </div>
+                    <div class="site-footer__contact-item">
+                        <i class="bi bi-envelope site-footer__contact-icon"></i>
+                        <div class="site-footer__contact-text">
+                            <span class="site-footer__contact-label">Email: </span>
+                            <a href="mailto:lunaraslivertrangsuc@gmail.com">lunaraslivertrangsuc@gmail.com</a>
+                        </div>
+                    </div>
+                    <div class="site-footer__contact-item site-footer__contact-hours">
+                        <i class="bi bi-clock site-footer__contact-icon"></i>
+                        <div class="site-footer__contact-text">
+                            <span>Thứ Hai — Thứ Bảy: 08:30 - 20:30 (Chủ Nhật: 09:00 - 18:00)</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div>
