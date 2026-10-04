@@ -36,7 +36,16 @@
         </div>
     </div>
     <div class="product-card__body">
-        <span class="product-card__category">{{ $product->category->name }}</span>
+        <div class="product-card__meta-top d-flex justify-content-between align-items-center mb-1">
+            <span class="product-card__category">{{ $product->category->name }}</span>
+            @if($product->approved_reviews_count > 0)
+                <span class="product-card__rating d-inline-flex align-items-center gap-1" title="{{ $product->approved_reviews_avg_rating }}/5 sao" aria-label="Đánh giá: {{ $product->approved_reviews_avg_rating }}/5 sao ({{ $product->approved_reviews_count }} lượt)">
+                    <i class="bi bi-star-fill text-warning" style="font-size: 0.72rem;"></i>
+                    <span class="fw-semibold text-dark" style="font-size: 0.78rem;">{{ $product->approved_reviews_avg_rating }}</span>
+                    <span class="text-muted" style="font-size: 0.72rem;">({{ $product->approved_reviews_count }})</span>
+                </span>
+            @endif
+        </div>
         <h3><a href="{{ route('products.show', $product->slug) }}">{{ $product->name }}</a></h3>
         <x-price :product="$product" />
         <a class="product-card__link" href="{{ route('products.show', $product->slug) }}" aria-label="Xem sản phẩm {{ $product->name }}">Xem sản phẩm <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>

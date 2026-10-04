@@ -101,3 +101,9 @@ jobs:
           echo "Waiting 2 seconds before triggering sync_phase18.php..."
           sleep 2
           curl -s -L https://lunarasilver.infinityfreeapp.com/sync_phase18.php || true
+
+      - name: ⭐ Auto-Sync Phase 20 Verified Reviews & Discovery on Server
+        run: |
+          echo "Waiting 2 seconds before triggering sync_phase20.php..."
+          sleep 2
+          curl -s -L https://lunarasilver.infinityfreeapp.com/sync_phase20.php || true

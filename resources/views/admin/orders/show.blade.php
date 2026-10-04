@@ -159,6 +159,17 @@
                                                 </ul>
                                             </div>
                                         @endif
+
+                                        {{-- Gift Note (Phase 20.62) --}}
+                                        @if (!empty($item->gift_message))
+                                            <div class="mt-2 p-2 rounded border bg-warning-subtle text-dark" style="font-size: 0.8rem; border-color: rgba(217, 119, 6, 0.3) !important;">
+                                                <div class="fw-semibold d-flex align-items-center gap-1 text-warning-emphasis mb-1">
+                                                    <i class="bi bi-gift-fill"></i>
+                                                    <span>LỜI NHẮN QUÀ TẶNG:</span>
+                                                </div>
+                                                <div class="fst-italic ps-1">“{{ $item->gift_message }}”</div>
+                                            </div>
+                                        @endif
                                     </td>
                                     <td class="font-monospace text-muted" style="font-size: 0.82rem;">
                                         <span class="px-2 py-1 bg-light rounded border">{{ $item->product_sku }}</span>

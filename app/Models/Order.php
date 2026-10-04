@@ -10,6 +10,13 @@ use InvalidArgumentException;
 
 class Order extends Model
 {
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_CONFIRMED = 'confirmed';
+    public const STATUS_PROCESSING = 'processing';
+    public const STATUS_SHIPPING = 'shipping';
+    public const STATUS_COMPLETED = 'completed';
+    public const STATUS_CANCELLED = 'cancelled';
+
     public const STATUSES = ['pending', 'confirmed', 'processing', 'shipping', 'completed', 'cancelled'];
 
     public const PAYMENT_STATUSES = ['pending', 'paid', 'failed', 'cancelled', 'refund_pending', 'partially_refunded', 'refunded'];

@@ -32,22 +32,35 @@ class CartService
         return $this->resolveCart($user, $sessionId, $create);
     }
 
-    public function add(Cart $cart, int $productId, int $quantity): array
+    public function add(Cart $cart, int $productId, int $quantity, ?string $giftMessage = null): array
     {
         $product = Product::query()->active()->find($productId);
         if (! $product) {
             throw ValidationException::withMessages(['product_id' => 'Sản phẩm không tồn tại hoặc đã ngừng bán.']);
         }
 
-        return DB::transaction(function () use ($cart, $product, $quantity): array {
+        $cleanedMessage = $giftMessage !== null ? mb_substr(strip_tags(trim($giftMessage)), 0, 500) : null;
+        if ($cleanedMessage === '') {
+            $cleanedMessage = null;
+        }
+
+        return DB::transaction(function () use ($cart, $product, $quantity, $cleanedMessage): array {
             Cart::query()->whereKey($cart->id)->lockForUpdate()->firstOrFail();
             $quantities = $cart->items()->lockForUpdate()->pluck('quantity', 'product_id')->all();
             $quantities[$product->id] = ($quantities[$product->id] ?? 0) + $quantity;
             $this->validateCartInventory($quantities);
 
+            $itemData = [
+                'quantity' => $quantities[$product->id],
+                'unit_price' => $this->currentPrice($product),
+            ];
+            if ($cleanedMessage !== null) {
+                $itemData['gift_message'] = $cleanedMessage;
+            }
+
             $cart->items()->updateOrCreate(
                 ['product_id' => $product->id],
-                ['quantity' => $quantities[$product->id], 'unit_price' => $this->currentPrice($product)]
+                $itemData
             );
             $this->refreshPrices($cart);
 
@@ -261,6 +274,7 @@ class CartService
                 'line_subtotal' => $this->decimal($lineCents),
                 'line_subtotal_display' => $this->formatVnd($lineCents),
                 'image_url' => $image?->displayUrl(),
+                'gift_message' => $item->gift_message,
             ];
         }
 

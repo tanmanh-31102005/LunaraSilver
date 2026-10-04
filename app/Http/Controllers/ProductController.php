@@ -22,7 +22,44 @@ class ProductController extends Controller
         $recentService->record($product->id, $recentSession);
         $request->session()->put(RecentlyViewedService::SESSION_KEY, $recentSession);
 
-        $product->load(['category', 'images', 'bundleItems.component.category', 'bundleItems.component.images']);
+        $product->load([
+            'category',
+            'images',
+            'bundleItems.component.category',
+            'bundleItems.component.images',
+        ]);
+
+        $reviewService = app(\App\Services\ReviewService::class);
+        $discoveryService = app(\App\Services\ProductDiscoveryService::class);
+
+        $ratingSummary = $product->ratingSummary();
+        $hasApprovedReviews = $ratingSummary['total'] > 0;
+
+        $ratingFilter = $request->query('rating') ? (int) $request->query('rating') : null;
+        $sort = (string) $request->query('sort', 'newest');
+
+        $reviews = $hasApprovedReviews
+            ? $reviewService->getApprovedReviewsForProduct($product, $ratingFilter, $sort, 10)
+            : new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10, 1, ['path' => $request->url(), 'query' => $request->query()]);
+
+        $customerGallery = $hasApprovedReviews
+            ? $reviewService->getCustomerMediaGallery($product, 8)
+            : collect();
+
+        $user = $request->user();
+        $eligibleOrderItem = $user ? $reviewService->getEligibleOrderItem($user, $product) : null;
+        $hasReviewed = $user ? $reviewService->hasUserReviewedProduct($user, $product) : false;
+
+        $relatedProducts = Product::query()->active()
+            ->where('category_id', $product->category_id)
+            ->whereKeyNot($product->id)
+            ->withCount('approvedReviews as approved_reviews_count')
+            ->withAvg('approvedReviews as approved_reviews_avg_rating', 'rating')
+            ->with(['category', 'images', 'bundleItems.component'])
+            ->orderByDesc('created_at')->orderByDesc('id')->limit(4)->get();
+
+        $completeTheLook = $discoveryService->getCompleteTheLook($product, $relatedProducts, 3);
+        $parentCollection = $discoveryService->getParentCollection($product);
 
         $images = $product->images->sortBy(
             fn ($image) => (match ($image->image_role) {
@@ -46,15 +83,25 @@ class ProductController extends Controller
             },
         ], fn ($value) => $value !== null && trim((string) $value) !== '');
 
-        $relatedProducts = Product::query()->active()
-            ->where('category_id', $product->category_id)
-            ->whereKeyNot($product->id)
-            ->with(['category', 'images', 'bundleItems.component'])
-            ->orderByDesc('created_at')->orderByDesc('id')->limit(4)->get();
-
         $metaDescription = Str::limit(strip_tags($product->short_description ?: $product->description ?: ''), 160, '');
 
-        return view('products.show', compact('product', 'images', 'specifications', 'relatedProducts', 'recentlyViewed', 'metaDescription'));
+        return view('products.show', compact(
+            'product',
+            'images',
+            'specifications',
+            'relatedProducts',
+            'recentlyViewed',
+            'metaDescription',
+            'reviews',
+            'ratingSummary',
+            'customerGallery',
+            'completeTheLook',
+            'parentCollection',
+            'eligibleOrderItem',
+            'hasReviewed',
+            'ratingFilter',
+            'sort'
+        ));
     }
 
     public function index(Request $request, ?Category $category = null): View
@@ -101,6 +148,8 @@ class ProductController extends Controller
         $products = Product::query()->active()->category($category)
             ->search($filters['q'])->priceRange($filters['min_price'], $filters['max_price'])
             ->productType($filters['type'])->material($filters['material'])->stone($filters['stone'])
+            ->withCount('approvedReviews as approved_reviews_count')
+            ->withAvg('approvedReviews as approved_reviews_avg_rating', 'rating')
             ->with(['category', 'images', 'bundleItems.component'])->sort($sort)
             ->paginate(12)->withQueryString();
 

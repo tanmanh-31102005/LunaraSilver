@@ -99,6 +99,13 @@
 
                 <div class="admin-nav-group">
                     <div class="admin-nav-group__title">KHÁCH HÀNG</div>
+                    <a href="{{ route('admin.reviews.index') }}"
+                       class="admin-nav-item {{ request()->routeIs('admin.reviews.*') ? 'admin-nav-item--active' : '' }}"
+                       data-bs-toggle="tooltip" data-bs-placement="right" title="Đánh giá sản phẩm">
+                        <i class="bi bi-star"></i>
+                        <span>Đánh giá</span>
+                    </a>
+
                     <a href="{{ route('admin.support.index') }}"
                        class="admin-nav-item {{ request()->routeIs('admin.support.*') ? 'admin-nav-item--active' : '' }}"
                        data-bs-toggle="tooltip" data-bs-placement="right" title="Hỗ trợ khách hàng">
@@ -185,6 +192,11 @@
 
                     <div class="admin-nav-group">
                         <div class="admin-nav-group__title text-white-50">KHÁCH HÀNG</div>
+                        <a href="{{ route('admin.reviews.index') }}" class="admin-nav-item {{ request()->routeIs('admin.reviews.*') ? 'admin-nav-item--active' : '' }}">
+                            <i class="bi bi-star"></i>
+                            <span>Đánh giá</span>
+                        </a>
+
                         <a href="{{ route('admin.support.index') }}" class="admin-nav-item {{ request()->routeIs('admin.support.*') ? 'admin-nav-item--active' : '' }}">
                             <i class="bi bi-headset"></i>
                             <span>Hỗ trợ</span>

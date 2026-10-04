@@ -36,11 +36,17 @@ class CartController extends Controller
             $data = $request->validate([
                 'product_id' => ['required', 'integer', 'min:1'],
                 'quantity' => ['required', 'integer', 'min:1', 'max:1000'],
+                'gift_message' => ['nullable', 'string', 'max:500'],
             ]);
 
             $cart = $this->getCart($request, true);
 
-            return $this->carts->add($cart, (int) $data['product_id'], (int) $data['quantity']);
+            return $this->carts->add(
+                $cart,
+                (int) $data['product_id'],
+                (int) $data['quantity'],
+                $data['gift_message'] ?? null
+            );
         }, 'Đã thêm sản phẩm vào giỏ hàng.');
     }
 

@@ -56,6 +56,8 @@ class RecentlyViewedService
         $products = Product::query()
             ->active()
             ->with(['category', 'images', 'bundleItems.component.images'])
+            ->withCount('approvedReviews as approved_reviews_count')
+            ->withAvg('approvedReviews as approved_reviews_avg_rating', 'rating')
             ->whereIn('id', $idsToFetch)
             ->get();
 

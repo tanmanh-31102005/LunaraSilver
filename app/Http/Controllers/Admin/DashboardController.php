@@ -99,6 +99,8 @@ class DashboardController extends Controller
 
         $unresolvedSupport = ContactMessage::whereIn('status', [ContactMessage::STATUS_NEW, ContactMessage::STATUS_IN_PROGRESS])->count();
         $unreadChatMessages = SupportMessage::where('sender_type', SupportMessage::SENDER_CUSTOMER)->whereNull('read_at')->count();
+        $pendingReviewsCount = \App\Models\Review::where('status', 'pending')->count();
+        $approvedReviewsAvg = round((float) (\App\Models\Review::where('status', 'approved')->avg('rating') ?: 0), 1);
 
         return view('admin.dashboard', [
             'metrics' => [
@@ -112,6 +114,8 @@ class DashboardController extends Controller
                 'pending_orders' => $pendingOrders,
                 'unresolved_support' => $unresolvedSupport,
                 'unread_chat_messages' => $unreadChatMessages,
+                'pending_reviews_count' => $pendingReviewsCount,
+                'approved_reviews_avg' => $approvedReviewsAvg,
                 'low_stock_threshold' => $threshold,
             ],
             'lowStockProducts' => $lowStockProducts,

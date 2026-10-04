@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class OrderItem extends Model
 {
     protected $fillable = [
-        'order_id', 'product_id', 'product_name', 'product_sku', 'unit_price', 'quantity', 'subtotal',
+        'order_id', 'product_id', 'product_name', 'product_sku', 'unit_price', 'quantity', 'subtotal', 'gift_message',
     ];
 
     protected $casts = [
@@ -31,5 +31,10 @@ class OrderItem extends Model
     public function components(): HasMany
     {
         return $this->hasMany(OrderItemComponent::class);
+    }
+
+    public function review(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Review::class);
     }
 }

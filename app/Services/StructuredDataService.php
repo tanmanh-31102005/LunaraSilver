@@ -93,7 +93,7 @@ class StructuredDataService
         $description = $product->seo_description
             ?: Str::limit(strip_tags($product->short_description ?: $product->description ?: $product->name), 250);
 
-        return [
+        $schema = [
             '@context' => 'https://schema.org',
             '@type' => 'Product',
             'name' => $product->name,
@@ -120,6 +120,47 @@ class StructuredDataService
                 ],
             ],
         ];
+
+        // Conditional aggregateRating & reviews (Phase 20 - Only when real approved reviews exist in DB!)
+        $approvedCount = $product->approved_reviews_count;
+        $avgRating = $product->approved_reviews_avg_rating;
+
+        if ($approvedCount > 0 && $avgRating !== null) {
+            $schema['aggregateRating'] = [
+                '@type' => 'AggregateRating',
+                'ratingValue' => (string) number_format($avgRating, 1, '.', ''),
+                'reviewCount' => (string) $approvedCount,
+                'bestRating' => '5',
+                'worstRating' => '1',
+            ];
+
+            // Include up to 3 latest approved reviews
+            $recentApproved = $product->relationLoaded('approvedReviews')
+                ? $product->approvedReviews->take(3)
+                : $product->approvedReviews()->with('user')->latest()->limit(3)->get();
+
+            if ($recentApproved->isNotEmpty()) {
+                $schema['review'] = $recentApproved->map(function ($rev) {
+                    return [
+                        '@type' => 'Review',
+                        'author' => [
+                            '@type' => 'Person',
+                            'name' => $rev->masked_user_name,
+                        ],
+                        'datePublished' => $rev->created_at?->toDateString(),
+                        'reviewRating' => [
+                            '@type' => 'Rating',
+                            'ratingValue' => (string) $rev->rating,
+                            'bestRating' => '5',
+                            'worstRating' => '1',
+                        ],
+                        'reviewBody' => Str::limit($rev->effective_content, 300),
+                    ];
+                })->values()->all();
+            }
+        }
+
+        return $schema;
     }
 
     /**

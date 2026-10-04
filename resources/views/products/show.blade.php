@@ -51,16 +51,26 @@
                         <span class="detail-meta-header__sep">/</span>
                         <span class="detail-sku">SKU: {{ $product->sku }}</span>
                     </div>
-                    <div class="detail-meta-rating" title="Đánh giá chất lượng 4.9/5 sao">
-                        <div class="detail-rating-stars">
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                        </div>
-                        <span class="detail-rating-text">4.9 <small>(36)</small></span>
-                    </div>
+                    @if($ratingSummary['total'] > 0)
+                        <a href="#reviews" class="detail-meta-rating text-decoration-none" title="Đánh giá chất lượng {{ $ratingSummary['average'] }}/5 sao">
+                            <div class="detail-rating-stars">
+                                @for($i = 1; $i <= 5; $i++)
+                                    @if($ratingSummary['average'] >= $i)
+                                        <i class="bi bi-star-fill text-warning"></i>
+                                    @elseif($ratingSummary['average'] >= $i - 0.5)
+                                        <i class="bi bi-star-half text-warning"></i>
+                                    @else
+                                        <i class="bi bi-star text-muted"></i>
+                                    @endif
+                                @endfor
+                            </div>
+                            <span class="detail-rating-text">{{ $ratingSummary['average'] }} <small>({{ $ratingSummary['total'] }})</small></span>
+                        </a>
+                    @else
+                        <a href="#reviews" class="detail-meta-rating text-decoration-none text-muted" title="Chưa có đánh giá">
+                            <span class="small fst-italic"><i class="bi bi-star me-1"></i>Chưa có đánh giá</span>
+                        </a>
+                    @endif
                 </div>
 
                 <h1 id="product-name" class="detail-title">{{ $product->name }}</h1>
@@ -126,6 +136,29 @@
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
 
+                    @if($product->product_type === 'gift')
+                        <div class="gift-experience-box mb-3 p-3 rounded border" style="background: rgba(245, 240, 235, 0.5); border-color: rgba(200, 180, 160, 0.4) !important;">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <i class="bi bi-gift text-champagne fs-5"></i>
+                                <label for="gift-message-input" class="fw-semibold small text-uppercase tracking-wider mb-0 text-dark">
+                                    Lời nhắn cho người nhận (Tùy chọn)
+                                </label>
+                            </div>
+                            <textarea
+                                id="gift-message-input"
+                                name="gift_message"
+                                class="form-control form-control-sm bg-white"
+                                rows="2"
+                                maxlength="500"
+                                placeholder="Gửi gắm lời chúc yêu thương của bạn, Lunara sẽ viết tay kèm thiệp trang trọng..."
+                            ></textarea>
+                            <div class="d-flex justify-content-between mt-1 text-muted" style="font-size: 0.72rem;">
+                                <span><i class="bi bi-patch-check me-1 text-accent"></i>Tặng kèm thiệp viết tay Lunara</span>
+                                <span>Tối đa 500 ký tự</span>
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="detail-cta__control-row">
                         <div class="detail-quantity-box">
                             <label for="detail-quantity" class="detail-quantity-label">Số lượng</label>
@@ -155,28 +188,28 @@
                         <i class="bi bi-gem trust-badge-cell__icon"></i>
                         <div class="trust-badge-cell__content">
                             <strong>Bạc Ý S925 Chuẩn</strong>
-                            <span>Kèm thẻ bảo hành chính hãng</span>
+                            <span>Kèm thẻ kiểm định tuổi bạc</span>
                         </div>
                     </div>
                     <div class="trust-badge-cell">
-                        <i class="bi bi-truck trust-badge-cell__icon"></i>
+                        <i class="bi bi-credit-card trust-badge-cell__icon"></i>
                         <div class="trust-badge-cell__content">
-                            <strong>Freeship Từ 500k</strong>
-                            <span>Giao toàn quốc, đồng kiểm</span>
-                        </div>
-                    </div>
-                    <div class="trust-badge-cell">
-                        <i class="bi bi-gift trust-badge-cell__icon"></i>
-                        <div class="trust-badge-cell__content">
-                            <strong>Tặng Kèm Hộp Quà</strong>
-                            <span>Đóng gói cao cấp ánh trăng</span>
+                            <strong>Thanh Toán An Tâm</strong>
+                            <span>Hỗ trợ COD & VNPay tiện lợi</span>
                         </div>
                     </div>
                     <div class="trust-badge-cell">
                         <i class="bi bi-arrow-repeat trust-badge-cell__icon"></i>
                         <div class="trust-badge-cell__content">
                             <strong>Đổi Trả 7 Ngày</strong>
-                            <span>Đánh sáng trọn đời miễn phí</span>
+                            <span>Đồng kiểm an tâm khi nhận hàng</span>
+                        </div>
+                    </div>
+                    <div class="trust-badge-cell">
+                        <i class="bi bi-headset trust-badge-cell__icon"></i>
+                        <div class="trust-badge-cell__content">
+                            <strong>Hỗ Trợ Tận Tâm</strong>
+                            <a href="{{ route('contact') }}" class="text-decoration-none text-muted">Hotline 0971 124 922</a>
                         </div>
                     </div>
                 </div>
@@ -323,22 +356,32 @@
 
 
         {{-- Complete the Look / Hoàn thiện phong cách (Phase 20) --}}
-        <section class="detail-section detail-complete-look my-5" aria-labelledby="complete-look-heading">
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4 border-bottom pb-3">
-                <div>
-                    <span class="text-uppercase tracking-widest small text-muted d-block mb-1">Gợi ý phối đồ Lunara</span>
-                    <h2 id="complete-look-heading" class="h3 font-serif mb-0">Hoàn Thiện Phong Cách</h2>
+        @if($completeTheLook->isNotEmpty())
+            <section class="detail-section detail-complete-look my-5" aria-labelledby="complete-look-heading">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4 border-bottom pb-3">
+                    <div>
+                        <span class="text-uppercase tracking-widest small text-muted d-block mb-1">Gợi ý phối đồ Lunara</span>
+                        <h2 id="complete-look-heading" class="h3 font-serif mb-0">Hoàn Thiện Phong Cách</h2>
+                    </div>
+                    @if($parentCollection)
+                        <a href="{{ route('products.show', $parentCollection->slug) }}" class="text-dark small fw-medium text-decoration-none mt-2 mt-md-0 d-inline-flex align-items-center gap-1">
+                            <span>Khám phá trọn bộ <strong>{{ $parentCollection->name }}</strong></span>
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                    @else
+                        <p class="text-muted small mb-0 mt-2 mt-md-0">Kết hợp cùng các thiết kế trang sức bạc 925 đồng điệu để tạo nên vẻ đẹp tỏa sáng tinh tế.</p>
+                    @endif
                 </div>
-                <p class="text-muted small mb-0 mt-2 mt-md-0">Kết hợp cùng các thiết kế trang sức bạc 925 đồng điệu để tạo nên vẻ đẹp tỏa sáng tinh tế.</p>
-            </div>
-            @if($relatedProducts->isNotEmpty())
                 <div class="product-grid">
-                    @foreach($relatedProducts->take(3) as $lookItem)
+                    @foreach($completeTheLook as $lookItem)
                         <x-product-card :product="$lookItem" />
                     @endforeach
                 </div>
-            @endif
-        </section>
+            </section>
+        @endif
+
+        {{-- Verified Reviews & Trust (Phase 20) --}}
+        @include('products._reviews_section')
 
         @if($relatedProducts->isNotEmpty())
             <section class="detail-section detail-related" aria-labelledby="related-heading">

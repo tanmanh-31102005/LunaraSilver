@@ -5,6 +5,7 @@ use App\Http\Controllers\Account\DashboardController;
 use App\Http\Controllers\Account\OrderController;
 use App\Http\Controllers\Account\PasswordController;
 use App\Http\Controllers\Account\ProfileController;
+use App\Http\Controllers\Account\ReviewController as AccountReviewController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\CouponController as AdminCouponController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Admin\PostCategoryController as AdminPostCategoryContro
 use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductImageController as AdminProductImageController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Admin\SupportController as AdminSupportController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
@@ -24,6 +26,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SupportController;
@@ -49,6 +52,7 @@ Route::delete('/wishlist/{product}', [WishlistController::class, 'destroy'])->wh
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{category:slug}', [ProductController::class, 'index'])->name('products.category');
 Route::get('/product/{product:slug}', [ProductController::class, 'show'])->name('products.show');
+Route::post('/product/{product:slug}/reviews', [ReviewController::class, 'store'])->middleware('auth')->name('reviews.store');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::get('/cart/summary', [CartController::class, 'summary'])->name('cart.summary');
 Route::post('/cart/items', [CartController::class, 'store'])->name('cart.items.store');
@@ -115,6 +119,10 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
         Route::get('/orders/{orderCode}', [OrderController::class, 'show'])->name('orders.show');
+
+        // Review Center (Phase 20.11)
+        Route::get('/reviews', [AccountReviewController::class, 'index'])->name('reviews.index');
+        Route::get('/reviews/create/{item}', [AccountReviewController::class, 'create'])->whereNumber('item')->name('reviews.create');
     });
 });
 
@@ -138,6 +146,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('orders/{orderCode}/cancel', [AdminOrderController::class, 'cancel'])->name('orders.cancel');
     Route::match(['get', 'post'], 'orders/{orderCode}/reconcile', [AdminOrderController::class, 'reconcile'])->name('orders.reconcile');
     Route::match(['get', 'post'], 'orders/{orderCode}/refund', [AdminOrderController::class, 'refund'])->name('orders.refund');
+
+    // Customer Reviews Moderation (Phase 20)
+    Route::get('reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
+    Route::get('reviews/{review}', [AdminReviewController::class, 'show'])->whereNumber('review')->name('reviews.show');
+    Route::post('reviews/{review}/approve', [AdminReviewController::class, 'approve'])->whereNumber('review')->name('reviews.approve');
+    Route::post('reviews/{review}/reject', [AdminReviewController::class, 'reject'])->whereNumber('review')->name('reviews.reject');
+    Route::post('reviews/{review}/reply', [AdminReviewController::class, 'reply'])->whereNumber('review')->name('reviews.reply');
+    Route::delete('reviews/{review}', [AdminReviewController::class, 'destroy'])->whereNumber('review')->name('reviews.destroy');
 
     // Customer Support Inbox & Live Chat
     Route::get('support', [AdminSupportController::class, 'index'])->name('support.index');

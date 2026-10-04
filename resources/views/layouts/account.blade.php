@@ -48,6 +48,9 @@
                         <a href="{{ route('account.orders.index') }}" class="account-nav-link {{ request()->routeIs('account.orders.*') ? 'active' : '' }}">
                             <i class="bi bi-box-seam me-2"></i> Đơn mua
                         </a>
+                        <a href="{{ route('account.reviews.index') }}" class="account-nav-link {{ request()->routeIs('account.reviews.*') ? 'active' : '' }}">
+                            <i class="bi bi-star me-2"></i> Đánh giá của tôi
+                        </a>
                         <a href="{{ route('account.wishlist') }}" class="account-nav-link {{ request()->routeIs('account.wishlist*') ? 'active' : '' }}">
                             <i class="bi bi-heart me-2"></i> Sản phẩm yêu thích
                         </a>

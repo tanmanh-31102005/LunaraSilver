@@ -164,6 +164,7 @@ class CheckoutService
                     'unit_price' => $item->unit_price,
                     'quantity' => $item->quantity,
                     'subtotal' => $this->decimal($lineCents),
+                    'gift_message' => $item->gift_message,
                 ]);
 
                 // Snapshot components for exact inventory restoration

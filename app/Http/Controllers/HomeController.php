@@ -23,6 +23,8 @@ class HomeController extends Controller
             ->where('is_active', true)
             ->where('product_type', 'single')
             ->with(['category', 'images'])
+            ->withCount('approvedReviews as approved_reviews_count')
+            ->withAvg('approvedReviews as approved_reviews_avg_rating', 'rating')
             ->orderBy('sku')
             ->get();
 
@@ -35,6 +37,8 @@ class HomeController extends Controller
             ->where('is_active', true)
             ->where('product_type', 'collection')
             ->with(['category', 'images', 'bundleItems.component'])
+            ->withCount('approvedReviews as approved_reviews_count')
+            ->withAvg('approvedReviews as approved_reviews_avg_rating', 'rating')
             ->orderBy('sku')
             ->limit(4)
             ->get();
@@ -43,6 +47,8 @@ class HomeController extends Controller
             ->where('is_active', true)
             ->where('product_type', 'gift')
             ->with(['category', 'images', 'bundleItems.component'])
+            ->withCount('approvedReviews as approved_reviews_count')
+            ->withAvg('approvedReviews as approved_reviews_avg_rating', 'rating')
             ->orderBy('sku')
             ->limit(4)
             ->get();

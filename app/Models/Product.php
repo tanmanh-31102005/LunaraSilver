@@ -85,6 +85,85 @@ class Product extends Model
         return $this->hasMany(Review::class);
     }
 
+    public function approvedReviews(): HasMany
+    {
+        return $this->hasMany(Review::class)->where('status', 'approved');
+    }
+
+    protected ?array $memoizedRatingSummary = null;
+
+    public function getApprovedReviewsCountAttribute(): int
+    {
+        if (array_key_exists('approved_reviews_count', $this->attributes)) {
+            return (int) $this->attributes['approved_reviews_count'];
+        }
+
+        return $this->ratingSummary()['total'];
+    }
+
+    public function getApprovedReviewsAvgRatingAttribute(): ?float
+    {
+        if (array_key_exists('approved_reviews_avg_rating', $this->attributes)) {
+            $val = $this->attributes['approved_reviews_avg_rating'];
+
+            return $val !== null ? round((float) $val, 1) : null;
+        }
+
+        return $this->ratingSummary()['average'];
+    }
+
+    /**
+     * Rating distribution across 5, 4, 3, 2, 1 stars.
+     *
+     * @return array{total: int, average: ?float, breakdown: array<int, array{count: int, percentage: int}>}
+     */
+    public function ratingSummary(): array
+    {
+        if ($this->memoizedRatingSummary !== null) {
+            return $this->memoizedRatingSummary;
+        }
+
+        $reviews = $this->relationLoaded('approvedReviews')
+            ? $this->approvedReviews
+            : $this->approvedReviews()->get(['id', 'product_id', 'rating']);
+
+        $total = $reviews->count();
+        $average = $total > 0 ? round((float) $reviews->avg('rating'), 1) : null;
+
+        $counts = [5 => 0, 4 => 0, 3 => 0, 2 => 0, 1 => 0];
+        foreach ($reviews as $rev) {
+            $r = (int) $rev->rating;
+            if (isset($counts[$r])) {
+                $counts[$r]++;
+            }
+        }
+
+        $breakdown = [];
+        foreach ([5, 4, 3, 2, 1] as $star) {
+            $c = $counts[$star];
+            $pct = $total > 0 ? (int) round(($c / $total) * 100) : 0;
+            $breakdown[$star] = [
+                'count' => $c,
+                'percentage' => $pct,
+            ];
+        }
+
+        $this->memoizedRatingSummary = [
+            'total' => $total,
+            'average' => $average,
+            'breakdown' => $breakdown,
+        ];
+
+        return $this->memoizedRatingSummary;
+    }
+
+    public function refresh()
+    {
+        $this->memoizedRatingSummary = null;
+
+        return parent::refresh();
+    }
+
     public function wishlistItems(): HasMany
     {
         return $this->hasMany(Wishlist::class);

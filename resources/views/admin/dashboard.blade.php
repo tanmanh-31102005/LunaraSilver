@@ -124,7 +124,36 @@
                 </div>
             </a>
         </div>
+
+        {{-- Pending Reviews (Phase 20.83 - 20.84) --}}
+        <div class="col-sm-6 col-xl-2">
+            <a href="{{ route('admin.reviews.index', ['status' => 'pending']) }}" class="text-decoration-none">
+                <div class="admin-metric-card {{ $metrics['pending_reviews_count'] > 0 ? 'border-warning' : '' }}">
+                    <div class="admin-metric-label {{ $metrics['pending_reviews_count'] > 0 ? 'text-warning-emphasis' : '' }}">Đánh giá chờ duyệt</div>
+                    <div class="admin-metric-value {{ $metrics['pending_reviews_count'] > 0 ? 'text-warning-emphasis' : 'text-dark' }}">
+                        {{ number_format($metrics['pending_reviews_count']) }}
+                    </div>
+                    <div class="admin-metric-desc">Đánh giá khách hàng</div>
+                </div>
+            </a>
+        </div>
     </div>
+
+    {{-- Attention item: Pending Reviews (Phase 20.84) --}}
+    @if($metrics['pending_reviews_count'] > 0)
+        <div class="alert alert-warning d-flex align-items-center justify-content-between mb-4 shadow-2xs rounded-3 p-3 border-warning" role="alert">
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-star-fill text-warning fs-5"></i>
+                <div>
+                    <strong>Có {{ $metrics['pending_reviews_count'] }} đánh giá khách hàng đang chờ duyệt.</strong>
+                    <span class="d-block small text-muted">Duyệt đánh giá giúp sản phẩm hiển thị điểm tín nhiệm thực tế và xuất hiện AggregateRating trên Google.</span>
+                </div>
+            </div>
+            <a href="{{ route('admin.reviews.index', ['status' => 'pending']) }}" class="admin-btn admin-btn--primary btn-sm text-nowrap">
+                Kiểm duyệt ngay <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+    @endif
 
     {{-- LAYER 2: ATTENTION REQUIRED (CẦN XỬ LÝ) --}}
     <div class="row g-4 mb-4">
