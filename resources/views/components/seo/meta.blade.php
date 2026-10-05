@@ -37,6 +37,12 @@
 <link rel="canonical" href="{{ $finalCanonical }}">
 <meta name="robots" content="{{ $finalRobots }}">
 
+{{-- Favicon & Brand Iconography --}}
+<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+<link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+
 {{-- Google Search Console Verification (18.74) --}}
 @if($googleVerification)
 <meta name="google-site-verification" content="{{ $googleVerification }}">

@@ -120,8 +120,10 @@
                                 <td class="px-3">
                                     <div class="d-flex align-items-center gap-3">
                                         @php
-                                            $primaryImage = $item->product?->images?->first();
-                                            $imageUrl = $primaryImage ? $primaryImage->image_url : null;
+                                            $image = $item->product?->primaryImage 
+                                                ?: ($item->product?->images?->firstWhere('image_role', 'primary') 
+                                                ?: $item->product?->images?->first());
+                                            $imageUrl = $image ? $image->displayUrl() : null;
                                         @endphp
                                         <div class="rounded border overflow-hidden bg-light flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 54px; height: 68px;">
                                             @if($imageUrl)
