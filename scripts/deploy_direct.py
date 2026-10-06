@@ -27,7 +27,7 @@ FILES_TO_UPLOAD = [
 
     # Vite build assets
     'public/build/manifest.json',
-    'public/build/assets/app-a8e0qGgK.css',
+    'public/build/assets/app-EAhN-Jnr.css',
     'public/build/assets/admin-D6rjyDK-.css',
     'public/build/assets/app-D9FL5RAx.js',
 
