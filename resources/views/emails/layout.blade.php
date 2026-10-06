@@ -12,7 +12,7 @@
         .wrapper { width: 100%; table-layout: fixed; background-color: #f8f6f2; padding: 40px 16px; }
         .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 6px; overflow: hidden; }
         .header { text-align: center; padding: 36px 30px 24px; border-bottom: 1px solid #e5e7eb; background-color: #ffffff; }
-        .header-logo-text { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; letter-spacing: 0.2em; text-transform: uppercase; color: #15171c; margin: 0; font-weight: 500; }
+        .header-logo-text { font-family: 'Playfair Display', Georgia, serif; font-size: 22px; letter-spacing: 0.2em; text-transform: uppercase; color: #15171c; margin: 0; font-weight: 500; }
         .header-subtext { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #717782; margin-top: 6px; }
         .content { padding: 36px 36px 28px; }
         .footer { padding: 24px 30px; text-align: center; font-size: 12px; color: #717782; border-top: 1px solid #e5e7eb; background-color: #f8f6f2; }

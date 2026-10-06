@@ -102,7 +102,7 @@ button {
 
 h1, h2, h3, h4, h5, h6 {
     color: inherit;
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Playfair Display', Georgia, serif;
     font-weight: 500;
     line-height: 1.12;
     letter-spacing: -0.01em;
@@ -161,7 +161,7 @@ h3 { font-size: clamp(1.4rem, 1.8vw, 1.9rem); }
 }
 
 .font-serif {
-    font-family: 'Cormorant Garamond', Georgia, serif !important;
+    font-family: 'Playfair Display', Georgia, serif !important;
 }
 
 .letter-spacing-1 {
@@ -839,7 +839,7 @@ h3 { font-size: clamp(1.4rem, 1.8vw, 1.9rem); }
 
 .mini-cart__item a {
     display: block;
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Playfair Display', Georgia, serif;
     font-size: 1.32rem;
     line-height: 1.18;
     color: var(--lunara-midnight);
@@ -1298,8 +1298,8 @@ textarea.form-control {
     position: relative;
     isolation: isolate;
     width: 100%;
-    height: calc(100vh - 85px);
-    min-height: 580px;
+    height: clamp(580px, calc(100vh - 85px), 860px);
+    min-height: 560px;
     background: #070a10;
     color: #ffffff;
     overflow: hidden;
@@ -1308,7 +1308,7 @@ textarea.form-control {
 
 @media (min-width: 1921px) {
     .hero-slider {
-        max-height: 960px;
+        max-height: 920px;
     }
 }
 
@@ -1326,11 +1326,10 @@ textarea.form-control {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: scale(1.015);
+    transform: scale(1);
     transition: opacity 850ms cubic-bezier(0.25, 1, 0.5, 1),
-                transform 850ms cubic-bezier(0.25, 1, 0.5, 1),
                 visibility 850ms;
-    will-change: opacity, transform;
+    will-change: opacity;
 }
 
 .hero-slide--active {
@@ -1353,13 +1352,11 @@ textarea.form-control {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: var(--desktop-pos, 72% center);
+    object-position: var(--desktop-pos, center center);
     display: block;
 }
 
-/* User specified ambient overlay:
-   linear-gradient(90deg, rgba(7, 10, 16, 0.78) 0%, rgba(7, 10, 16, 0.40) 35%, rgba(7, 10, 16, 0.05) 65%, transparent 100%)
-*/
+/* Luxury ambient gradient overlay - lets jewelry in center & right shine */
 .hero-slide__overlay {
     position: absolute;
     inset: 0;
@@ -1367,9 +1364,9 @@ textarea.form-control {
     height: 100%;
     background: linear-gradient(
         90deg,
-        rgba(7, 10, 16, 0.82) 0%,
-        rgba(7, 10, 16, 0.42) 35%,
-        rgba(7, 10, 16, 0.06) 65%,
+        rgba(7, 10, 16, 0.78) 0%,
+        rgba(7, 10, 16, 0.40) 35%,
+        rgba(7, 10, 16, 0.05) 65%,
         transparent 100%
     );
     pointer-events: none;
@@ -1588,7 +1585,7 @@ textarea.form-control {
         min-height: 520px;
     }
     .hero-slide__image {
-        object-position: var(--mobile-pos, 75% center);
+        object-position: var(--mobile-pos, center center);
     }
     .hero-slide__overlay {
         background:
@@ -1611,7 +1608,8 @@ textarea.form-control {
         padding-bottom: 74px;
     }
     .hero-slide__content {
-        max-width: min(340px, 85%);
+        max-width: min(360px, 92%);
+        padding: 18px 20px;
     }
     .hero-slide__overline {
         font-size: 0.72rem;
@@ -1793,7 +1791,7 @@ textarea.form-control {
     position: relative;
     z-index: 1;
     color: rgba(255, 255, 255, 0.75);
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Playfair Display', Georgia, serif;
     font-size: 1.35rem;
     font-weight: 600;
     letter-spacing: 0.08em;
@@ -1811,7 +1809,7 @@ textarea.form-control {
 .category-tile__title {
     margin: 0;
     color: #ffffff;
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Playfair Display', Georgia, serif;
     font-size: clamp(1.4rem, 1.7vw, 1.85rem);
     font-weight: 500;
     line-height: 1.15;
@@ -2299,7 +2297,7 @@ textarea.form-control {
 }
 
 .story-section__slogan {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Playfair Display', Georgia, serif;
     font-size: 1.55rem;
     font-style: italic;
     color: var(--lunara-mauve);
@@ -2332,7 +2330,7 @@ textarea.form-control {
 
 .site-footer__slogan {
     margin-top: 14px;
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Playfair Display', Georgia, serif;
     font-size: 1.35rem;
     font-style: italic;
     color: var(--lunara-mauve);
@@ -2570,7 +2568,7 @@ textarea.form-control {
 .listing-categories h2,
 .listing-filter-form h2 {
     margin: 0 0 12px;
-    font: 600 1.35rem 'Cormorant Garamond', Georgia, serif;
+    font: 600 1.35rem 'Playfair Display', Georgia, serif;
 }
 
 .listing-categories a {
@@ -3961,7 +3959,7 @@ textarea.form-control {
 }
 
 .account-header h1 {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Playfair Display', Georgia, serif;
     font-size: clamp(2.8rem, 4vw, 4.2rem);
     font-weight: 500;
 }
@@ -3999,7 +3997,7 @@ textarea.form-control {
     border-radius: 50%;
     background: var(--lunara-blush);
     color: var(--lunara-midnight);
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Playfair Display', Georgia, serif;
     font-size: 1.6rem;
     font-weight: 600;
 }
@@ -4060,7 +4058,7 @@ textarea.form-control {
 .account-content .card-header h2,
 .account-content .card-header h3,
 .account-content h2.h5 {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Playfair Display', Georgia, serif;
     font-size: 1.8rem;
     font-weight: 600 !important;
 }
@@ -4106,7 +4104,7 @@ textarea.form-control {
 
 .account-content .h3.fw-bold {
     color: var(--lunara-midnight);
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Playfair Display', Georgia, serif;
     font-size: 2.4rem;
     font-weight: 600 !important;
 }

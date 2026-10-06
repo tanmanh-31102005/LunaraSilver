@@ -99,8 +99,8 @@ class BlogSeeder extends Seeder
 <blockquote>Sự tinh tế của phong cách Quiet Luxury không nằm ở kích thước phô trương, mà nằm ở độ tỉ mỉ trong từng đường nét cắt gọt và sự hài hòa giữa các tầng lớp.</blockquote>
 <h2>Kết hợp các kết cấu sợi dây (Textural Contrast)</h2>
 <p>Đừng ngần ngại kết hợp sợi dây chuyền trơn bóng (Snake Chain) cùng sợi mắt xích mảnh (Cable Chain). Sự tương phản nhẹ nhàng về mặt xúc giác tạo nên chiều sâu cuốn hút mà vẫn giữ trọn vẻ đẹp thanh lịch vượt thời gian.</p>',
-                'cover_image_url' => 'media/banner2.png',
-                'image_url' => 'media/banner2.png',
+                'cover_image_url' => 'media/banner2.jpg',
+                'image_url' => 'media/banner2.jpg',
                 'status' => Post::STATUS_PUBLISHED,
                 'is_published' => true,
                 'is_featured' => false,
@@ -121,8 +121,8 @@ class BlogSeeder extends Seeder
 <blockquote>"Bạn không cần phải luôn rực rỡ và tròn đầy như trăng rằm mới được xem là hoàn hảo. Ở bất kỳ giai đoạn nào của cuộc đời, bạn đều sở hữu một nét đẹp độc bản và xứng đáng được trân quý."</blockquote>
 <h2>Ngôi sao Bắc Đẩu — Ánh sáng dẫn lối niềm hy vọng</h2>
 <p>Đồng hành cùng ánh trăng là những vì tinh tú lấp lánh giữa màn đêm. Biểu tượng ngôi sao 4 cánh và 8 cánh đính đá Zirconia cao cấp tượng trưng cho niềm hy vọng kiên định và ngọn hải đăng soi sáng con đường bạn lựa chọn bước đi.</p>',
-                'cover_image_url' => 'media/banner3.png',
-                'image_url' => 'media/banner3.png',
+                'cover_image_url' => 'media/banner3.jpg',
+                'image_url' => 'media/banner3.jpg',
                 'status' => Post::STATUS_PUBLISHED,
                 'is_published' => true,
                 'is_featured' => false,

@@ -65,7 +65,7 @@
                 <div class="mega-menu__col mega-menu__col--editorial">
                     <div class="mega-editorial-card">
                         <div class="mega-editorial-card__media">
-                            <img src="{{ asset('media-previews/hero-2.webp') }}" alt="Ánh Trăng Tuyển Chọn" loading="lazy">
+                            <img src="{{ asset('media-previews/hero.webp') }}" alt="Ánh Trăng Tuyển Chọn" loading="lazy">
                         </div>
                         <div class="mega-editorial-card__body">
                             <span class="mega-editorial-card__eyebrow">✦ LUNARA ATELIER ✦</span>
@@ -122,7 +122,7 @@
                 <div class="mega-menu__col mega-menu__col--editorial">
                     <div class="mega-editorial-card">
                         <div class="mega-editorial-card__media">
-                            <img src="{{ asset('media-previews/hero-3.webp') }}" alt="Bộ sưu tập Lunara" loading="lazy">
+                            <img src="{{ asset('media-previews/hero-2.webp') }}" alt="Bộ sưu tập Lunara" loading="lazy">
                         </div>
                         <div class="mega-editorial-card__body">
                             <span class="mega-editorial-card__eyebrow">✦ BỘ PHỐI TINH TÚ ✦</span>
@@ -180,7 +180,7 @@
                 <div class="mega-menu__col mega-menu__col--editorial">
                     <div class="mega-editorial-card">
                         <div class="mega-editorial-card__media">
-                            <img src="{{ asset('media-previews/hero-1.webp') }}" alt="Hộp Quà Ánh Trăng" loading="lazy">
+                            <img src="{{ asset('media-previews/hero-3.webp') }}" alt="Hộp Quà Ánh Trăng" loading="lazy">
                         </div>
                         <div class="mega-editorial-card__body">
                             <span class="mega-editorial-card__eyebrow">✦ HỘP QUÀ & THIỆP KÈM ✦</span>

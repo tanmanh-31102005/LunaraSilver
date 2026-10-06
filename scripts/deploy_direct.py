@@ -8,61 +8,38 @@ FTP_PASS = 'manh31102005'
 REMOTE_BASE = 'htdocs'
 
 FILES_TO_UPLOAD = [
-    # Models & Services
-    'app/Models/Category.php',
-    'app/Services/NavigationService.php',
-    'app/Services/SeoService.php',
+    # Controllers & Models
+    'app/Http/Controllers/MediaController.php',
+    'app/Models/Post.php',
+    'database/seeders/BlogSeeder.php',
+    'diag.php',
 
     # Views
-    'resources/views/account/orders/show.blade.php',
+    'resources/views/layouts/app.blade.php',
     'resources/views/admin/layouts/app.blade.php',
     'resources/views/components/hero-slider.blade.php',
     'resources/views/components/mega-menu.blade.php',
-    'resources/views/components/seo/meta.blade.php',
-    'resources/views/home.blade.php',
-    'resources/views/layouts/app.blade.php',
-    'resources/views/products/_filters.blade.php',
-    'resources/views/products/index.blade.php',
+    'resources/views/emails/layout.blade.php',
 
-    # Banners and Video
-    'media/banner.jpg',
-    'media/banner2.jpg',
-    'media/banner3.jpg',
-    'media/Animationbanner.mp4',
+    # CSS & Tokens
+    'resources/css/tokens.css',
+    'resources/css/app.css',
 
-    # Hero WebP previews
+    # Vite build assets
+    'public/build/manifest.json',
+    'public/build/assets/app-a8e0qGgK.css',
+    'public/build/assets/admin-D6rjyDK-.css',
+    'public/build/assets/app-D9FL5RAx.js',
+
+    # WebP Previews
     'public/media-previews/hero.webp',
+    'public/media-previews/hero-1.webp',
     'public/media-previews/hero-2.webp',
     'public/media-previews/hero-3.webp',
-
-    # Public favicons & icons
-    'public/favicon.ico',
-    'public/favicon-16x16.png',
-    'public/favicon-32x32.png',
-    'public/favicon.png',
-    'public/apple-touch-icon.png',
-    'public/android-chrome-192x192.png',
-    'public/android-chrome-512x512.png',
-
-    # Root favicons & icons
-    'favicon.ico',
-    'favicon-16x16.png',
-    'favicon-32x32.png',
-    'favicon.png',
-    'apple-touch-icon.png',
-    'android-chrome-192x192.png',
-    'android-chrome-512x512.png',
-
-    # Product media files
-    'media/Product/dc004.jpg',
-    'media/Product/nh004.jpg',
-    'media/Product/dc0010.jpg',
-
-    # Webp previews
-    'public/media-previews/1220106db4953be528c228476a400fd6c579e4d0.webp',
-    'public/media-previews/40abd3105f1908a30d00720694156f3325794ae1.webp',
-    'public/media-previews/b9fd7e19791282aa9348b9d777ebe3181fd6181e.webp',
-    'public/media-previews/d281e7422f4b1c982836035cc6dc1d1c5e5bdc3e.webp',
+    'public/media-previews/aaa25111e73d445cc91fe54c2f69711d0770dc9b.webp',
+    'public/media-previews/8864fea8744d49c046292b2ff57fc82c1d690a10.webp',
+    'public/media-previews/afb9c5f571f7ac059df63464ff72977420d18522.webp',
+    'public/media-previews/4adeae886168f4902e20fa35235e3a24a1ad1ca5.webp',
 ]
 
 def ensure_remote_dir(ftp, remote_dir):
@@ -72,9 +49,24 @@ def ensure_remote_dir(ftp, remote_dir):
         cur = f"{cur}/{part}" if cur else part
         try:
             ftp.mkd(cur)
-            print(f"Created remote dir: {cur}")
         except Exception:
             pass
+
+def wipe_remote_views_cache(ftp):
+    views_dir = f"{REMOTE_BASE}/storage/framework/views"
+    try:
+        files = ftp.nlst(views_dir)
+        count = 0
+        for f in files:
+            if f.endswith('.php'):
+                try:
+                    ftp.delete(f)
+                    count += 1
+                except Exception:
+                    pass
+        print(f"Purged {count} cached compiled views via FTP.")
+    except Exception as e:
+        print("Note on wiping view cache:", e)
 
 def main():
     print(f"Connecting to FTP {FTP_HOST} as {FTP_USER}...")
@@ -99,21 +91,24 @@ def main():
             ftp.storbinary(f"STOR {remote_path}", f)
         success_count += 1
 
+    wipe_remote_views_cache(ftp)
     ftp.quit()
     print(f"\nUploaded {success_count}/{len(FILES_TO_UPLOAD)} files successfully!")
 
-    print("\nTriggering cache clear via diag.php?clear_cache=1...")
+    print("\nTriggering cache clear & post synchronization via diag.php...")
     try:
         req = urllib.request.Request(
-            'https://lunarasilver.infinityfreeapp.com/diag.php?clear_cache=1',
+            'https://lunarasilver.infinityfreeapp.com/diag.php?clear_cache=1&sync_posts=1',
             headers={'User-Agent': 'Mozilla/5.0'}
         )
         with urllib.request.urlopen(req, timeout=15) as res:
             html = res.read().decode('utf-8', errors='ignore')
             if 'Đã xóa sạch cache' in html:
                 print("SUCCESS: Cache cleared on InfinityFree!")
+            if 'Đã đồng bộ' in html:
+                print("SUCCESS: Database posts synced to banner2.jpg / banner3.jpg!")
             else:
-                print("Server responded to diag.php (code 200).")
+                print("Diag response:", html[:300])
     except Exception as e:
         print("Note on diag.php:", e)
 

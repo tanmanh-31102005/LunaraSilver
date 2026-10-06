@@ -144,6 +144,16 @@ class Post extends Model
                 return asset($preview);
             }
 
+            $altRaw = str_ends_with($raw, '.png') 
+                ? substr($raw, 0, -4).'.jpg' 
+                : (str_ends_with($raw, '.jpg') ? substr($raw, 0, -4).'.png' : null);
+            if ($altRaw) {
+                $altPreview = 'media-previews/'.sha1($altRaw).'.webp';
+                if (is_file(public_path($altPreview))) {
+                    return asset($altPreview);
+                }
+            }
+
             return route('media.show', ['path' => substr($raw, strlen('media/'))]);
         }
 

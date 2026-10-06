@@ -42,7 +42,7 @@
     --ln-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.08);
 
     /* Typography Families (Max 2) */
-    --ln-font-display: 'Cormorant Garamond', Georgia, serif;
+    --ln-font-display: 'Playfair Display', Georgia, serif;
     --ln-font-ui: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
     /* Standardized Type Scale with responsive clamp() */

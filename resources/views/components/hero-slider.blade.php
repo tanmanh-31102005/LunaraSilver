@@ -3,17 +3,33 @@ if (!isset($slides)) {
     $dbBanners = \App\Models\Banner::query()->active()->ordered()->get();
     if ($dbBanners->isNotEmpty()) {
         $slides = $dbBanners->map(function ($banner, $index) {
+            $defaultTitles = [
+                'Tỏa sáng cùng nhịp điệu riêng của bạn',
+                'Trang sức cho những khoảnh khắc đáng nhớ',
+                'Một món quà nhỏ, một dấu ấn thật lâu',
+            ];
+            $defaultOverlines = [
+                'BỘ SƯU TẬP ÁNH TRĂNG · TOP 1 BẠC 925',
+                'LUNARA SILVER · THIẾT KẾ TINH TUYỂN',
+                'QUÀ TẶNG TỪ ÁNH TRĂNG',
+            ];
+            $defaultDescs = [
+                'Khám phá những thiết kế trang sức bạc lấy cảm hứng từ bầu trời đêm.',
+                'Những đường nét tinh tế, thanh lịch và hiện đại từ bạc 925 cao cấp.',
+                'Khám phá những lựa chọn quà tặng tinh tế từ Lunara Silver.',
+            ];
+
             return [
                 'id' => 'hero-slide-db-' . $banner->id,
-                'overline' => $banner->subtitle ?: ($index === 0 ? 'LUNARA SILVER · THƯƠNG HIỆU UY TÍN' : 'LUNARA SILVER'),
-                'title' => $banner->title ?: ($index === 0 ? 'Trang Sức Bạc Top 1' : 'Tỏa sáng cùng nhịp điệu riêng của bạn'),
-                'description' => $banner->subtitle ?: ($index === 0 ? 'Thương hiệu trang sức bạc 925 hàng đầu — Tuyển chọn dây chuyền bạc nữ, nhẫn bạc đôi, lắc tay bạc và bộ sưu tập độc quyền.' : ''),
-                'cta_label' => $banner->button_text ?: 'Khám phá bộ sưu tập',
+                'overline' => $banner->subtitle ?: ($defaultOverlines[$index % 3]),
+                'title' => $banner->title ?: ($defaultTitles[$index % 3]),
+                'description' => $defaultDescs[$index % 3],
+                'cta_label' => $banner->button_text ?: ($index === 0 ? 'Khám phá bộ sưu tập' : ($index === 1 ? 'Xem sản phẩm' : 'Khám phá quà tặng')),
                 'cta_url' => $banner->link ?: route('products.index'),
                 'image' => $banner->displayUrl(),
-                'image_alt' => $banner->title ?: 'Trang sức bạc top 1 Lunara Silver',
-                'position' => '72% center',
-                'mobile_position' => '72% center',
+                'image_alt' => $banner->title ?: 'Lunara Silver Banner',
+                'position' => 'center center',
+                'mobile_position' => 'center center',
                 'preload' => $index === 0,
             ];
         })->toArray();
@@ -23,41 +39,41 @@ if (!isset($slides)) {
 $slides = $slides ?? [
     [
         'id' => 'hero-slide-1',
-        'overline' => 'LUNARA SILVER · THƯƠNG HIỆU UY TÍN',
-        'title' => 'Trang Sức Bạc Top 1',
-        'description' => 'Thương hiệu trang sức bạc 925 hàng đầu — Tuyển chọn dây chuyền bạc nữ, nhẫn bạc đôi, lắc tay bạc và bộ sưu tập ánh trăng độc quyền.',
-        'cta_label' => 'Khám phá ngay',
+        'overline' => 'BỘ SƯU TẬP ÁNH TRĂNG · TOP 1 BẠC 925',
+        'title' => 'Tỏa sáng cùng nhịp điệu riêng của bạn',
+        'description' => 'Khám phá những thiết kế trang sức bạc lấy cảm hứng từ bầu trời đêm.',
+        'cta_label' => 'Khám phá bộ sưu tập',
         'cta_url' => route('products.index'),
         'image' => asset('media-previews/hero.webp'),
         'image_alt' => 'Trang sức bạc top 1 Lunara Silver',
-        'position' => '72% center',
-        'mobile_position' => '72% center',
+        'position' => 'center center',
+        'mobile_position' => 'center center',
         'preload' => true,
     ],
     [
         'id' => 'hero-slide-2',
-        'overline' => 'BỘ SƯU TẬP BẠC 925 TINH TUYỂN',
-        'title' => 'Dây Chuyền Bạc Nữ & Nhẫn Bạc 925',
-        'description' => 'Tỏa sáng cùng trang sức bạc nữ thiết kế thanh lịch, giác cắt đá Moissanite và Moonstone hoàn mỹ.',
-        'cta_label' => 'Xem dây chuyền & nhẫn bạc',
+        'overline' => 'LUNARA SILVER · THIẾT KẾ TINH TUYỂN',
+        'title' => 'Trang sức cho những khoảnh khắc đáng nhớ',
+        'description' => 'Những đường nét tinh tế, thanh lịch và hiện đại từ bạc 925 cao cấp.',
+        'cta_label' => 'Xem sản phẩm',
         'cta_url' => route('products.category', 'day-chuyen'),
         'image' => asset('media-previews/hero-2.webp'),
-        'image_alt' => 'Dây chuyền bạc nữ và nhẫn bạc 925 Lunara Silver',
-        'position' => '75% center',
-        'mobile_position' => '75% center',
+        'image_alt' => 'Trang sức bạc thanh lịch Lunara Silver',
+        'position' => 'center center',
+        'mobile_position' => 'center center',
         'preload' => false,
     ],
     [
         'id' => 'hero-slide-3',
-        'overline' => 'KỶ NIỆM & QUÀ TẶNG Ý NGHĨA',
-        'title' => 'Nhẫn Bạc Đôi & Vòng Tay Bạc Cao Cấp',
-        'description' => 'Gắn kết yêu thương với nhẫn bạc cặp, lắc chân bạc nữ và set quà tặng trang sức bạc sang trọng.',
+        'overline' => 'QUÀ TẶNG TỪ ÁNH TRĂNG',
+        'title' => 'Một món quà nhỏ, một dấu ấn thật lâu',
+        'description' => 'Khám phá những lựa chọn quà tặng tinh tế từ Lunara Silver.',
         'cta_label' => 'Khám phá quà tặng',
         'cta_url' => route('products.category', 'set-qua-tang'),
         'image' => asset('media-previews/hero-3.webp'),
-        'image_alt' => 'Nhẫn bạc đôi và vòng tay bạc Lunara Silver',
-        'position' => '78% center',
-        'mobile_position' => '78% center',
+        'image_alt' => 'Hộp quà tặng trang sức bạc Lunara Silver',
+        'position' => 'center center',
+        'mobile_position' => 'center center',
         'preload' => false,
     ],
 ];
