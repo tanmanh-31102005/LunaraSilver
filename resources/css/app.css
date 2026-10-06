@@ -771,14 +771,14 @@ h3 { font-size: clamp(1.4rem, 1.8vw, 1.9rem); }
     padding: 16px 24px 40px;
 }
 
-.mobile-navigation .offcanvas-body a,
-.mobile-navigation .offcanvas-body span,
-.mobile-navigation .offcanvas-body button {
+.mobile-navigation .offcanvas-body > a,
+.mobile-navigation .offcanvas-body > button,
+.mobile-navigation .mobile-nav-link {
     display: flex;
     align-items: center;
     width: 100%;
-    min-height: 48px;
-    padding: 12px 14px;
+    min-height: 44px;
+    padding: 10px 14px;
     border: 0;
     border-radius: var(--radius-sm);
     background: transparent;
@@ -789,10 +789,30 @@ h3 { font-size: clamp(1.4rem, 1.8vw, 1.9rem); }
     transition: background var(--transition-fast), color var(--transition-fast);
 }
 
-.mobile-navigation .offcanvas-body a:hover,
-.mobile-navigation .offcanvas-body button:hover {
+.mobile-navigation .offcanvas-body > a:hover,
+.mobile-navigation .offcanvas-body > button:hover,
+.mobile-navigation .mobile-nav-link:hover {
     background: var(--lunara-blush);
     color: var(--lunara-accent);
+}
+
+.mobile-navigation .badge,
+.mobile-navigation span.badge,
+.mobile-navigation [data-wishlist-count] {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: auto !important;
+    min-width: 20px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: 24px !important;
+    padding: 2px 8px !important;
+    font-size: 0.7rem !important;
+    line-height: 1.2 !important;
+    border-radius: 9999px !important;
+    flex: 0 0 auto !important;
+    text-align: center !important;
 }
 
 .mobile-navigation__divider {
