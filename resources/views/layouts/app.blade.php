@@ -196,12 +196,12 @@
                 </div>
             </div>
             <div>
-                <h2>Bộ sưu tập</h2>
-                <a href="{{ route('products.category', 'day-chuyen') }}">Dây chuyền</a>
-                <a href="{{ route('products.category', 'nhan') }}">Nhẫn ánh trăng</a>
-                <a href="{{ route('products.category', 'vong-tay') }}">Vòng tay tinh tú</a>
-                <a href="{{ route('products.category', 'bo-trang-suc') }}">Bộ trang sức</a>
-                <a href="{{ route('products.category', 'set-qua-tang') }}">Set quà tặng</a>
+                <h2>Bộ sưu tập Bạc 925</h2>
+                <a href="{{ route('products.category', 'day-chuyen') }}">Dây chuyền bạc nữ & nam</a>
+                <a href="{{ route('products.category', 'nhan') }}">Nhẫn bạc 925 & Nhẫn đôi</a>
+                <a href="{{ route('products.category', 'vong-tay') }}">Vòng tay & Lắc tay bạc</a>
+                <a href="{{ route('products.category', 'bo-trang-suc') }}">Bộ trang sức bạc 925</a>
+                <a href="{{ route('products.category', 'set-qua-tang') }}">Set quà tặng trang sức bạc</a>
             </div>
             <div>
                 <h2>Khách hàng</h2>
@@ -231,6 +231,25 @@
                 </div>
             </div>
         </div>
+
+        {{-- SEO Discovery Keywords Bar --}}
+        <div class="lunara-container pt-3 pb-2 border-top border-secondary border-opacity-10">
+            <div class="d-flex flex-wrap align-items-center gap-2 small text-muted" style="font-size: 0.78rem;">
+                <span class="fw-semibold text-dark text-uppercase me-1" style="letter-spacing: 0.5px;">Xu hướng tìm kiếm:</span>
+                <a href="{{ route('products.index', ['q' => 'trang sức bạc top 1']) }}" class="text-secondary text-decoration-none">Trang sức bạc top 1</a> <span class="opacity-50">•</span>
+                <a href="{{ route('products.category', 'day-chuyen') }}" class="text-secondary text-decoration-none">Dây chuyền bạc nữ</a> <span class="opacity-50">•</span>
+                <a href="{{ route('products.category', 'nhan') }}" class="text-secondary text-decoration-none">Nhẫn bạc 925</a> <span class="opacity-50">•</span>
+                <a href="{{ route('products.index', ['q' => 'nhẫn bạc đôi']) }}" class="text-secondary text-decoration-none">Nhẫn bạc đôi nam nữ</a> <span class="opacity-50">•</span>
+                <a href="{{ route('products.category', 'vong-tay') }}" class="text-secondary text-decoration-none">Vòng tay bạc nữ đẹp</a> <span class="opacity-50">•</span>
+                <a href="{{ route('products.category', 'vong-tay') }}" class="text-secondary text-decoration-none">Lắc tay bạc</a> <span class="opacity-50">•</span>
+                <a href="{{ route('products.index', ['q' => 'lắc chân bạc nữ']) }}" class="text-secondary text-decoration-none">Lắc chân bạc nữ</a> <span class="opacity-50">•</span>
+                <a href="{{ route('products.index', ['q' => 'nhẫn cặp bạc']) }}" class="text-secondary text-decoration-none">Nhẫn cặp bạc</a> <span class="opacity-50">•</span>
+                <a href="{{ route('products.index', ['q' => 'dây chuyền bạc nam']) }}" class="text-secondary text-decoration-none">Dây chuyền bạc nam</a> <span class="opacity-50">•</span>
+                <a href="{{ route('products.category', 'bo-trang-suc') }}" class="text-secondary text-decoration-none">Bộ trang sức bạc nữ</a> <span class="opacity-50">•</span>
+                <a href="{{ route('products.category', 'set-qua-tang') }}" class="text-secondary text-decoration-none">Set quà tặng bạc 925</a>
+            </div>
+        </div>
+
         <div class="lunara-container site-footer__bottom">
             <span>© {{ date('Y') }} Lunara Silver · All rights reserved.</span>
             <span>Shine with your own moonlight</span>

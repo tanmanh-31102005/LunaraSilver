@@ -1,9 +1,22 @@
 <div class="listing-categories">
-    <h2>Danh mục</h2>
-    <a href="{{ route('products.index') }}" @if(! $category) aria-current="page" @endif>Tất cả sản phẩm</a>
+    <h2>Danh mục trang sức bạc</h2>
+    <a href="{{ route('products.index') }}" @if(! $category) aria-current="page" @endif>Tất cả sản phẩm bạc</a>
     @foreach($categories as $item)
-        <a href="{{ route('products.category', $item->slug) }}" @if($category?->id === $item->id) aria-current="page" @endif>{{ $item->name }}</a>
+        <a href="{{ route('products.category', $item->slug) }}" @if($category?->id === $item->id) aria-current="page" @endif>{{ $item->seo_display_name ?? $item->name }}</a>
     @endforeach
+
+    <div class="listing-keywords-cloud mt-3 pt-2 border-top">
+        <span class="d-block small text-muted text-uppercase fw-semibold mb-2" style="font-size: 0.72rem; letter-spacing: 0.5px;">Từ khóa tìm kiếm nổi bật</span>
+        <div class="d-flex flex-wrap gap-1">
+            <a href="{{ route('products.category', 'day-chuyen') }}" class="badge rounded-pill bg-light text-dark border text-decoration-none py-1 px-2" style="font-size: 0.75rem; font-weight: normal;">#dây chuyền bạc nữ</a>
+            <a href="{{ route('products.category', 'nhan') }}" class="badge rounded-pill bg-light text-dark border text-decoration-none py-1 px-2" style="font-size: 0.75rem; font-weight: normal;">#nhẫn bạc 925</a>
+            <a href="{{ route('products.category', 'nhan') }}" class="badge rounded-pill bg-light text-dark border text-decoration-none py-1 px-2" style="font-size: 0.75rem; font-weight: normal;">#nhẫn bạc đôi</a>
+            <a href="{{ route('products.category', 'vong-tay') }}" class="badge rounded-pill bg-light text-dark border text-decoration-none py-1 px-2" style="font-size: 0.75rem; font-weight: normal;">#vòng tay bạc nữ đẹp</a>
+            <a href="{{ route('products.category', 'vong-tay') }}" class="badge rounded-pill bg-light text-dark border text-decoration-none py-1 px-2" style="font-size: 0.75rem; font-weight: normal;">#lắc tay bạc</a>
+            <a href="{{ route('products.index', ['q' => 'lắc chân bạc nữ']) }}" class="badge rounded-pill bg-light text-dark border text-decoration-none py-1 px-2" style="font-size: 0.75rem; font-weight: normal;">#lắc chân bạc nữ</a>
+            <a href="{{ route('products.index', ['q' => 'trang sức bạc nam']) }}" class="badge rounded-pill bg-light text-dark border text-decoration-none py-1 px-2" style="font-size: 0.75rem; font-weight: normal;">#trang sức bạc nam</a>
+        </div>
+    </div>
 </div>
 <form action="{{ $baseRoute }}" method="get" class="listing-filter-form">
     <h2>Bộ lọc</h2>

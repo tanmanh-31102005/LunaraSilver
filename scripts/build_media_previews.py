@@ -37,13 +37,18 @@ def main():
             preview.save(target, "WEBP", quality=82, method=6)
 
     hero_banners = [
-        ("media/banner.jpg", "hero.webp"),
-        ("media/banner2.png", "hero-2.webp"),
-        ("media/banner3.png", "hero-3.webp"),
+        (["media/banner.jpg", "media/banner.png"], "hero.webp"),
+        (["media/banner2.jpg", "media/banner2.png"], "hero-2.webp"),
+        (["media/banner3.jpg", "media/banner3.png"], "hero-3.webp"),
     ]
-    for rel_path, out_name in hero_banners:
-        banner_file = ROOT / rel_path
-        if banner_file.is_file():
+    for candidates, out_name in hero_banners:
+        banner_file = None
+        for rel_path in candidates:
+            if (ROOT / rel_path).is_file():
+                banner_file = ROOT / rel_path
+                break
+        if banner_file:
+            print(f"Generating {out_name} from {banner_file.relative_to(ROOT)}...")
             with Image.open(banner_file) as original:
                 banner = ImageOps.exif_transpose(original)
                 if banner.width > 1920:

@@ -1,6 +1,7 @@
 @props([
     'title' => null,
     'description' => null,
+    'keywords' => null,
     'canonical' => null,
     'robots' => null,
     'image' => null,
@@ -12,6 +13,7 @@
 @php
     $finalTitle = $seoService->title($title);
     $finalDescription = $seoService->description($description);
+    $finalKeywords = $seoService->keywords($keywords);
     $finalCanonical = $seoService->canonical($canonical);
     $finalRobots = $robots ?: $seoService->robots();
     
@@ -34,6 +36,7 @@
 
 <title>{{ $finalTitle }}</title>
 <meta name="description" content="{{ $finalDescription }}">
+<meta name="keywords" content="{{ $finalKeywords }}">
 <link rel="canonical" href="{{ $finalCanonical }}">
 <meta name="robots" content="{{ $finalRobots }}">
 

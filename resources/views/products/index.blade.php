@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', $category?->seo_title ?: ($category ? $category->name.' Bạc 925 Cao Cấp | Lunara Silver' : 'Bộ Sưu Tập Trang Sức Bạc 925 Cao Cấp | Lunara Silver'))
-@section('meta_description', $category?->seo_description ?: ($category ? ($category->description ?: 'Khám phá các thiết kế '.$category->name.' bạc 925 cao cấp từ Lunara Silver.') : 'Khám phá toàn bộ tác phẩm trang sức bạc 925 cao cấp Lunara Silver.'))
+@section('title', $category?->seo_title ?: ($category ? ($category->seo_display_name ?? $category->name).' Bạc 925 Cao Cấp | Lunara Silver' : 'Trang Sức Bạc Top 1 | Bộ Sưu Tập Bạc 925 Cao Cấp | Lunara Silver'))
+@section('meta_description', $category?->seo_description ?: ($category ? ($category->description ?: 'Khám phá các thiết kế '.($category->seo_display_name ?? $category->name).' 925 cao cấp từ Lunara Silver.') : 'Khám phá bộ sưu tập trang sức bạc top 1 Lunara Silver chuẩn bạc 925: dây chuyền bạc nữ, nhẫn bạc đôi, vòng tay và lắc tay bạc cao cấp.'))
 @section('main_class', 'listing-main')
 @section('canonical', $category ? route('products.category', $category->slug) : route('products.index'))
 

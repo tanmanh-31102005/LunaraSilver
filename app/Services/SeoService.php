@@ -156,7 +156,7 @@ class SeoService
             return $customTitle;
         }
 
-        return 'Lunara Silver | Trang sức bạc tinh tế';
+        return 'Trang Sức Bạc Top 1 | Lunara Silver — Trang Sức Bạc 925 Cao Cấp';
     }
 
     /**
@@ -168,7 +168,65 @@ class SeoService
             return Str::limit(strip_tags($customDescription), 160);
         }
 
-        return 'Khám phá thế giới trang sức bạc 925 cao cấp Lunara Silver. Tinh tế, thanh lịch và tỏa sáng theo cách của riêng bạn với thiết kế mặt trăng và các vì sao.';
+        return 'Khám phá thương hiệu trang sức bạc top 1 Lunara Silver: bạc 925 cao cấp, dây chuyền bạc nữ, nhẫn bạc đôi, vòng tay bạc và lắc chân bạc nữ tinh tế, sáng bóng bền lâu.';
+    }
+
+    /**
+     * Default SEO keywords with comprehensive target terms from market research.
+     */
+    public function keywords(?string $customKeywords = null): string
+    {
+        if (filled($customKeywords)) {
+            return $customKeywords;
+        }
+
+        return implode(', ', [
+            'trang sức bạc top 1',
+            'bạc 925',
+            'vòng tay bạc',
+            'dây chuyền bạc',
+            'nhẫn bạc',
+            'dây chuyền bạc nữ',
+            'nhẫn bạc nam',
+            'dây chuyền bạc nam',
+            'lắc tay bạc',
+            'nhẫn bạc nữ',
+            'nhẫn bạc đôi',
+            'lắc chân bạc',
+            'nhẫn đôi bạc',
+            'vòng tay bạc nữ',
+            'vòng bạc',
+            'vòng bạc nam',
+            'vòng tay bạc nam',
+            'nhẫn cặp bạc',
+            'vòng cổ bạc',
+            'vòng cổ bạc nam',
+            'vòng cổ bạc nữ',
+            'nhẫn bạc cặp',
+            'lắc tay nam bạc',
+            'trang sức bạc nam',
+            'bông tai bạc 925',
+            'vòng tay nữ bạc',
+            'dây chuyền nam bạc',
+            'vòng tay nam bạc',
+            'vòng bạc đôi',
+            'dây chuyền nữ bạc',
+            'vòng tay bạc nữ đẹp',
+            'vòng bạc nữ đẹp',
+            'bông tai bạc nam',
+            'nhẫn bạc 925',
+            'dây chuyền bạc nam sợi to',
+            'lắc chân bạc nữ',
+            'giá dây chuyền bạc nữ',
+            'nhẫn nam bạc',
+            'day chuyen bac',
+            'nhẫn bạc đôi nam nữ',
+            'trang sức bạc nữ',
+            'trang suc bac',
+            'vòng tay bạc đôi',
+            'dây chuyền bạc nữ sợi nhỏ',
+            'Lunara Silver',
+        ]);
     }
 
     /**

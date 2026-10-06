@@ -10,23 +10,25 @@
             <div class="mega-menu__grid mega-menu__grid--4col">
                 {{-- Col 1: Khám phá --}}
                 <div class="mega-menu__col">
-                    <span class="mega-menu__heading">Khám phá</span>
+                    <span class="mega-menu__heading">Khám phá Bạc 925</span>
                     <ul class="mega-menu__list">
-                        <li><a href="{{ route('products.index') }}" class="mega-menu__link fw-semibold"><span>Tất cả sản phẩm</span></a></li>
-                        <li><a href="{{ route('products.index', ['sort' => 'newest']) }}" class="mega-menu__link"><span class="badge-dot"></span><span>Hàng mới về</span></a></li>
-                        <li><a href="{{ route('products.index', ['sort' => 'price_desc']) }}" class="mega-menu__link"><span>Bán chạy nhất</span></a></li>
+                        <li><a href="{{ route('products.index') }}" class="mega-menu__link fw-semibold"><span>Tất cả trang sức bạc</span></a></li>
+                        <li><a href="{{ route('products.index', ['q' => 'trang sức bạc nữ']) }}" class="mega-menu__link"><span class="badge-dot"></span><span>Trang sức bạc nữ</span></a></li>
+                        <li><a href="{{ route('products.index', ['q' => 'nhẫn bạc đôi']) }}" class="mega-menu__link"><span>Nhẫn bạc đôi & Nhẫn cặp</span></a></li>
                         <li><a href="{{ route('products.index', ['material' => 'Bạc 925']) }}" class="mega-menu__link"><span>Bạc S925 Tuyển chọn</span></a></li>
+                        <li><a href="{{ route('products.index', ['q' => 'trang sức bạc nam']) }}" class="mega-menu__link"><span>Trang sức bạc nam</span></a></li>
+                        <li><a href="{{ route('products.category', 'vong-tay') }}" class="mega-menu__link"><span>Lắc chân & Lắc tay bạc</span></a></li>
                     </ul>
                 </div>
 
-                {{-- Col 2: Loại trang sức (Real DB Categories) --}}
+                {{-- Col 2: Loại trang sức (Real DB Categories with SEO Silver Names) --}}
                 <div class="mega-menu__col">
-                    <span class="mega-menu__heading">Loại trang sức</span>
+                    <span class="mega-menu__heading">Danh mục trang sức bạc</span>
                     <ul class="mega-menu__list">
                         @foreach($navData['categories'] ?? [] as $cat)
                             <li>
                                 <a href="{{ $cat['url'] }}" class="mega-menu__link mega-menu__link--between">
-                                    <span>{{ $cat['name'] }}</span>
+                                    <span>{{ $cat['display_name'] ?? $cat['name'] }}</span>
                                     @if(!empty($cat['count']))
                                         <small class="text-muted mega-menu__count">{{ $cat['count'] }}</small>
                                     @endif

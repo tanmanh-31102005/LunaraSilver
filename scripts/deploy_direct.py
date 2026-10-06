@@ -8,11 +8,32 @@ FTP_PASS = 'manh31102005'
 REMOTE_BASE = 'htdocs'
 
 FILES_TO_UPLOAD = [
+    # Models & Services
+    'app/Models/Category.php',
+    'app/Services/NavigationService.php',
+    'app/Services/SeoService.php',
+
     # Views
     'resources/views/account/orders/show.blade.php',
     'resources/views/admin/layouts/app.blade.php',
+    'resources/views/components/hero-slider.blade.php',
+    'resources/views/components/mega-menu.blade.php',
     'resources/views/components/seo/meta.blade.php',
+    'resources/views/home.blade.php',
     'resources/views/layouts/app.blade.php',
+    'resources/views/products/_filters.blade.php',
+    'resources/views/products/index.blade.php',
+
+    # Banners and Video
+    'media/banner.jpg',
+    'media/banner2.jpg',
+    'media/banner3.jpg',
+    'media/Animationbanner.mp4',
+
+    # Hero WebP previews
+    'public/media-previews/hero.webp',
+    'public/media-previews/hero-2.webp',
+    'public/media-previews/hero-3.webp',
 
     # Public favicons & icons
     'public/favicon.ico',

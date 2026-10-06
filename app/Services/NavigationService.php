@@ -40,6 +40,7 @@ class NavigationService
             ->map(fn (Category $cat) => [
                 'id' => $cat->id,
                 'name' => $cat->name,
+                'display_name' => $cat->seo_display_name,
                 'slug' => $cat->slug,
                 'url' => route('products.category', $cat->slug),
                 'count' => $cat->products_count ?? 0,

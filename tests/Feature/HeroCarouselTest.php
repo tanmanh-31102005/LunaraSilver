@@ -24,29 +24,23 @@ class HeroCarouselTest extends TestCase
             ->assertSee('data-autoplay="true"', false)
             ->assertSee('data-interval="5500"', false);
 
-        // 2. Slide 1 Assertions
-        $response->assertSee('BỘ SƯU TẬP ÁNH TRĂNG')
-            ->assertSee('Tỏa sáng cùng nhịp điệu riêng của bạn')
-            ->assertSee('Khám phá những thiết kế bạc lấy cảm hứng từ bầu trời đêm.')
-            ->assertSee('Khám phá bộ sưu tập')
-            ->assertSee(route('products.category', 'bo-trang-suc'))
+        // 2. Slide 1 Assertions (SEO Top 1 Banner Title)
+        $response->assertSee('LUNARA SILVER · THƯƠNG HIỆU UY TÍN')
+            ->assertSee('Trang Sức Bạc Top 1')
+            ->assertSee('Khám phá ngay')
             ->assertSee('media-previews/hero.webp')
             ->assertSee('fetchpriority="high"', false);
 
-        // 3. Slide 2 Assertions
-        $response->assertSee('LUNARA SILVER')
-            ->assertSee('Trang sức cho những khoảnh khắc đáng nhớ')
-            ->assertSee('Những đường nét tinh tế, thanh lịch và hiện đại.')
-            ->assertSee('Xem sản phẩm')
-            ->assertSee(route('products.index'))
+        // 3. Slide 2 Assertions (Category & Silver 925 terms)
+        $response->assertSee('BỘ SƯU TẬP BẠC 925 TINH TUYỂN')
+            ->assertSee('Dây Chuyền Bạc Nữ &amp; Nhẫn Bạc 925', false)
+            ->assertSee('Xem dây chuyền &amp; nhẫn bạc', false)
             ->assertSee('media-previews/hero-2.webp');
 
-        // 4. Slide 3 Assertions
-        $response->assertSee('QUÀ TẶNG TỪ ÁNH TRĂNG')
-            ->assertSee('Một món quà nhỏ, một dấu ấn thật lâu')
-            ->assertSee('Khám phá những lựa chọn quà tặng tinh tế từ Lunara.')
+        // 4. Slide 3 Assertions (Rings & Gift terms)
+        $response->assertSee('KỶ NIỆM &amp; QUÀ TẶNG Ý NGHĨA', false)
+            ->assertSee('Nhẫn Bạc Đôi &amp; Vòng Tay Bạc Cao Cấp', false)
             ->assertSee('Khám phá quà tặng')
-            ->assertSee(route('products.category', 'set-qua-tang'))
             ->assertSee('media-previews/hero-3.webp');
 
         // 5. Performance Check: Only 1 fetchpriority="high" image for hero
