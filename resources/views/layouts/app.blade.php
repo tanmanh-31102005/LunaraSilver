@@ -105,30 +105,88 @@
     <div class="mega-menu-backdrop" id="megaMenuBackdrop" hidden></div>
 
     <div class="offcanvas offcanvas-start mobile-navigation" tabindex="-1" id="mobileNavigation" aria-labelledby="mobileNavigationTitle">
-        <div class="offcanvas-header">
-            <h2 class="offcanvas-title h4 mb-0" id="mobileNavigationTitle">Lunara Silver</h2>
+        <div class="offcanvas-header border-bottom">
+            <div class="d-flex align-items-center gap-2">
+                <img src="{{ route('media.show', ['path' => 'lunara-logo-dark.svg']) }}" alt="Lunara Silver" width="130" height="42" style="height: 36px; width: auto;">
+            </div>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Đóng menu"></button>
         </div>
-        <nav class="offcanvas-body" aria-label="Điều hướng di động">
+        <nav class="offcanvas-body p-3" aria-label="Điều hướng di động">
+            {{-- SEO Brand Trust Badge --}}
+            <div class="mobile-nav-seo-badge mb-3 p-2 rounded-2 bg-light border d-flex align-items-center gap-2">
+                <span class="badge bg-dark text-white rounded-pill px-2 py-1" style="font-size: 0.65rem; letter-spacing: 0.05em;">TOP 1</span>
+                <div class="small lh-sm">
+                    <strong class="d-block text-dark" style="font-size: 0.82rem;">Trang Sức Bạc 925 Chuẩn Quốc Tế</strong>
+                    <span class="text-muted" style="font-size: 0.72rem;">Bảo hành &amp; đánh sáng trọn đời</span>
+                </div>
+            </div>
+
+            {{-- Categories Section (Standardized SEO) --}}
             <div class="mobile-nav-group mb-2">
                 <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
-                    <a href="{{ route('products.index') }}" class="fw-semibold text-dark text-decoration-none">TRANG SỨC</a>
-                    <button class="btn btn-sm btn-link text-muted p-0 text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#mobileTrangSucCollapse" aria-expanded="false" aria-controls="mobileTrangSucCollapse">
+                    <span class="fw-bold text-dark small text-uppercase" style="letter-spacing: 0.08em; font-size: 0.78rem;">DANH MỤC TRANG SỨC BẠC</span>
+                    <button class="btn btn-sm btn-link text-muted p-0 text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#mobileTrangSucCollapse" aria-expanded="true" aria-controls="mobileTrangSucCollapse">
                         <i class="bi bi-chevron-down"></i>
                     </button>
                 </div>
-                <div class="collapse show mt-2 ps-2" id="mobileTrangSucCollapse">
-                    <a href="{{ route('products.index') }}" class="d-block py-1 text-muted text-decoration-none small">✦ Tất cả sản phẩm</a>
+                <div class="collapse show mt-2" id="mobileTrangSucCollapse">
+                    <a href="{{ route('products.index') }}" class="mobile-nav-cat-item d-flex align-items-center justify-content-between py-2 px-2 rounded text-decoration-none {{ request()->routeIs('products.index') && !request()->route('category') ? 'bg-light fw-bold text-dark' : 'text-muted' }}">
+                        <span class="d-flex align-items-center gap-2 small">
+                            <i class="bi bi-stars text-warning"></i>
+                            Tất cả trang sức bạc 925
+                        </span>
+                        <span class="badge bg-secondary-subtle text-secondary rounded-pill" style="font-size: 0.68rem;">Khám phá</span>
+                    </a>
                     @foreach($navData['categories'] ?? [] as $mCat)
-                        <a href="{{ $mCat['url'] }}" class="d-block py-1 text-muted text-decoration-none small">• {{ $mCat['name'] }}</a>
+                        @php
+                            $catIcon = match($mCat['slug']) {
+                                'day-chuyen' => 'bi-gem',
+                                'nhan' => 'bi-circle',
+                                'vong-tay' => 'bi-infinity',
+                                'bo-trang-suc' => 'bi-stars',
+                                'set-qua-tang' => 'bi-gift',
+                                default => 'bi-sparkles'
+                            };
+                        @endphp
+                        <a href="{{ $mCat['url'] }}" class="mobile-nav-cat-item d-flex align-items-center justify-content-between py-2 px-2 rounded text-decoration-none {{ request()->is('danh-muc/' . $mCat['slug']) ? 'bg-light fw-bold text-dark' : 'text-dark' }}">
+                            <span class="d-flex align-items-center gap-2 small">
+                                <i class="bi {{ $catIcon }} text-muted"></i>
+                                {{ $mCat['display_name'] ?? $mCat['name'] }}
+                            </span>
+                            <span class="badge bg-light text-muted border rounded-pill" style="font-size: 0.68rem;">{{ $mCat['count'] }} sp</span>
+                        </a>
                     @endforeach
                 </div>
             </div>
 
-            <a href="{{ route('products.category', 'bo-trang-suc') }}" class="d-block py-2 border-bottom text-dark fw-semibold text-decoration-none">BỘ SƯU TẬP</a>
-            <a href="{{ route('products.category', 'set-qua-tang') }}" class="d-block py-2 border-bottom text-dark fw-semibold text-decoration-none">QUÀ TẶNG</a>
-            <a href="{{ route('blog.index') }}" class="d-block py-2 border-bottom text-dark fw-semibold text-decoration-none">NHẬT KÝ LUNARA (BLOG)</a>
-            <a href="{{ route('about') }}" class="d-block py-2 border-bottom text-dark fw-semibold text-decoration-none {{ request()->routeIs('about') ? 'active' : '' }}">GIỚI THIỆU</a>
+            <a href="{{ route('products.category', 'bo-trang-suc') }}" class="d-flex align-items-center gap-2 py-2 border-bottom text-dark fw-semibold text-decoration-none small">
+                <i class="bi bi-collection text-muted"></i>
+                BỘ SƯU TẬP TRANG SỨC BẠC
+            </a>
+            <a href="{{ route('products.category', 'set-qua-tang') }}" class="d-flex align-items-center gap-2 py-2 border-bottom text-dark fw-semibold text-decoration-none small">
+                <i class="bi bi-gift text-muted"></i>
+                SET QUÀ TẶNG BẠC CAO CẤP
+            </a>
+            <a href="{{ route('blog.index') }}" class="d-flex align-items-center gap-2 py-2 border-bottom text-dark fw-semibold text-decoration-none small">
+                <i class="bi bi-journal-text text-muted"></i>
+                NHẬT KÝ LUNARA (BLOG)
+            </a>
+            <a href="{{ route('about') }}" class="d-flex align-items-center gap-2 py-2 border-bottom text-dark fw-semibold text-decoration-none small {{ request()->routeIs('about') ? 'active' : '' }}">
+                <i class="bi bi-info-circle text-muted"></i>
+                GIỚI THIỆU THƯƠNG HIỆU
+            </a>
+
+            {{-- Popular SEO Keywords in Mobile Menu --}}
+            <div class="mobile-nav-keywords my-3 pt-2">
+                <span class="d-block text-muted text-uppercase mb-2 fw-semibold" style="font-size: 0.68rem; letter-spacing: 0.08em;">Từ khóa tìm kiếm phổ biến:</span>
+                <div class="d-flex flex-wrap gap-1">
+                    <a href="{{ route('products.index', ['q' => 'trang sức bạc top 1']) }}" class="badge bg-light text-dark border text-decoration-none fw-normal py-1 px-2" style="font-size: 0.72rem;">Trang sức bạc top 1</a>
+                    <a href="{{ route('products.category', 'day-chuyen') }}" class="badge bg-light text-dark border text-decoration-none fw-normal py-1 px-2" style="font-size: 0.72rem;">Dây chuyền bạc nữ</a>
+                    <a href="{{ route('products.category', 'nhan') }}" class="badge bg-light text-dark border text-decoration-none fw-normal py-1 px-2" style="font-size: 0.72rem;">Nhẫn bạc 925</a>
+                    <a href="{{ route('products.category', 'vong-tay') }}" class="badge bg-light text-dark border text-decoration-none fw-normal py-1 px-2" style="font-size: 0.72rem;">Lắc tay bạc</a>
+                    <a href="{{ route('products.index', ['q' => 'nhẫn bạc đôi']) }}" class="badge bg-light text-dark border text-decoration-none fw-normal py-1 px-2" style="font-size: 0.72rem;">Nhẫn bạc đôi</a>
+                </div>
+            </div>
 
             <div class="mobile-navigation__divider my-3"></div>
             @auth
@@ -136,14 +194,14 @@
                     <span class="text-muted small d-block">Đăng nhập bởi:</span>
                     <strong class="text-dark">{{ auth()->user()->name }}</strong>
                 </div>
-                <a href="{{ route('account.dashboard') }}"><i class="bi bi-person me-2"></i>Tài khoản của tôi</a>
-                <a href="{{ route('account.orders.index') }}"><i class="bi bi-box-seam me-2"></i>Đơn mua của tôi</a>
-                <form method="post" action="{{ route('logout') }}" class="mt-2">@csrf<button type="submit" class="text-danger w-100 text-start bg-transparent border-0 p-0"><i class="bi bi-box-arrow-right me-2"></i>Đăng xuất</button></form>
+                <a href="{{ route('account.dashboard') }}" class="d-flex align-items-center py-2 text-decoration-none text-dark small"><i class="bi bi-person me-2"></i>Tài khoản của tôi</a>
+                <a href="{{ route('account.orders.index') }}" class="d-flex align-items-center py-2 text-decoration-none text-dark small"><i class="bi bi-box-seam me-2"></i>Đơn mua của tôi</a>
+                <form method="post" action="{{ route('logout') }}" class="mt-2">@csrf<button type="submit" class="text-danger w-100 text-start bg-transparent border-0 p-0 small"><i class="bi bi-box-arrow-right me-2"></i>Đăng xuất</button></form>
             @else
-                <a href="{{ route('login') }}"><i class="bi bi-box-arrow-in-right me-2"></i>Đăng nhập</a>
-                <a href="{{ route('register') }}"><i class="bi bi-person-plus me-2"></i>Đăng ký tài khoản</a>
+                <a href="{{ route('login') }}" class="d-flex align-items-center py-2 text-decoration-none text-dark small"><i class="bi bi-box-arrow-in-right me-2"></i>Đăng nhập</a>
+                <a href="{{ route('register') }}" class="d-flex align-items-center py-2 text-decoration-none text-dark small"><i class="bi bi-person-plus me-2"></i>Đăng ký tài khoản</a>
             @endauth
-            <a href="{{ route('account.wishlist') }}" class="mt-2"><i class="bi bi-heart me-2"></i>Yêu thích <span class="badge bg-dark rounded-pill ms-1" data-wishlist-count>{{ $headerWishlistCount ?? 0 }}</span></a>
+            <a href="{{ route('account.wishlist') }}" class="d-flex align-items-center py-2 text-decoration-none text-dark small mt-1"><i class="bi bi-heart me-2"></i>Yêu thích <span class="badge bg-dark rounded-pill ms-auto" data-wishlist-count>{{ $headerWishlistCount ?? 0 }}</span></a>
         </nav>
     </div>
 
@@ -257,6 +315,37 @@
         </div>
     </footer>
     <x-toast-container />
+
+    {{-- Mobile App Sticky Bottom Bar --}}
+    <nav class="mobile-bottom-bar d-lg-none" aria-label="Thanh điều hướng di động">
+        <a href="{{ route('home') }}" class="mobile-bottom-bar__item {{ request()->routeIs('home') ? 'active' : '' }}">
+            <i class="bi bi-house{{ request()->routeIs('home') ? '-door-fill' : '-door' }}"></i>
+            <span>Trang chủ</span>
+        </a>
+        <button type="button" class="mobile-bottom-bar__item" data-bs-toggle="offcanvas" data-bs-target="#mobileNavigation" aria-controls="mobileNavigation">
+            <i class="bi bi-grid-fill"></i>
+            <span>Danh mục</span>
+        </button>
+        <a href="{{ route('account.wishlist') }}" class="mobile-bottom-bar__item {{ request()->routeIs('account.wishlist') ? 'active' : '' }}">
+            <div class="position-relative d-inline-block">
+                <i class="bi bi-heart{{ request()->routeIs('account.wishlist') ? '-fill text-danger' : '' }}"></i>
+                <span class="mobile-bottom-bar__badge {{ ($headerWishlistCount ?? 0) > 0 ? '' : 'd-none' }}" data-wishlist-count>{{ $headerWishlistCount ?? 0 }}</span>
+            </div>
+            <span>Yêu thích</span>
+        </a>
+        <button type="button" class="mobile-bottom-bar__item cart-trigger" data-bs-toggle="offcanvas" data-bs-target="#miniCart" aria-controls="miniCart">
+            <div class="position-relative d-inline-block">
+                <i class="bi bi-bag"></i>
+                <span class="mobile-bottom-bar__badge" data-cart-count>{{ $headerCart['cart_count'] ?? 0 }}</span>
+            </div>
+            <span>Giỏ hàng</span>
+        </button>
+        <a href="{{ auth()->check() ? route('account.dashboard') : route('login') }}" class="mobile-bottom-bar__item {{ request()->routeIs('account.*') || request()->routeIs('login') ? 'active' : '' }}">
+            <i class="bi bi-person{{ auth()->check() ? '-check-fill' : '' }}"></i>
+            <span>{{ auth()->check() ? 'Tài khoản' : 'Đăng nhập' }}</span>
+        </a>
+    </nav>
+
     @include('partials.support_widget')
     @stack('scripts')
 </body>

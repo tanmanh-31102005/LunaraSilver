@@ -15,6 +15,7 @@ FILES_TO_UPLOAD = [
     'diag.php',
 
     # Views
+    'resources/views/home.blade.php',
     'resources/views/layouts/app.blade.php',
     'resources/views/admin/layouts/app.blade.php',
     'resources/views/components/hero-slider.blade.php',
@@ -27,7 +28,7 @@ FILES_TO_UPLOAD = [
 
     # Vite build assets
     'public/build/manifest.json',
-    'public/build/assets/app-EAhN-Jnr.css',
+    'public/build/assets/app-BDll23MJ.css',
     'public/build/assets/admin-D6rjyDK-.css',
     'public/build/assets/app-D9FL5RAx.js',
 

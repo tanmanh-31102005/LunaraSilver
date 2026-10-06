@@ -15,6 +15,38 @@
     <section class="home-section categories-section" aria-labelledby="categories-title">
         <div class="lunara-container">
             <x-section-heading eyebrow="DANH MỤC TRANG SỨC BẠC 925" title="Khám phá dấu ấn phong cách của riêng bạn" description="Tuyển chọn trang sức bạc nữ, nhẫn bạc đôi, dây chuyền bạc và lắc tay bạc thiết kế độc quyền." id="categories-title" />
+
+            {{-- Mobile App Quick Category Rail (SEO Standardized) --}}
+            <div class="mobile-cat-rail d-lg-none" aria-label="Danh mục bạc 925 chuẩn SEO">
+                <div class="mobile-cat-rail__header d-flex justify-content-between align-items-center mb-2 px-1">
+                    <span class="text-uppercase fw-bold text-muted small" style="font-size: 0.72rem; letter-spacing: 0.08em;"><i class="bi bi-stars text-warning me-1"></i>DANH MỤC NỔI BẬT</span>
+                    <a href="{{ route('products.index') }}" class="small text-decoration-none text-muted" style="font-size: 0.75rem;">Xem tất cả <i class="bi bi-chevron-right"></i></a>
+                </div>
+                <div class="mobile-cat-rail__track" tabindex="0" role="region" aria-label="Lướt nhanh danh mục bạc 925">
+                    @foreach($categories as $category)
+                        <a href="{{ route('products.category', $category->slug) }}" class="mobile-cat-rail__card">
+                            <div class="mobile-cat-rail__thumb-wrap">
+                                @if(!empty($category->preview_image))
+                                    <img src="{{ $category->preview_image }}" alt="{{ $category->seo_display_name ?? $category->name }}" width="64" height="64" loading="lazy" class="mobile-cat-rail__thumb">
+                                @else
+                                    <div class="mobile-cat-rail__icon-placeholder">
+                                        <i class="bi bi-gem"></i>
+                                    </div>
+                                @endif
+                                <span class="mobile-cat-rail__count-badge">{{ $category->products_count }}</span>
+                            </div>
+                            <span class="mobile-cat-rail__label">{{ $category->seo_display_name ?? $category->name }}</span>
+                        </a>
+                    @endforeach
+                    <a href="{{ route('products.index') }}" class="mobile-cat-rail__card mobile-cat-rail__card--all">
+                        <div class="mobile-cat-rail__thumb-wrap mobile-cat-rail__thumb-wrap--all">
+                            <i class="bi bi-arrow-right"></i>
+                        </div>
+                        <span class="mobile-cat-rail__label">Tất cả sản phẩm</span>
+                    </a>
+                </div>
+            </div>
+
             <div class="category-grid">
                 @forelse($categories as $category)
                     <a class="category-tile" href="{{ route('products.category', $category->slug) }}">
@@ -26,6 +58,9 @@
                         </div>
                         <span class="category-tile__number">0{{ $loop->iteration }}</span>
                         <div class="category-tile__content">
+                            @if(!empty($category->popular_keywords[0]))
+                                <span class="category-tile__seo-badge">{{ $category->popular_keywords[0] }}</span>
+                            @endif
                             <h3 class="category-tile__title">{{ $category->seo_display_name ?? $category->name }}</h3>
                             <span class="category-tile__count">{{ $category->products_count }} thiết kế bạc 925</span>
                         </div>
