@@ -29,6 +29,8 @@
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
+        <env name="VNPAY_TMN_CODE" value="7OO2Y0S8"/>
+        <env name="VNPAY_HASH_SECRET" value="TRPSTTTYPHQWBATDQWCUWMANEWXLZMGE"/>
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
