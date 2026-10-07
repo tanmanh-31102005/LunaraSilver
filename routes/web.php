@@ -9,9 +9,13 @@ use App\Http\Controllers\Account\ProfileController;
 use App\Http\Controllers\Account\ReviewController as AccountReviewController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\CouponController as AdminCouponController;
+use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\ExportController as AdminExportController;
 use App\Http\Controllers\Admin\FaqController as AdminFaqController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\AdminSearchController;
+
 use App\Http\Controllers\Admin\PostCategoryController as AdminPostCategoryController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
@@ -181,4 +185,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('posts/{post}/toggle-feature', [AdminPostController::class, 'toggleFeature'])->name('posts.toggle-feature');
     Route::resource('posts', AdminPostController::class);
     Route::resource('post-categories', AdminPostCategoryController::class)->except(['show']);
+
+    // Customer Directory & Customer 360 (Phase 21)
+    Route::get('customers', [AdminCustomerController::class, 'index'])->name('customers.index');
+    Route::get('customers/{user}', [AdminCustomerController::class, 'show'])->whereNumber('user')->name('customers.show');
+
+    // Global Admin Command Palette Search (Phase 21)
+    Route::get('search/global', [AdminSearchController::class, 'search'])->name('search.global');
+
+    // Data Export Center (Phase 21)
+    Route::get('export/{type}', [AdminExportController::class, 'export'])->name('export');
 });
+

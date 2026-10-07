@@ -104,6 +104,13 @@
 
                 <div class="admin-nav-group">
                     <div class="admin-nav-group__title">KHÁCH HÀNG</div>
+                    <a href="{{ route('admin.customers.index') }}"
+                       class="admin-nav-item {{ request()->routeIs('admin.customers.*') ? 'admin-nav-item--active' : '' }}"
+                       data-bs-toggle="tooltip" data-bs-placement="right" title="Quản lý khách hàng">
+                        <i class="bi bi-people"></i>
+                        <span>Khách hàng</span>
+                    </a>
+
                     <a href="{{ route('admin.reviews.index') }}"
                        class="admin-nav-item {{ request()->routeIs('admin.reviews.*') ? 'admin-nav-item--active' : '' }}"
                        data-bs-toggle="tooltip" data-bs-placement="right" title="Đánh giá sản phẩm">
@@ -197,6 +204,11 @@
 
                     <div class="admin-nav-group">
                         <div class="admin-nav-group__title text-white-50">KHÁCH HÀNG</div>
+                        <a href="{{ route('admin.customers.index') }}" class="admin-nav-item {{ request()->routeIs('admin.customers.*') ? 'admin-nav-item--active' : '' }}">
+                            <i class="bi bi-people"></i>
+                            <span>Khách hàng</span>
+                        </a>
+
                         <a href="{{ route('admin.reviews.index') }}" class="admin-nav-item {{ request()->routeIs('admin.reviews.*') ? 'admin-nav-item--active' : '' }}">
                             <i class="bi bi-star"></i>
                             <span>Đánh giá</span>
@@ -243,6 +255,17 @@
                         </ol>
                         <h1 class="h6 mb-0 fw-bold" style="letter-spacing: -0.01em;">@yield('page_title', 'Dashboard')</h1>
                     </div>
+                </div>
+
+                {{-- Global Search Bar Trigger --}}
+                <div class="admin-topbar__search mx-2 mx-md-3 flex-grow-1" style="max-width: 380px;">
+                    <button type="button" class="btn btn-sm btn-light border text-start w-100 d-flex align-items-center justify-content-between px-3 py-1 text-muted rounded-pill shadow-none" id="adminGlobalSearchTrigger" aria-label="Tìm kiếm toàn hệ thống (Ctrl+K)" style="background: #f8fafc; font-size: 0.82rem; height: 36px;">
+                        <span class="d-flex align-items-center gap-2 text-truncate">
+                            <i class="bi bi-search text-muted"></i>
+                            <span class="text-truncate">Tìm đơn hàng, SKU, khách hàng...</span>
+                        </span>
+                        <kbd class="badge bg-secondary-subtle text-secondary border px-1 py-0 fw-normal d-none d-sm-inline" style="font-size: 0.68rem;">Ctrl K</kbd>
+                    </button>
                 </div>
 
                 <div class="admin-topbar__right">
@@ -368,6 +391,34 @@
         </div>
     </div>
 
+    {{-- Global Search Command Palette Modal (Ctrl + K) --}}
+    <div class="modal fade" id="adminGlobalSearchModal" tabindex="-1" aria-labelledby="adminGlobalSearchModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+            <div class="modal-content border-0 shadow-lg rounded-3" style="overflow: hidden;">
+                <div class="modal-header p-3 border-bottom" style="background: #f8fafc;">
+                    <div class="input-group input-group-lg border-0 shadow-none">
+                        <span class="input-group-text bg-transparent border-0 pe-2"><i class="bi bi-search text-primary fs-5"></i></span>
+                        <input type="text" class="form-control bg-transparent border-0 shadow-none fs-6" id="adminGlobalSearchInput" placeholder="Nhập mã đơn (LNS-), SKU, email, tên khách hàng, số điện thoại..." autocomplete="off">
+                        <button class="btn btn-link text-muted p-0 text-decoration-none" type="button" data-bs-dismiss="modal" aria-label="Đóng"><kbd class="bg-white border text-muted px-2 py-1 small">ESC</kbd></button>
+                    </div>
+                </div>
+                <div class="modal-body p-3" id="adminGlobalSearchResults" style="max-height: 480px; min-height: 200px;">
+                    <div class="text-center py-5 text-muted small" id="adminGlobalSearchEmpty">
+                        <i class="bi bi-binoculars fs-1 d-block mb-2 text-muted opacity-50"></i>
+                        <span class="fw-medium">Tìm nhanh dữ liệu vận hành toàn hệ thống</span>
+                        <div class="mt-2 text-muted-50" style="font-size: 0.78rem;">Hỗ trợ: Mã đơn hàng (LNS-), Mã SKU, Tên/Email khách hàng, Mã yêu cầu hỗ trợ (SUP-)...</div>
+                    </div>
+                    <div id="adminGlobalSearchResultsContainer" class="d-none"></div>
+                </div>
+                <div class="modal-footer py-2 px-3 bg-light border-top d-flex justify-content-between align-items-center">
+                    <span class="text-muted small" style="font-size: 0.75rem;"><kbd class="px-1 py-0">↑</kbd> <kbd class="px-1 py-0">↓</kbd> Di chuyển • <kbd class="px-1 py-0">Enter</kbd> Chọn • <kbd class="px-1 py-0">ESC</kbd> Đóng</span>
+                    <span class="badge bg-secondary-subtle text-secondary border">Lunara Admin Intelligence</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Persistent Collapsible Sidebar
@@ -439,8 +490,164 @@
                 const modal = new bootstrap.Modal(modalEl);
                 modal.show();
             };
+
+            // Phase 21: Global Command Palette Search (Ctrl + K / Cmd + K)
+            const searchModalEl = document.getElementById('adminGlobalSearchModal');
+            const searchTriggerBtn = document.getElementById('adminGlobalSearchTrigger');
+            const searchInput = document.getElementById('adminGlobalSearchInput');
+            const resultsEmpty = document.getElementById('adminGlobalSearchEmpty');
+            const resultsContainer = document.getElementById('adminGlobalSearchResultsContainer');
+
+            let searchModalInstance = null;
+            if (searchModalEl) {
+                searchModalInstance = new bootstrap.Modal(searchModalEl);
+
+                searchModalEl.addEventListener('shown.bs.modal', function() {
+                    if (searchInput) {
+                        searchInput.focus();
+                        searchInput.select();
+                    }
+                });
+            }
+
+            if (searchTriggerBtn && searchModalInstance) {
+                searchTriggerBtn.addEventListener('click', function() {
+                    searchModalInstance.show();
+                });
+            }
+
+            // Global keyboard shortcuts (Ctrl+K or Cmd+K)
+            document.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                    e.preventDefault();
+                    if (searchModalInstance) {
+                        searchModalInstance.show();
+                    }
+                }
+            });
+
+            let searchDebounceTimer = null;
+            let currentSelectedIndex = -1;
+
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const q = searchInput.value.trim();
+                    clearTimeout(searchDebounceTimer);
+
+                    if (q.length < 2) {
+                        resultsContainer.innerHTML = '';
+                        resultsContainer.classList.add('d-none');
+                        resultsEmpty.classList.remove('d-none');
+                        return;
+                    }
+
+                    searchDebounceTimer = setTimeout(function() {
+                        fetch('{{ route("admin.search.global") }}?q=' + encodeURIComponent(q), {
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            renderSearchResults(data.groups || []);
+                        })
+                        .catch(() => {
+                            resultsContainer.innerHTML = '<div class="text-danger small p-3 text-center">Lỗi khi tìm kiếm dữ liệu.</div>';
+                            resultsContainer.classList.remove('d-none');
+                            resultsEmpty.classList.add('d-none');
+                        });
+                    }, 250);
+                });
+
+                // Keyboard arrow navigation & Enter
+                searchInput.addEventListener('keydown', function(e) {
+                    const items = resultsContainer.querySelectorAll('.admin-search-item');
+                    if (!items.length) return;
+
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        currentSelectedIndex = (currentSelectedIndex + 1) % items.length;
+                        updateSelectedItem(items);
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        currentSelectedIndex = (currentSelectedIndex - 1 + items.length) % items.length;
+                        updateSelectedItem(items);
+                    } else if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (currentSelectedIndex >= 0 && items[currentSelectedIndex]) {
+                            items[currentSelectedIndex].click();
+                        } else if (items.length > 0) {
+                            items[0].click();
+                        }
+                    }
+                });
+            }
+
+            function updateSelectedItem(items) {
+                items.forEach((item, idx) => {
+                    if (idx === currentSelectedIndex) {
+                        item.classList.add('active', 'bg-light');
+                        item.scrollIntoView({ block: 'nearest' });
+                    } else {
+                        item.classList.remove('active', 'bg-light');
+                    }
+                });
+            }
+
+            function renderSearchResults(groups) {
+                currentSelectedIndex = -1;
+                if (!groups.length) {
+                    resultsEmpty.classList.add('d-none');
+                    resultsContainer.classList.remove('d-none');
+                    resultsContainer.innerHTML = '<div class="text-center py-4 text-muted small">Không tìm thấy kết quả phù hợp.</div>';
+                    return;
+                }
+
+                resultsEmpty.classList.add('d-none');
+                resultsContainer.classList.remove('d-none');
+
+                let html = '';
+                groups.forEach(group => {
+                    html += `
+                        <div class="admin-search-group mb-3">
+                            <div class="d-flex align-items-center gap-2 px-2 py-1 text-muted text-uppercase fw-bold border-bottom" style="font-size: 0.68rem; letter-spacing: 0.08em;">
+                                <i class="bi ${group.icon}"></i>
+                                <span>${group.group}</span>
+                            </div>
+                            <div class="list-group list-group-flush mt-1">
+                    `;
+
+                    group.items.forEach(item => {
+                        const badgeHtml = item.badge ? `<span class="badge ${item.badge_class || 'bg-secondary'} rounded-pill" style="font-size: 0.68rem;">${item.badge}</span>` : '';
+                        html += `
+                            <a href="${item.url}" class="admin-search-item list-group-item list-group-item-action border-0 rounded-2 px-3 py-2 d-flex align-items-center justify-content-between text-decoration-none">
+                                <div class="me-2 text-truncate">
+                                    <div class="fw-semibold text-dark small text-truncate">${escapeHtml(item.title)}</div>
+                                    <div class="text-muted text-truncate" style="font-size: 0.75rem;">${escapeHtml(item.subtitle)}</div>
+                                </div>
+                                <div>${badgeHtml}</div>
+                            </a>
+                        `;
+                    });
+
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                });
+
+                resultsContainer.innerHTML = html;
+            }
+
+            function escapeHtml(text) {
+                if (!text) return '';
+                const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+                return text.toString().replace(/[&<>"']/g, function(m) { return map[m]; });
+            }
         });
     </script>
     @stack('scripts')
 </body>
 </html>
+

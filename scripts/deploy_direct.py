@@ -8,16 +8,34 @@ FTP_PASS = 'manh31102005'
 REMOTE_BASE = 'htdocs'
 
 FILES_TO_UPLOAD = [
-    # Controllers & Models
+    # Routes & Core Models
+    'routes/web.php',
+    'app/Models/User.php',
     'app/Http/Controllers/MediaController.php',
     'app/Models/Post.php',
     'database/seeders/BlogSeeder.php',
     'diag.php',
 
+    # Admin Controllers
+    'app/Http/Controllers/Admin/DashboardController.php',
+    'app/Http/Controllers/Admin/CustomerController.php',
+    'app/Http/Controllers/Admin/AdminSearchController.php',
+    'app/Http/Controllers/Admin/ExportController.php',
+
+    # Admin Services
+    'app/Services/Admin/AnalyticsService.php',
+    'app/Services/Admin/AttentionService.php',
+    'app/Services/Admin/CustomerInsightsService.php',
+    'app/Services/Admin/AdminSearchService.php',
+    'app/Services/Admin/ExportService.php',
+
     # Views
     'resources/views/home.blade.php',
     'resources/views/layouts/app.blade.php',
     'resources/views/admin/layouts/app.blade.php',
+    'resources/views/admin/dashboard.blade.php',
+    'resources/views/admin/customers/index.blade.php',
+    'resources/views/admin/customers/show.blade.php',
     'resources/views/components/hero-slider.blade.php',
     'resources/views/components/mega-menu.blade.php',
     'resources/views/emails/layout.blade.php',
@@ -31,16 +49,6 @@ FILES_TO_UPLOAD = [
     'public/build/assets/app-BCoycH2Q.css',
     'public/build/assets/admin-D6rjyDK-.css',
     'public/build/assets/app-D9FL5RAx.js',
-
-    # WebP Previews
-    'public/media-previews/hero.webp',
-    'public/media-previews/hero-1.webp',
-    'public/media-previews/hero-2.webp',
-    'public/media-previews/hero-3.webp',
-    'public/media-previews/aaa25111e73d445cc91fe54c2f69711d0770dc9b.webp',
-    'public/media-previews/8864fea8744d49c046292b2ff57fc82c1d690a10.webp',
-    'public/media-previews/afb9c5f571f7ac059df63464ff72977420d18522.webp',
-    'public/media-previews/4adeae886168f4902e20fa35235e3a24a1ad1ca5.webp',
 ]
 
 def ensure_remote_dir(ftp, remote_dir):
