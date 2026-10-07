@@ -8,6 +8,10 @@ FTP_PASS = 'manh31102005'
 REMOTE_BASE = 'htdocs'
 
 FILES_TO_UPLOAD = [
+    # Bootstrap & Middleware
+    'bootstrap/app.php',
+    'app/Http/Middleware/SecurityHeadersMiddleware.php',
+
     # Routes & Core Models
     'routes/web.php',
     'app/Models/User.php',
@@ -16,39 +20,62 @@ FILES_TO_UPLOAD = [
     'database/seeders/BlogSeeder.php',
     'diag.php',
 
-    # Admin Controllers
+    # Admin Controllers & Services
     'app/Http/Controllers/Admin/DashboardController.php',
     'app/Http/Controllers/Admin/CustomerController.php',
     'app/Http/Controllers/Admin/AdminSearchController.php',
     'app/Http/Controllers/Admin/ExportController.php',
-
-    # Admin Services
     'app/Services/Admin/AnalyticsService.php',
     'app/Services/Admin/AttentionService.php',
     'app/Services/Admin/CustomerInsightsService.php',
     'app/Services/Admin/AdminSearchService.php',
     'app/Services/Admin/ExportService.php',
 
-    # Views
+    # Storefront & Shared Views
     'resources/views/home.blade.php',
     'resources/views/layouts/app.blade.php',
+    'resources/views/components/hero-slider.blade.php',
+    'resources/views/components/mega-menu.blade.php',
+    'resources/views/components/search-overlay.blade.php',
+    'resources/views/components/cart-drawer.blade.php',
+    'resources/views/products/_reviews_section.blade.php',
+    'resources/views/emails/layout.blade.php',
+
+    # Admin Views & Customer Tabs
     'resources/views/admin/layouts/app.blade.php',
     'resources/views/admin/dashboard.blade.php',
     'resources/views/admin/customers/index.blade.php',
     'resources/views/admin/customers/show.blade.php',
-    'resources/views/components/hero-slider.blade.php',
-    'resources/views/components/mega-menu.blade.php',
-    'resources/views/emails/layout.blade.php',
+    'resources/views/admin/customers/tabs/orders.blade.php',
+    'resources/views/admin/customers/tabs/reviews.blade.php',
+    'resources/views/admin/customers/tabs/support.blade.php',
+    'resources/views/admin/customers/tabs/coupons.blade.php',
+    'resources/views/admin/customers/tabs/addresses.blade.php',
 
-    # CSS & Tokens
+    # Custom Error Pages (Phase 23)
+    'resources/views/errors/layout.blade.php',
+    'resources/views/errors/404.blade.php',
+    'resources/views/errors/403.blade.php',
+    'resources/views/errors/419.blade.php',
+    'resources/views/errors/429.blade.php',
+    'resources/views/errors/500.blade.php',
+    'resources/views/errors/503.blade.php',
+
+    # Documentation & Migrations
+    'docs/backup_and_recovery.md',
+    'database/migrations/2026_10_07_000001_add_performance_indexes_for_phase21_5.php',
+
+    # CSS & JS Source
     'resources/css/tokens.css',
     'resources/css/app.css',
+    'resources/js/app.js',
+    'resources/js/search-overlay.js',
 
-    # Vite build assets
+    # Vite build assets (Phase 23 compilation)
     'public/build/manifest.json',
-    'public/build/assets/app-BCoycH2Q.css',
+    'public/build/assets/app-DNC1TOfE.css',
     'public/build/assets/admin-D6rjyDK-.css',
-    'public/build/assets/app-D9FL5RAx.js',
+    'public/build/assets/app-e57kuO4T.js',
 ]
 
 def ensure_remote_dir(ftp, remote_dir):
@@ -107,7 +134,7 @@ def main():
     print("\nTriggering cache clear & post synchronization via diag.php...")
     try:
         req = urllib.request.Request(
-            'https://lunarasilver.infinityfreeapp.com/diag.php?clear_cache=1&sync_posts=1',
+            'https://lunarasilver.infinityfreeapp.com/diag.php?clear_cache=1&sync_posts=1&migrate_indexes=1',
             headers={'User-Agent': 'Mozilla/5.0'}
         )
         with urllib.request.urlopen(req, timeout=15) as res:
@@ -116,6 +143,8 @@ def main():
                 print("SUCCESS: Cache cleared on InfinityFree!")
             if 'Đã đồng bộ' in html:
                 print("SUCCESS: Database posts synced to banner2.jpg / banner3.jpg!")
+            if 'indexes hiệu năng' in html:
+                print("SUCCESS: Performance indexes applied to production DB!")
             else:
                 print("Diag response:", html[:300])
     except Exception as e:

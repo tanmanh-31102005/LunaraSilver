@@ -17,7 +17,7 @@
             <div class="col-md-4 text-center border-md-end">
                 @if($ratingSummary['total'] > 0)
                     <div class="display-4 fw-serif text-dark mb-1">{{ number_format($ratingSummary['average'], 1) }}</div>
-                    <div class="reviews-stars-row text-warning fs-5 mb-2">
+                    <div class="reviews-stars-row text-warning fs-5 mb-2" role="img" aria-label="Đánh giá trung bình: {{ number_format($ratingSummary['average'], 1) }} trên 5 sao">
                         @for($i = 1; $i <= 5; $i++)
                             @if($ratingSummary['average'] >= $i)
                                 <i class="bi bi-star-fill"></i>
@@ -30,7 +30,7 @@
                     </div>
                     <p class="text-muted small mb-0">Dựa trên <strong>{{ $ratingSummary['total'] }}</strong> đánh giá thực tế</p>
                 @else
-                    <div class="reviews-stars-row text-muted fs-4 mb-2">
+                    <div class="reviews-stars-row text-muted fs-4 mb-2" role="img" aria-label="Chưa có đánh giá sao">
                         <i class="bi bi-star"></i><i class="bi bi-star"></i><i class="bi bi-star"></i><i class="bi bi-star"></i><i class="bi bi-star"></i>
                     </div>
                     <p class="fw-medium text-dark mb-1">Chưa có đánh giá</p>
@@ -199,7 +199,7 @@
                 <article class="review-card p-3 p-md-4 rounded border bg-white shadow-xs">
                     <div class="d-flex justify-content-between align-items-start mb-2">
                         <div>
-                            <div class="review-card__stars text-warning fs-6 mb-1">
+                            <div class="review-card__stars text-warning fs-6 mb-1" role="img" aria-label="{{ $review->rating }} trên 5 sao">
                                 @for($i = 1; $i <= 5; $i++)
                                     <i class="bi bi-star{{ $review->rating >= $i ? '-fill' : '' }}"></i>
                                 @endfor

@@ -141,9 +141,27 @@ export function initSearchOverlay() {
     });
 
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !overlay.hasAttribute('hidden')) {
+        if (overlay.hasAttribute('hidden')) return;
+
+        if (e.key === 'Escape') {
             e.preventDefault();
             closeOverlay();
+            return;
+        }
+
+        if (e.key === 'Tab') {
+            const focusables = Array.from(overlay.querySelectorAll('button:not([disabled]), [href], input:not([disabled]):not([type="hidden"]), [tabindex]:not([tabindex="-1"])'))
+                .filter(el => el.offsetParent !== null);
+            if (focusables.length === 0) return;
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
+            }
         }
     });
 

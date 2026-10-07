@@ -27,3 +27,5 @@ test.php
 /public/diag.php
 /.claude
 ~$*
+/backup
+/scratch

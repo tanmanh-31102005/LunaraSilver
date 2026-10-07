@@ -2,6 +2,7 @@
     <div class="search-overlay__backdrop" data-search-close></div>
     <div class="search-overlay__panel">
         <div class="lunara-container">
+            <h2 id="searchOverlayTitle" class="visually-hidden">Tìm kiếm sản phẩm Lunara</h2>
             <div class="search-overlay__header">
                 <form action="{{ route('search') }}" method="get" class="search-overlay__form" id="searchOverlayForm">
                     <i class="bi bi-search search-overlay__search-icon" aria-hidden="true"></i>

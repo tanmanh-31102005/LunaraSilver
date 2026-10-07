@@ -15,7 +15,7 @@ class MediaController extends Controller
         // If file not found directly, check alternative image extensions
         if (! $file || ! is_file($file)) {
             $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-            $baseWithoutExt = pathinfo($path, PATHINFO_DIRNAME) !== '.' 
+            $baseWithoutExt = pathinfo($path, PATHINFO_DIRNAME) !== '.'
                 ? pathinfo($path, PATHINFO_DIRNAME).'/'.pathinfo($path, PATHINFO_FILENAME)
                 : pathinfo($path, PATHINFO_FILENAME);
 

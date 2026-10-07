@@ -80,7 +80,7 @@ class AnalyticsService
                 $diffDays = max(1, $start->diffInDays($end) + 1);
                 $prevEnd = $start->copy()->subSecond();
                 $prevStart = $prevEnd->copy()->subDays($diffDays - 1)->startOfDay();
-                $label = $start->format('d/m/Y') . ' - ' . $end->format('d/m/Y');
+                $label = $start->format('d/m/Y').' - '.$end->format('d/m/Y');
                 break;
 
             case '30d':
@@ -110,7 +110,7 @@ class AnalyticsService
      */
     public function getDashboardMetrics(Carbon $start, Carbon $end, Carbon $prevStart, Carbon $prevEnd): array
     {
-        $cacheKey = 'admin.dashboard.metrics.' . $start->timestamp . '.' . $end->timestamp;
+        $cacheKey = 'admin.dashboard.metrics.'.$start->timestamp.'.'.$end->timestamp;
 
         if (app()->environment('testing')) {
             Cache::forget($cacheKey);
@@ -142,7 +142,7 @@ class AnalyticsService
             $currentUnitsSold = (int) OrderItem::query()
                 ->whereHas('order', function ($q) use ($start, $end) {
                     $q->where('order_status', Order::STATUS_COMPLETED)
-                      ->whereBetween('created_at', [$start, $end]);
+                        ->whereBetween('created_at', [$start, $end]);
                 })
                 ->sum('quantity');
 
@@ -171,7 +171,7 @@ class AnalyticsService
             $prevUnitsSold = (int) OrderItem::query()
                 ->whereHas('order', function ($q) use ($prevStart, $prevEnd) {
                     $q->where('order_status', Order::STATUS_COMPLETED)
-                      ->whereBetween('created_at', [$prevStart, $prevEnd]);
+                        ->whereBetween('created_at', [$prevStart, $prevEnd]);
                 })
                 ->sum('quantity');
 
@@ -287,7 +287,7 @@ class AnalyticsService
      */
     public function getRevenueTrend(string $range, Carbon $start, Carbon $end): array
     {
-        $cacheKey = 'admin.dashboard.trend.' . $range . '.' . $start->timestamp . '.' . $end->timestamp;
+        $cacheKey = 'admin.dashboard.trend.'.$range.'.'.$start->timestamp.'.'.$end->timestamp;
 
         if (app()->environment('testing')) {
             Cache::forget($cacheKey);
@@ -356,7 +356,7 @@ class AnalyticsService
                         $actualStart = $cur->lt($start) ? $start : $cur;
                         $actualEnd = $weekEnd->gt($end) ? $end : $weekEnd;
 
-                        $labels[] = $actualStart->format('d/m') . ' - ' . $actualEnd->format('d/m');
+                        $labels[] = $actualStart->format('d/m').' - '.$actualEnd->format('d/m');
 
                         $gross = (float) Order::query()
                             ->where('order_status', Order::STATUS_COMPLETED)
@@ -389,21 +389,28 @@ class AnalyticsService
      */
     public function getOrdersByStatus(Carbon $start, Carbon $end): array
     {
-        $counts = Order::query()
-            ->selectRaw('order_status, COUNT(*) as count')
-            ->whereBetween('created_at', [$start, $end])
-            ->groupBy('order_status')
-            ->pluck('count', 'order_status');
-
-        $result = [];
-        foreach (Order::STATUSES as $status) {
-            $result[$status] = [
-                'label' => Order::STATUS_LABELS[$status] ?? ucfirst($status),
-                'count' => (int) ($counts[$status] ?? 0),
-            ];
+        $cacheKey = 'admin.dashboard.orders_status.'.$start->timestamp.'.'.$end->timestamp;
+        if (app()->environment('testing')) {
+            Cache::forget($cacheKey);
         }
 
-        return $result;
+        return Cache::remember($cacheKey, 120, function () use ($start, $end) {
+            $counts = Order::query()
+                ->selectRaw('order_status, COUNT(*) as count')
+                ->whereBetween('created_at', [$start, $end])
+                ->groupBy('order_status')
+                ->pluck('count', 'order_status');
+
+            $result = [];
+            foreach (Order::STATUSES as $status) {
+                $result[$status] = [
+                    'label' => Order::STATUS_LABELS[$status] ?? ucfirst($status),
+                    'count' => (int) ($counts[$status] ?? 0),
+                ];
+            }
+
+            return $result;
+        });
     }
 
     /**
@@ -411,30 +418,37 @@ class AnalyticsService
      */
     public function getPaymentBreakdown(Carbon $start, Carbon $end): array
     {
-        $data = Order::query()
-            ->selectRaw('payment_method, COUNT(*) as total_orders, SUM(grand_total) as total_amount')
-            ->whereBetween('created_at', [$start, $end])
-            ->groupBy('payment_method')
-            ->get()
-            ->keyBy('payment_method');
-
-        $result = [];
-        $labels = [
-            'cod' => 'Thanh toán COD',
-            'vnpay' => 'VNPay Online',
-            'bank_transfer' => 'Chuyển khoản ngân hàng',
-        ];
-
-        foreach (Order::PAYMENT_METHODS as $method) {
-            $item = $data->get($method);
-            $result[$method] = [
-                'label' => $labels[$method] ?? strtoupper($method),
-                'orders_count' => $item ? (int) $item->total_orders : 0,
-                'total_amount' => $item ? (float) $item->total_amount : 0.0,
-            ];
+        $cacheKey = 'admin.dashboard.payment.'.$start->timestamp.'.'.$end->timestamp;
+        if (app()->environment('testing')) {
+            Cache::forget($cacheKey);
         }
 
-        return $result;
+        return Cache::remember($cacheKey, 120, function () use ($start, $end) {
+            $data = Order::query()
+                ->selectRaw('payment_method, COUNT(*) as total_orders, SUM(grand_total) as total_amount')
+                ->whereBetween('created_at', [$start, $end])
+                ->groupBy('payment_method')
+                ->get()
+                ->keyBy('payment_method');
+
+            $result = [];
+            $labels = [
+                'cod' => 'Thanh toán COD',
+                'vnpay' => 'VNPay Online',
+                'bank_transfer' => 'Chuyển khoản ngân hàng',
+            ];
+
+            foreach (Order::PAYMENT_METHODS as $method) {
+                $item = $data->get($method);
+                $result[$method] = [
+                    'label' => $labels[$method] ?? strtoupper($method),
+                    'orders_count' => $item ? (int) $item->total_orders : 0,
+                    'total_amount' => $item ? (float) $item->total_amount : 0.0,
+                ];
+            }
+
+            return $result;
+        });
     }
 
     /**
@@ -443,38 +457,46 @@ class AnalyticsService
      */
     public function getTopProducts(Carbon $start, Carbon $end, string $sortBy = 'units', int $limit = 5): Collection
     {
-        $query = OrderItem::query()
-            ->select(
-                'order_items.product_id',
-                'order_items.product_name',
-                'order_items.product_sku',
-                DB::raw('SUM(order_items.quantity) as units_sold'),
-                DB::raw('SUM(order_items.subtotal) as total_revenue'),
-                DB::raw('COUNT(DISTINCT order_items.order_id) as total_orders')
-            )
-            ->join('orders', 'order_items.order_id', '=', 'orders.id')
-            ->where('orders.order_status', Order::STATUS_COMPLETED)
-            ->whereBetween('orders.created_at', [$start, $end])
-            ->groupBy('order_items.product_id', 'order_items.product_name', 'order_items.product_sku');
-
-        if ($sortBy === 'revenue') {
-            $query->orderByDesc('total_revenue');
-        } else {
-            $query->orderByDesc('units_sold');
+        $cacheKey = 'admin.dashboard.top_products.'.$sortBy.'.'.$limit.'.'.$start->timestamp.'.'.$end->timestamp;
+        if (app()->environment('testing')) {
+            Cache::forget($cacheKey);
         }
 
-        $items = $query->take($limit)->get();
+        return Cache::remember($cacheKey, 300, function () use ($start, $end, $sortBy, $limit) {
+            $query = OrderItem::query()
+                ->select(
+                    'order_items.product_id',
+                    'order_items.product_name',
+                    'order_items.product_sku',
+                    DB::raw('SUM(order_items.quantity) as units_sold'),
+                    DB::raw('SUM(order_items.subtotal) as total_revenue'),
+                    DB::raw('COUNT(DISTINCT order_items.order_id) as total_orders')
+                )
+                ->join('orders', 'order_items.order_id', '=', 'orders.id')
+                ->where('orders.order_status', Order::STATUS_COMPLETED)
+                ->whereBetween('orders.created_at', [$start, $end])
+                ->groupBy('order_items.product_id', 'order_items.product_name', 'order_items.product_sku');
 
-        // Attach current product instance (with soft-deleted / inactive support) for images & status
-        $productIds = $items->pluck('product_id')->filter()->unique();
-        $products = Product::withTrashed()->with('primaryImage')->whereIn('id', $productIds)->get()->keyBy('id');
+            if ($sortBy === 'revenue') {
+                $query->orderByDesc('total_revenue');
+            } else {
+                $query->orderByDesc('units_sold');
+            }
 
-        return $items->map(function ($item) use ($products) {
-            $prod = $products->get($item->product_id);
-            $item->product = $prod;
-            $item->is_active = $prod ? $prod->is_active : false;
-            $item->product_type = $prod ? $prod->product_type : 'single';
-            return $item;
+            $items = $query->take($limit)->get();
+
+            // Attach current product instance (with soft-deleted / inactive support) for images & status
+            $productIds = $items->pluck('product_id')->filter()->unique();
+            $products = Product::withTrashed()->with('primaryImage')->whereIn('id', $productIds)->get()->keyBy('id');
+
+            return $items->map(function ($item) use ($products) {
+                $prod = $products->get($item->product_id);
+                $item->product = $prod;
+                $item->is_active = $prod ? $prod->is_active : false;
+                $item->product_type = $prod ? $prod->product_type : 'single';
+
+                return $item;
+            });
         });
     }
 
@@ -484,90 +506,97 @@ class AnalyticsService
      */
     public function getInventoryHealth(int $limit = 8): array
     {
-        $threshold = (int) config('lunara.low_stock_threshold', 5);
-
-        // Low stock singles
-        $lowStockSingles = Product::query()
-            ->where('product_type', 'single')
-            ->where('is_active', true)
-            ->where('stock_quantity', '>', 0)
-            ->where('stock_quantity', '<=', $threshold)
-            ->with(['category', 'primaryImage'])
-            ->orderBy('stock_quantity')
-            ->take($limit)
-            ->get()
-            ->map(function (Product $p) {
-                return [
-                    'id' => $p->id,
-                    'name' => $p->name,
-                    'sku' => $p->sku,
-                    'type' => 'single',
-                    'available' => $p->stock_quantity,
-                    'status' => 'low_stock',
-                    'limiting_component' => null,
-                    'url' => route('admin.products.edit', $p),
-                ];
-            });
-
-        // Out of stock singles
-        $outOfStockSingles = Product::query()
-            ->where('product_type', 'single')
-            ->where('stock_quantity', '<=', 0)
-            ->with(['category', 'primaryImage'])
-            ->orderBy('name')
-            ->take($limit)
-            ->get()
-            ->map(function (Product $p) {
-                return [
-                    'id' => $p->id,
-                    'name' => $p->name,
-                    'sku' => $p->sku,
-                    'type' => 'single',
-                    'available' => 0,
-                    'status' => 'out_of_stock',
-                    'limiting_component' => null,
-                    'url' => route('admin.products.edit', $p),
-                ];
-            });
-
-        // Evaluate bundles (collections & gifts)
-        $bundles = Product::query()
-            ->whereIn('product_type', ['collection', 'gift'])
-            ->with(['bundleItems.component'])
-            ->get();
-
-        $bundleHealth = [];
-        foreach ($bundles as $bundle) {
-            $avail = $bundle->availableQuantity();
-            $limiting = $this->findLimitingComponent($bundle);
-
-            $status = 'in_stock';
-            if ($avail <= 0) {
-                $status = 'out_of_stock';
-            } elseif ($avail <= $threshold) {
-                $status = 'low_stock';
-            }
-
-            if ($status !== 'in_stock') {
-                $bundleHealth[] = [
-                    'id' => $bundle->id,
-                    'name' => $bundle->name,
-                    'sku' => $bundle->sku,
-                    'type' => $bundle->product_type,
-                    'available' => $avail,
-                    'status' => $status,
-                    'limiting_component' => $limiting,
-                    'url' => route('admin.products.edit', $bundle),
-                ];
-            }
+        $cacheKey = 'admin.dashboard.inventory_health.'.$limit;
+        if (app()->environment('testing')) {
+            Cache::forget($cacheKey);
         }
 
-        return [
-            'threshold' => $threshold,
-            'low_stock_singles' => $lowStockSingles,
-            'out_of_stock_singles' => $outOfStockSingles,
-            'troubled_bundles' => array_slice($bundleHealth, 0, $limit),
-        ];
+        return Cache::remember($cacheKey, 180, function () use ($limit) {
+            $threshold = (int) config('lunara.low_stock_threshold', 5);
+
+            // Low stock singles
+            $lowStockSingles = Product::query()
+                ->where('product_type', 'single')
+                ->where('is_active', true)
+                ->where('stock_quantity', '>', 0)
+                ->where('stock_quantity', '<=', $threshold)
+                ->with(['category', 'primaryImage'])
+                ->orderBy('stock_quantity')
+                ->take($limit)
+                ->get()
+                ->map(function (Product $p) {
+                    return [
+                        'id' => $p->id,
+                        'name' => $p->name,
+                        'sku' => $p->sku,
+                        'type' => 'single',
+                        'available' => $p->stock_quantity,
+                        'status' => 'low_stock',
+                        'limiting_component' => null,
+                        'url' => route('admin.products.edit', $p),
+                    ];
+                });
+
+            // Out of stock singles
+            $outOfStockSingles = Product::query()
+                ->where('product_type', 'single')
+                ->where('stock_quantity', '<=', 0)
+                ->with(['category', 'primaryImage'])
+                ->orderBy('name')
+                ->take($limit)
+                ->get()
+                ->map(function (Product $p) {
+                    return [
+                        'id' => $p->id,
+                        'name' => $p->name,
+                        'sku' => $p->sku,
+                        'type' => 'single',
+                        'available' => 0,
+                        'status' => 'out_of_stock',
+                        'limiting_component' => null,
+                        'url' => route('admin.products.edit', $p),
+                    ];
+                });
+
+            // Evaluate bundles (collections & gifts)
+            $bundles = Product::query()
+                ->whereIn('product_type', ['collection', 'gift'])
+                ->with(['bundleItems.component'])
+                ->get();
+
+            $bundleHealth = [];
+            foreach ($bundles as $bundle) {
+                $avail = $bundle->availableQuantity();
+                $limiting = $this->findLimitingComponent($bundle);
+
+                $status = 'in_stock';
+                if ($avail <= 0) {
+                    $status = 'out_of_stock';
+                } elseif ($avail <= $threshold) {
+                    $status = 'low_stock';
+                }
+
+                if ($status !== 'in_stock') {
+                    $bundleHealth[] = [
+                        'id' => $bundle->id,
+                        'name' => $bundle->name,
+                        'sku' => $bundle->sku,
+                        'type' => $bundle->product_type,
+                        'available' => $avail,
+                        'status' => $status,
+                        'limiting_component' => $limiting,
+                        'url' => route('admin.products.edit', $bundle),
+                    ];
+                }
+            }
+
+            return [
+                'threshold' => $threshold,
+                'low_stock_singles' => $lowStockSingles,
+                'out_of_stock_singles' => $outOfStockSingles,
+                'troubled_bundles' => array_slice($bundleHealth, 0, $limit),
+            ];
+        });
     }
 
     /**

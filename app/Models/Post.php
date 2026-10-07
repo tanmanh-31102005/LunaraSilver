@@ -144,8 +144,8 @@ class Post extends Model
                 return asset($preview);
             }
 
-            $altRaw = str_ends_with($raw, '.png') 
-                ? substr($raw, 0, -4).'.jpg' 
+            $altRaw = str_ends_with($raw, '.png')
+                ? substr($raw, 0, -4).'.jpg'
                 : (str_ends_with($raw, '.jpg') ? substr($raw, 0, -4).'.png' : null);
             if ($altRaw) {
                 $altPreview = 'media-previews/'.sha1($altRaw).'.webp';

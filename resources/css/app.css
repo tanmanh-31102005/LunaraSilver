@@ -296,8 +296,10 @@ h3 { font-size: clamp(1.4rem, 1.8vw, 1.9rem); }
 
 .icon-button {
     display: inline-flex;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
@@ -4459,8 +4461,10 @@ textarea.form-control {
         width: 120px;
     }
     .site-header__actions .icon-button {
-        width: 36px;
-        height: 36px;
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        min-height: 44px;
     }
     .hero {
         min-height: 600px;
@@ -5764,8 +5768,17 @@ textarea.form-control {
     color: var(--lunara-midnight);
 }
 
-/* Reduced motion accessibility (Phase 19.64) */
+/* Reduced motion accessibility (Phase 19.64 & Phase 23) */
 @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
     .search-overlay__panel,
     .mobile-sticky-bar,
     .lunara-toast,

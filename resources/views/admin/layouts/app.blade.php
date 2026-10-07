@@ -278,16 +278,16 @@
                     <div class="dropdown">
                         <button class="admin-user-btn dropdown-toggle" type="button" id="adminUserDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                             <div class="admin-user-avatar">
-                                {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}
+                                {{ strtoupper(substr(auth()->user()?->name ?? 'A', 0, 1)) }}
                             </div>
                             <div class="admin-user-info d-none d-md-block">
-                                <div class="admin-user-name">{{ auth()->user()->name ?? 'Quản trị viên' }}</div>
+                                <div class="admin-user-name">{{ auth()->user()?->name ?? 'Quản trị viên' }}</div>
                                 <div class="admin-user-role">Administrator</div>
                             </div>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end shadow-sm border" aria-labelledby="adminUserDropdown" style="font-size: 0.85rem; min-width: 180px;">
                             <li class="px-3 py-2 border-bottom d-md-none">
-                                <div class="fw-semibold">{{ auth()->user()->name }}</div>
+                                <div class="fw-semibold">{{ auth()->user()?->name ?? 'Quản trị viên' }}</div>
                                 <div class="text-muted small">Administrator</div>
                             </li>
                             <li>
@@ -418,7 +418,6 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Persistent Collapsible Sidebar
@@ -491,7 +490,7 @@
                 modal.show();
             };
 
-            // Phase 21: Global Command Palette Search (Ctrl + K / Cmd + K)
+            // Phase 21 & 21.5: Global Command Palette Search (Ctrl + K / Cmd + K) with AbortController
             const searchModalEl = document.getElementById('adminGlobalSearchModal');
             const searchTriggerBtn = document.getElementById('adminGlobalSearchTrigger');
             const searchInput = document.getElementById('adminGlobalSearchInput');
@@ -528,11 +527,18 @@
 
             let searchDebounceTimer = null;
             let currentSelectedIndex = -1;
+            let searchAbortController = null;
 
             if (searchInput) {
                 searchInput.addEventListener('input', function() {
                     const q = searchInput.value.trim();
                     clearTimeout(searchDebounceTimer);
+
+                    // Cancel previous in-flight request if user is still typing
+                    if (searchAbortController) {
+                        searchAbortController.abort();
+                        searchAbortController = null;
+                    }
 
                     if (q.length < 2) {
                         resultsContainer.innerHTML = '';
@@ -542,7 +548,9 @@
                     }
 
                     searchDebounceTimer = setTimeout(function() {
+                        searchAbortController = new AbortController();
                         fetch('{{ route("admin.search.global") }}?q=' + encodeURIComponent(q), {
+                            signal: searchAbortController.signal,
                             headers: {
                                 'Accept': 'application/json',
                                 'X-Requested-With': 'XMLHttpRequest'
@@ -552,12 +560,13 @@
                         .then(data => {
                             renderSearchResults(data.groups || []);
                         })
-                        .catch(() => {
+                        .catch(err => {
+                            if (err.name === 'AbortError') return; // Request was aborted cleanly
                             resultsContainer.innerHTML = '<div class="text-danger small p-3 text-center">Lỗi khi tìm kiếm dữ liệu.</div>';
                             resultsContainer.classList.remove('d-none');
                             resultsEmpty.classList.add('d-none');
                         });
-                    }, 250);
+                    }, 300);
                 });
 
                 // Keyboard arrow navigation & Enter

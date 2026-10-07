@@ -4,6 +4,7 @@ namespace App\Services\Admin;
 
 use App\Models\Coupon;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\PaymentRefund;
 use App\Models\Product;
 use App\Models\User;
@@ -16,10 +17,11 @@ class ExportService
 {
     /**
      * Generate streamed CSV download with UTF-8 BOM to prevent Excel encoding corruptions.
+     * Uses chunkById and pre-aggregated queries to guarantee minimal memory peak.
      */
     public function export(string $type, Request $request): StreamedResponse
     {
-        $filename = "lunara-export-{$type}-" . Carbon::now()->format('Ymd-His') . '.csv';
+        $filename = "lunara-export-{$type}-".Carbon::now()->format('Ymd-His').'.csv';
 
         $headers = [
             'Content-Type' => 'text/csv; charset=UTF-8',
@@ -66,7 +68,7 @@ class ExportService
             'Ngày đặt hàng',
         ]);
 
-        $query = Order::query()->latest();
+        $query = Order::query()->orderBy('id');
 
         // Respect filters
         if ($status = $request->input('order_status')) {
@@ -82,7 +84,7 @@ class ExportService
             $query->where('created_at', '<=', Carbon::parse($to)->endOfDay());
         }
 
-        $query->chunk(100, function ($orders) use ($handle) {
+        $query->chunkById(200, function ($orders) use ($handle) {
             foreach ($orders as $order) {
                 fputcsv($handle, [
                     $order->order_code,
@@ -120,9 +122,9 @@ class ExportService
             'Ngày tạo',
         ]);
 
-        $query = Product::withTrashed()->with('category')->latest('id');
+        $query = Product::withTrashed()->with('category')->orderBy('id');
 
-        $query->chunk(100, function ($products) use ($handle) {
+        $query->chunkById(200, function ($products) use ($handle) {
             foreach ($products as $p) {
                 fputcsv($handle, [
                     $p->id,
@@ -155,37 +157,41 @@ class ExportService
         ]);
 
         $threshold = (int) config('lunara.low_stock_threshold', 5);
-        $products = Product::where('is_active', true)->with(['bundleItems.component'])->get();
+        $analytics = app(AnalyticsService::class);
 
-        foreach ($products as $p) {
-            $avail = $p->availableQuantity();
-            $limitingInfo = '—';
+        Product::where('is_active', true)
+            ->with(['bundleItems.component'])
+            ->orderBy('id')
+            ->chunkById(100, function ($products) use ($handle, $threshold, $analytics) {
+                foreach ($products as $p) {
+                    $avail = $p->availableQuantity();
+                    $limitingInfo = '—';
 
-            if ($p->isBundle()) {
-                $analytics = app(AnalyticsService::class);
-                $lim = $analytics->findLimitingComponent($p);
-                if ($lim) {
-                    $limitingInfo = "{$lim['sku']} - {$lim['name']} (Tồn: {$lim['stock']}, Cần: {$lim['required']})";
+                    if ($p->isBundle()) {
+                        $lim = $analytics->findLimitingComponent($p);
+                        if ($lim) {
+                            $limitingInfo = "{$lim['sku']} - {$lim['name']} (Tồn: {$lim['stock']}, Cần: {$lim['required']})";
+                        }
+                    }
+
+                    $status = 'Bình thường';
+                    if ($avail <= 0) {
+                        $status = 'Hết hàng';
+                    } elseif ($avail <= $threshold) {
+                        $status = 'Sắp hết hàng';
+                    }
+
+                    fputcsv($handle, [
+                        $p->sku,
+                        $p->name,
+                        $p->product_type,
+                        $p->product_type === 'single' ? $p->stock_quantity : '—',
+                        $avail,
+                        $status,
+                        $limitingInfo,
+                    ]);
                 }
-            }
-
-            $status = 'Bình thường';
-            if ($avail <= 0) {
-                $status = 'Hết hàng';
-            } elseif ($avail <= $threshold) {
-                $status = 'Sắp hết hàng';
-            }
-
-            fputcsv($handle, [
-                $p->sku,
-                $p->name,
-                $p->product_type,
-                $p->product_type === 'single' ? $p->stock_quantity : '—',
-                $avail,
-                $status,
-                $limitingInfo,
-            ]);
-        }
+            });
     }
 
     private function streamCustomers($handle, Request $request): void
@@ -202,7 +208,8 @@ class ExportService
         ]);
 
         $insightsService = app(CustomerInsightsService::class);
-        $customers = User::where('role', User::ROLE_USER)
+
+        User::where('role', User::ROLE_USER)
             ->withCount('orders')
             ->withCount(['orders as completed_orders_count' => function ($q) {
                 $q->where('order_status', Order::STATUS_COMPLETED);
@@ -217,26 +224,27 @@ class ExportService
                     ->where('payment_refunds.status', PaymentRefund::STATUS_SUCCEEDED)
                     ->selectRaw('COALESCE(SUM(payment_refunds.amount), 0)');
             }, 'refunded_amount')
-            ->get();
+            ->orderBy('id')
+            ->chunkById(200, function ($customers) use ($handle, $insightsService) {
+                foreach ($customers as $c) {
+                    $gross = (float) ($c->gross_spent ?? 0.0);
+                    $refunded = (float) ($c->refunded_amount ?? 0.0);
+                    $netSpend = max(0.0, round($gross - $refunded, 2));
+                    $c->lifetime_spend = $netSpend;
+                    $segment = $insightsService->determineSegment($c);
 
-        foreach ($customers as $c) {
-            $gross = (float) ($c->gross_spent ?? 0.0);
-            $refunded = (float) ($c->refunded_amount ?? 0.0);
-            $netSpend = max(0.0, round($gross - $refunded, 2));
-            $c->lifetime_spend = $netSpend;
-            $segment = $insightsService->determineSegment($c);
-
-            fputcsv($handle, [
-                $c->id,
-                $c->name,
-                $c->email,
-                $c->created_at ? $c->created_at->format('Y-m-d H:i:s') : '',
-                $c->orders_count,
-                $c->completed_orders_count,
-                $netSpend,
-                $segment,
-            ]);
-        }
+                    fputcsv($handle, [
+                        $c->id,
+                        $c->name,
+                        $c->email,
+                        $c->created_at ? $c->created_at->format('Y-m-d H:i:s') : '',
+                        $c->orders_count,
+                        $c->completed_orders_count,
+                        $netSpend,
+                        $segment,
+                    ]);
+                }
+            });
     }
 
     private function streamRevenue($handle, Request $request): void
@@ -260,37 +268,43 @@ class ExportService
 
         $period = CarbonPeriod::create($range['start']->copy()->startOfDay(), '1 day', $range['end']->copy()->startOfDay());
 
+        // Pre-aggregate grouped queries in bulk (cuts from 360+ queries to exactly 3)
+        $ordersByDate = Order::query()
+            ->selectRaw('DATE(created_at) as order_date, SUM(grand_total) as gross, COUNT(*) as orders_count')
+            ->where('order_status', Order::STATUS_COMPLETED)
+            ->whereBetween('created_at', [$range['start'], $range['end']])
+            ->groupBy('order_date')
+            ->get()
+            ->keyBy('order_date');
+
+        $refundsByDate = PaymentRefund::query()
+            ->selectRaw('DATE(created_at) as refund_date, SUM(amount) as total')
+            ->where('status', PaymentRefund::STATUS_SUCCEEDED)
+            ->whereBetween('created_at', [$range['start'], $range['end']])
+            ->groupBy('refund_date')
+            ->pluck('total', 'refund_date');
+
+        $unitsByDate = OrderItem::query()
+            ->join('orders', 'order_items.order_id', '=', 'orders.id')
+            ->selectRaw('DATE(orders.created_at) as order_date, SUM(order_items.quantity) as total_units')
+            ->where('orders.order_status', Order::STATUS_COMPLETED)
+            ->whereBetween('orders.created_at', [$range['start'], $range['end']])
+            ->groupBy('order_date')
+            ->pluck('total_units', 'order_date');
+
         foreach ($period as $day) {
-            $dayStart = $day->copy()->startOfDay();
-            $dayEnd = $day->copy()->endOfDay();
+            $dateKey = $day->format('Y-m-d');
+            $orderItem = $ordersByDate->get($dateKey);
 
-            $gross = (float) Order::query()
-                ->where('order_status', Order::STATUS_COMPLETED)
-                ->whereBetween('created_at', [$dayStart, $dayEnd])
-                ->sum('grand_total');
-
-            $refund = (float) PaymentRefund::query()
-                ->where('status', PaymentRefund::STATUS_SUCCEEDED)
-                ->whereBetween('created_at', [$dayStart, $dayEnd])
-                ->sum('amount');
-
+            $gross = (float) ($orderItem ? $orderItem->gross : 0.0);
+            $ordersCount = (int) ($orderItem ? $orderItem->orders_count : 0);
+            $refund = (float) ($refundsByDate->get($dateKey) ?? 0.0);
+            $units = (int) ($unitsByDate->get($dateKey) ?? 0);
             $net = max(0.0, round($gross - $refund, 2));
-
-            $ordersCount = Order::query()
-                ->where('order_status', Order::STATUS_COMPLETED)
-                ->whereBetween('created_at', [$dayStart, $dayEnd])
-                ->count();
-
             $aov = $ordersCount > 0 ? round($gross / $ordersCount, 2) : 0.0;
 
-            $units = (int) Order::query()
-                ->join('order_items', 'orders.id', '=', 'order_items.order_id')
-                ->where('orders.order_status', Order::STATUS_COMPLETED)
-                ->whereBetween('orders.created_at', [$dayStart, $dayEnd])
-                ->sum('order_items.quantity');
-
             fputcsv($handle, [
-                $day->format('Y-m-d'),
+                $dateKey,
                 $gross,
                 $refund,
                 $net,
@@ -316,21 +330,21 @@ class ExportService
             'Hết hạn lúc',
         ]);
 
-        $coupons = Coupon::latest()->get();
-
-        foreach ($coupons as $cp) {
-            fputcsv($handle, [
-                $cp->code,
-                $cp->type === 'percentage' ? 'Phần trăm' : 'Số tiền cố định',
-                $cp->type === 'percentage' ? $cp->value . '%' : (float) $cp->value,
-                (float) ($cp->minimum_order ?? 0),
-                $cp->maximum_discount ? (float) $cp->maximum_discount : 'Không giới hạn',
-                $cp->usage_limit ?: 'Không giới hạn',
-                $cp->used_count ?? 0,
-                $cp->is_active ? 'Hoạt động' : 'Tạm dừng',
-                $cp->starts_at ? $cp->starts_at->format('Y-m-d H:i') : '—',
-                $cp->expires_at ? $cp->expires_at->format('Y-m-d H:i') : '—',
-            ]);
-        }
+        Coupon::orderBy('id')->chunkById(100, function ($coupons) use ($handle) {
+            foreach ($coupons as $cp) {
+                fputcsv($handle, [
+                    $cp->code,
+                    $cp->type === 'percentage' ? 'Phần trăm' : 'Số tiền cố định',
+                    $cp->type === 'percentage' ? $cp->value.'%' : (float) $cp->value,
+                    (float) ($cp->minimum_order ?? 0),
+                    $cp->maximum_discount ? (float) $cp->maximum_discount : 'Không giới hạn',
+                    $cp->usage_limit ?: 'Không giới hạn',
+                    $cp->used_count ?? 0,
+                    $cp->is_active ? 'Hoạt động' : 'Tạm dừng',
+                    $cp->starts_at ? $cp->starts_at->format('Y-m-d H:i') : '—',
+                    $cp->expires_at ? $cp->expires_at->format('Y-m-d H:i') : '—',
+                ]);
+            }
+        });
     }
 }

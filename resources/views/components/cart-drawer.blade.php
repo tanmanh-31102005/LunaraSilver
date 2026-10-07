@@ -1,4 +1,4 @@
-<div class="offcanvas offcanvas-end cart-drawer" tabindex="-1" id="miniCart" aria-labelledby="miniCartTitle" data-bs-backdrop="true">
+<div class="offcanvas offcanvas-end cart-drawer" tabindex="-1" id="miniCart" role="dialog" aria-modal="true" aria-labelledby="miniCartTitle" data-bs-backdrop="true">
     <div class="offcanvas-header border-bottom py-3">
         <div class="d-flex align-items-center gap-2">
             <i class="bi bi-bag fs-5 text-dark"></i>

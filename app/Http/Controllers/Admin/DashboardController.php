@@ -80,7 +80,7 @@ class DashboardController extends Controller
             ->where('product_type', 'single')
             ->where('is_active', true)
             ->where('stock_quantity', '>', 0)
-            ->where('stock_quantity', '<=', $inventoryHealth['threshold'])
+            ->where('stock_quantity', '<=', $inventoryHealth['threshold'] ?? 5)
             ->with(['category', 'primaryImage'])
             ->orderBy('stock_quantity')
             ->take(8)
@@ -102,4 +102,3 @@ class DashboardController extends Controller
         ]);
     }
 }
-

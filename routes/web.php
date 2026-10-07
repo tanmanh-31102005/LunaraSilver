@@ -7,6 +7,7 @@ use App\Http\Controllers\Account\OrderController;
 use App\Http\Controllers\Account\PasswordController;
 use App\Http\Controllers\Account\ProfileController;
 use App\Http\Controllers\Account\ReviewController as AccountReviewController;
+use App\Http\Controllers\Admin\AdminSearchController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\CouponController as AdminCouponController;
 use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
@@ -14,8 +15,6 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ExportController as AdminExportController;
 use App\Http\Controllers\Admin\FaqController as AdminFaqController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
-use App\Http\Controllers\Admin\AdminSearchController;
-
 use App\Http\Controllers\Admin\PostCategoryController as AdminPostCategoryController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
@@ -150,8 +149,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('orders/{orderCode}', [AdminOrderController::class, 'show'])->name('orders.show');
     Route::patch('orders/{orderCode}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.status');
     Route::post('orders/{orderCode}/cancel', [AdminOrderController::class, 'cancel'])->name('orders.cancel');
-    Route::match(['get', 'post'], 'orders/{orderCode}/reconcile', [AdminOrderController::class, 'reconcile'])->name('orders.reconcile');
-    Route::match(['get', 'post'], 'orders/{orderCode}/refund', [AdminOrderController::class, 'refund'])->name('orders.refund');
+    Route::post('orders/{orderCode}/reconcile', [AdminOrderController::class, 'reconcile'])->name('orders.reconcile');
+    Route::post('orders/{orderCode}/refund', [AdminOrderController::class, 'refund'])->name('orders.refund');
 
     // Customer Reviews Moderation (Phase 20)
     Route::get('reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
@@ -186,9 +185,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('posts', AdminPostController::class);
     Route::resource('post-categories', AdminPostCategoryController::class)->except(['show']);
 
-    // Customer Directory & Customer 360 (Phase 21)
+    // Customer Directory & Customer 360 (Phase 21 & 21.5)
     Route::get('customers', [AdminCustomerController::class, 'index'])->name('customers.index');
     Route::get('customers/{user}', [AdminCustomerController::class, 'show'])->whereNumber('user')->name('customers.show');
+    Route::get('customers/{user}/tab/{tab}', [AdminCustomerController::class, 'tab'])->whereNumber('user')->name('customers.tab');
 
     // Global Admin Command Palette Search (Phase 21)
     Route::get('search/global', [AdminSearchController::class, 'search'])->name('search.global');
@@ -196,4 +196,3 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Data Export Center (Phase 21)
     Route::get('export/{type}', [AdminExportController::class, 'export'])->name('export');
 });
-

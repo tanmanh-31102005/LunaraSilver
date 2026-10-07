@@ -5,8 +5,6 @@ namespace Tests\Feature;
 use App\Models\Address;
 use App\Models\Category;
 use App\Models\ContactMessage;
-use App\Models\Coupon;
-use App\Models\CouponUsage;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Payment;
@@ -17,7 +15,6 @@ use App\Models\User;
 use App\Services\Admin\AnalyticsService;
 use App\Services\Admin\AttentionService;
 use App\Services\Admin\CustomerInsightsService;
-use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -26,7 +23,9 @@ class AdminPhase21AnalyticsTest extends TestCase
     use RefreshDatabase;
 
     protected User $admin;
+
     protected User $customer;
+
     protected Category $category;
 
     protected function setUp(): void
@@ -58,9 +57,9 @@ class AdminPhase21AnalyticsTest extends TestCase
     {
         return Product::create(array_merge([
             'category_id' => $this->category->id,
-            'sku' => 'SP-' . uniqid(),
+            'sku' => 'SP-'.uniqid(),
             'name' => 'Sản phẩm Test',
-            'slug' => 'san-pham-test-' . uniqid(),
+            'slug' => 'san-pham-test-'.uniqid(),
             'product_type' => 'single',
             'regular_price' => 500000,
             'sale_price' => null,
@@ -77,7 +76,7 @@ class AdminPhase21AnalyticsTest extends TestCase
     {
         return Order::create(array_merge([
             'user_id' => $this->customer->id,
-            'order_code' => 'LNS-' . strtoupper(uniqid()),
+            'order_code' => 'LNS-'.strtoupper(uniqid()),
             'customer_name' => $this->customer->name,
             'customer_email' => $this->customer->email,
             'customer_phone' => '0912345678',
@@ -148,14 +147,14 @@ class AdminPhase21AnalyticsTest extends TestCase
             'provider' => 'vnpay',
             'amount' => 1000000,
             'status' => 'paid',
-            'txn_ref' => 'TXN-' . uniqid(),
+            'txn_ref' => 'TXN-'.uniqid(),
         ]);
 
         // Succeeded refund of 200,000 VND
         PaymentRefund::create([
             'payment_id' => $payment->id,
             'order_id' => $order->id,
-            'request_id' => 'REF-' . uniqid(),
+            'request_id' => 'REF-'.uniqid(),
             'refund_type' => 'partial',
             'amount' => 200000,
             'status' => PaymentRefund::STATUS_SUCCEEDED,
@@ -184,14 +183,14 @@ class AdminPhase21AnalyticsTest extends TestCase
             'provider' => 'vnpay',
             'amount' => 1000000,
             'status' => 'paid',
-            'txn_ref' => 'TXN-' . uniqid(),
+            'txn_ref' => 'TXN-'.uniqid(),
         ]);
 
         // Failed refund
         PaymentRefund::create([
             'payment_id' => $payment->id,
             'order_id' => $order->id,
-            'request_id' => 'REF-FAILED-' . uniqid(),
+            'request_id' => 'REF-FAILED-'.uniqid(),
             'refund_type' => 'partial',
             'amount' => 300000,
             'status' => PaymentRefund::STATUS_FAILED,
@@ -201,7 +200,7 @@ class AdminPhase21AnalyticsTest extends TestCase
         PaymentRefund::create([
             'payment_id' => $payment->id,
             'order_id' => $order->id,
-            'request_id' => 'REF-PENDING-' . uniqid(),
+            'request_id' => 'REF-PENDING-'.uniqid(),
             'refund_type' => 'partial',
             'amount' => 400000,
             'status' => PaymentRefund::STATUS_REQUESTED,
@@ -355,13 +354,13 @@ class AdminPhase21AnalyticsTest extends TestCase
             'provider' => 'vnpay',
             'amount' => 800000,
             'status' => 'paid',
-            'txn_ref' => 'TXN-' . uniqid(),
+            'txn_ref' => 'TXN-'.uniqid(),
         ]);
 
         PaymentRefund::create([
             'payment_id' => $payment->id,
             'order_id' => $order1->id,
-            'request_id' => 'REF-' . uniqid(),
+            'request_id' => 'REF-'.uniqid(),
             'refund_type' => 'partial',
             'amount' => 100000,
             'status' => PaymentRefund::STATUS_SUCCEEDED,
@@ -581,4 +580,3 @@ class AdminPhase21AnalyticsTest extends TestCase
         $this->assertStringNotContainsString('remember_token', $content);
     }
 }
-
