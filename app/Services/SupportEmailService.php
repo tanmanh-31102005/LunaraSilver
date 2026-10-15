@@ -47,7 +47,10 @@ class SupportEmailService
      */
     public function sendAdminNewRequest(ContactMessage $contactMessage): bool
     {
-        $adminEmail = config('mail.from.address', 'lunaraslivertrangsuc@gmail.com');
+        $adminEmail = config('mail.admin_address')
+            ?: env('ADMIN_EMAIL')
+            ?: config('mail.mailers.smtp.username')
+            ?: 'lunaraslivertrangsuc@gmail.com';
         $type = 'admin_new_request';
 
         try {

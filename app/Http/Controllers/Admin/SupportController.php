@@ -82,7 +82,7 @@ class SupportController extends Controller
      */
     public function show(ContactMessage $support): View
     {
-        $support->load(['user', 'order.items.product', 'assignedUser']);
+        $support->load(['user', 'order.items.product', 'assignedUser', 'emailLogs']);
         $admins = User::where('role', 'admin')->get(['id', 'name']);
 
         return view('admin.support.show', [

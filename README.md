@@ -11,37 +11,40 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel 12">
   <img src="https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP 8.2+">
-  <img src="https://img.shields.io/badge/MySQL-8.0+-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL">
+  <img src="https://img.shields.io/badge/MariaDB-10.4+-4479A1?style=for-the-badge&logo=mariadb&logoColor=white" alt="MariaDB">
   <img src="https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white" alt="Bootstrap 5.3">
   <img src="https://img.shields.io/badge/Vite-7.x-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite">
-  <img src="https://img.shields.io/badge/Tests-240%20Passed%20(1200%20asserts)-success?style=for-the-badge" alt="Tests Passed">
+  <img src="https://img.shields.io/badge/Tests-367%20Passed%20(1762%20asserts)-success?style=for-the-badge" alt="Tests Passed">
+  <img src="https://img.shields.io/badge/Production-Live-success?style=for-the-badge&logo=checkly&logoColor=white" alt="Production Live">
 </p>
 
 ---
 
-## 📖 Mục Lục
+## 📖 Hệ Thống Tài Liệu Kỹ Thuật (Documentation Index)
 
-- [1. Giới thiệu Dự án](#1-giới-thiệu-dự-án)
-- [2. Tính năng Nổi bật](#2-tính-năng-nổi-bật)
-  - [2.1 Trải nghiệm Khách hàng (Storefront)](#21-trải-nghiệm-khách-hàng-storefront)
-  - [2.2 Mô hình Tồn kho Ảo (Dynamic Virtual Inventory)](#22-mô-hình-tồn-kho-ảo-dynamic-virtual-inventory)
-  - [2.3 Cổng Thanh toán VNPay & COD](#23-cổng-thanh-toán-vnpay--cod)
-  - [2.4 Quản lý Ảnh Đám mây Cloudinary](#24-quản-lý-ảnh-đám-mây-cloudinary)
-  - [2.5 Cổng Tài khoản Khách hàng (Customer Portal)](#25-cổng-tài-khoản-khách-hàng-customer-portal)
-  - [2.6 Hệ thống Quản trị Toàn diện (Admin Portal)](#26-hệ-thống-quản-trị-toàn-diện-admin-portal)
-- [3. Kiến trúc & Công nghệ](#3-kiến-trúc--công-nghệ)
-- [4. Yêu cầu Hệ thống](#4-yêu-cầu-hệ-thống)
-- [5. Hướng dẫn Cài đặt & Chạy Local](#5-hướng-dẫn-cài-đặt--chạy-local)
-- [6. Tài khoản Mặc định & Thử nghiệm](#6-tài-khoản-mặc-định--thử-nghiệm)
-- [7. Kiểm thử Tự động (Automated Testing)](#7-kiểm-thử-tự-động-automated-testing)
-- [8. Hướng dẫn Đẩy Code lên Git / GitHub](#8-hướng-dẫn-đẩy-code-lên-git--github)
-- [9. Hướng dẫn Triển khai & Tự Động Hóa (Deployment & Automation)](#9-hướng-dẫn-triển-khai--tự-động-hóa-deployment--automation)
-  - [9.1 Bộ Công Cụ Tự Động Hóa Vận Hành Không Cần SSH](#91-bộ-công-cụ-tự-động-hóa-vận-hành-không-cần-ssh)
-  - [9.2 Triển khai lên Hosting (cPanel / DirectAdmin / InfinityFree)](#92-triển-khai-lên-hosting-cpanel--directadmin--infinityfree)
-  - [9.3 Triển khai lên VPS Linux (Ubuntu + Nginx + PHP-FPM)](#93-triển-khai-lên-vps-linux-ubuntu--nginx--php-fpm)
-  - [9.4 Quy trình Tối ưu & Checklist Bảo mật Production](#94-quy-trình-tối-ưu--checklist-bảo-mật-production)
-- [10. Cấu trúc Thư mục Dự án](#10-cấu-trúc-thư-mục-dự-án)
-- [11. Tài liệu Tham khảo & Nghiên cứu](#11-tài-liệu-tham-khảo--nghiên-cứu)
+Toàn bộ tài liệu chi tiết của dự án được lưu trữ và đánh số chuẩn hóa trong thư mục [`docs/`](docs/):
+
+| STT | Tài liệu | Mô tả tóm tắt nội dung |
+| :---: | :--- | :--- |
+| **01** | [01-project-overview.md](docs/01-project-overview.md) | Tổng quan hệ thống, mục tiêu, tác nhân (Actors) và phân định phạm vi Core/Extended. |
+| **02** | [02-installation-guide.md](docs/02-installation-guide.md) | Hướng dẫn cài đặt từng bước, tài khoản demo, cấu hình CSDL và dịch vụ ngoài. |
+| **03** | [03-system-architecture.md](docs/03-system-architecture.md) | Kiến trúc phân lớp Layered MVC, vòng đời Request và danh mục 27 Services nghiệp vụ. |
+| **04** | [04-database-design.md](docs/04-database-design.md) | Thiết kế 35 bảng CSDL quan hệ MariaDB/MySQL và Sơ đồ thực thể ERD (Mermaid). |
+| **05** | [05-functional-specification.md](docs/05-functional-specification.md) | Đặc tả 13 module chức năng, phân biệt Full CRUD vs. Business Workflows. |
+| **06** | [06-user-guide.md](docs/06-user-guide.md) | Cẩm nang hướng dẫn sử dụng dành cho Khách hàng (Storefront User Guide). |
+| **07** | [07-admin-guide.md](docs/07-admin-guide.md) | Hướng dẫn vận hành dành cho Quản trị viên (Admin Operator Guide) & cảnh báo an toàn. |
+| **08** | [08-technical-stack.md](docs/08-technical-stack.md) | Ma trận công nghệ và phiên bản phụ thuộc trích xuất từ `composer.lock` & `package-lock.json`. |
+| **09** | [09-open-source-technologies.md](docs/09-open-source-technologies.md) | Phân tích công nghệ mã nguồn mở (Giấy phép MIT/GPL/BSD, vai trò, lý do lựa chọn). |
+| **10** | [10-technical-techniques.md](docs/10-technical-techniques.md) | Chuyên đề kỹ thuật: Thuật toán tồn kho Bundle, Đối soát kép VNPay, LeftJoinSub, Streaming CSV. |
+| **11** | [11-security.md](docs/11-security.md) | Các biện pháp kiểm soát bảo mật: Bcrypt, chống IDOR, CSRF, XSS Sanitization, Security Headers. |
+| **12** | [12-testing.md](docs/12-testing.md) | Báo cáo kiểm thử tự động toàn diện: 367 Tests passed, 1,762 assertions, 100% không lỗi. |
+| **13** | [13-deployment-guide.md](docs/13-deployment-guide.md) | Quy trình triển khai sản xuất lên InfinityFree Hosting và các giới hạn hạ tầng thực tế. |
+| **14** | [14-external-integrations.md](docs/14-external-integrations.md) | Tích hợp cổng VNPay Sandbox, lưu trữ đám mây Cloudinary CDN và Google SMTP. |
+| **15** | [15-seo-performance-accessibility.md](docs/15-seo-performance-accessibility.md) | Kiến trúc SEO JSON-LD, tối ưu hiệu năng dưới 19ms và tiêu chuẩn tiếp cận WCAG 2.2 AA. |
+| **16** | [16-known-limitations.md](docs/16-known-limitations.md) | Phân tích trung thực các giới hạn đã biết của hệ thống (Free hosting, Sandbox, No native app). |
+| **17** | [17-academic-requirements-mapping.md](docs/17-academic-requirements-mapping.md) | Bảng đối chiếu chuẩn đầu ra học phần Lập trình Mã nguồn mở và danh mục các CRUD modules. |
+| **18** | [18-demo-script.md](docs/18-demo-script.md) | Kịch bản trình diễn demo 8-12 phút trước Hội đồng và danh mục ảnh chụp màn hình báo cáo. |
+| **DOCX**| [Bao_cao_Do_An_Lunara_Silver.docx](docs/Bao_cao_Do_An_Lunara_Silver.docx) | Tệp báo cáo Microsoft Word hoàn chỉnh (~84KB, 457 đoạn, 26 bảng) sẵn sàng in ấn nộp đồ án. |
 
 ---
 
@@ -52,7 +55,10 @@
 - **Silver & Mauve** (`#C0C0C0`, `#B8A7B7`): Điểm nhấn ánh kim tinh tế.
 - **Ivory & Cream** (`#F7F5F2`, `#E6E2DD`): Không gian trưng bày sản phẩm mềm mại, cao cấp.
 
-Dự án được xây dựng trên nền tảng **Laravel 12**, tuân thủ nghiêm ngặt mô hình kiến trúc MVC, Service Layer Pattern, kiểm thử tự động toàn diện với **240 test cases (1200 assertions)** đảm bảo tính ổn định và toàn vẹn dữ liệu ở cấp độ doanh nghiệp.
+Dự án được xây dựng trên nền tảng **Laravel 12** (Framework v12.69.2), tuân thủ nghiêm ngặt mô hình kiến trúc MVC, Service Layer Pattern, kiểm thử tự động toàn diện với **367 test cases (1,762 assertions, 100% pass)** đảm bảo tính ổn định và toàn vẹn dữ liệu ở cấp độ doanh nghiệp.
+
+- 🌐 **Website Sản xuất (Live Production)**: [https://lunarasilver.infinityfreeapp.com](https://lunarasilver.infinityfreeapp.com)
+- 📊 **Tập hợp Dữ liệu Báo cáo Đồ án**: [docs/report-material.md](docs/report-material.md)
 
 ---
 

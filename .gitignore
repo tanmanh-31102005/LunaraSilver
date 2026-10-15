@@ -29,3 +29,5 @@ test.php
 ~$*
 /backup
 /scratch
+*.zip
+/dist/*.zip

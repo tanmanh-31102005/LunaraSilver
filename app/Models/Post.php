@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Schema;
 
 class Post extends Model
 {
@@ -89,8 +90,18 @@ class Post extends Model
     public function scopePublished(Builder $query): Builder
     {
         return $query->where(function ($q) {
-            $q->where('status', self::STATUS_PUBLISHED)
-                ->orWhere('is_published', true);
+            $hasStatus = false;
+            try {
+                $hasStatus = Schema::hasColumn('posts', 'status');
+            } catch (\Throwable) {
+            }
+
+            if ($hasStatus) {
+                $q->where('status', self::STATUS_PUBLISHED)
+                    ->orWhere('is_published', true);
+            } else {
+                $q->where('is_published', true);
+            }
         })->whereNotNull('published_at')->where('published_at', '<=', now());
     }
 
@@ -99,7 +110,17 @@ class Post extends Model
      */
     public function scopeFeatured(Builder $query): Builder
     {
-        return $query->where('is_featured', true);
+        $hasFeatured = false;
+        try {
+            $hasFeatured = Schema::hasColumn('posts', 'is_featured');
+        } catch (\Throwable) {
+        }
+
+        if ($hasFeatured) {
+            return $query->where('is_featured', true);
+        }
+
+        return $query->where('is_published', true);
     }
 
     /**

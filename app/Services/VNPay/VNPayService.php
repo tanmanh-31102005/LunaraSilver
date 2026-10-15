@@ -197,10 +197,16 @@ class VNPayService
         ];
 
         try {
-            $response = Http::withHeaders([
+            $httpClient = Http::withHeaders([
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
-            ])->timeout(15)->post($apiUrl, $payload);
+            ])->timeout(15);
+
+            if (! $this->shouldVerifySsl()) {
+                $httpClient = $httpClient->withoutVerifying();
+            }
+
+            $response = $httpClient->post($apiUrl, $payload);
 
             if (! $response->successful()) {
                 Log::warning('VNPay QueryDr HTTP error', [
@@ -327,10 +333,16 @@ class VNPayService
         ];
 
         try {
-            $response = Http::withHeaders([
+            $httpClient = Http::withHeaders([
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
-            ])->timeout(20)->post($apiUrl, $payload);
+            ])->timeout(20);
+
+            if (! $this->shouldVerifySsl()) {
+                $httpClient = $httpClient->withoutVerifying();
+            }
+
+            $response = $httpClient->post($apiUrl, $payload);
 
             if (! $response->successful()) {
                 Log::warning('VNPay Refund HTTP error', [
@@ -385,5 +397,24 @@ class VNPayService
                 rawPayload: ['error' => $e->getMessage()]
             );
         }
+    }
+
+    /**
+     * Determine whether SSL certificate verification should be performed for VNPay WebAPI calls.
+     */
+    protected function shouldVerifySsl(): bool
+    {
+        $configured = config('vnpay.verify_ssl');
+        if ($configured !== null) {
+            return (bool) $configured;
+        }
+
+        // On production environments, strictly verify SSL
+        if (app()->isProduction()) {
+            return true;
+        }
+
+        // On local/dev environments (e.g. Windows/XAMPP lacking CA bundle), bypass SSL verify
+        return false;
     }
 }

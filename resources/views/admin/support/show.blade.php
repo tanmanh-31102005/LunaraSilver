@@ -240,7 +240,7 @@
             </div>
 
             {{-- Internal Notes Card (Hidden from customer) --}}
-            <div class="admin-card">
+            <div class="admin-card mb-4">
                 <div class="admin-card-header">
                     <h3 class="admin-card-title">Ghi chú nội bộ</h3>
                 </div>
@@ -255,6 +255,53 @@
                             Lưu ghi chú nội bộ
                         </button>
                     </form>
+                </div>
+            </div>
+
+            {{-- Email Delivery History Card --}}
+            <div class="admin-card">
+                <div class="admin-card-header d-flex justify-content-between align-items-center">
+                    <h3 class="admin-card-title mb-0">Lịch sử gửi Email</h3>
+                    <span class="badge bg-light text-dark border">{{ $contact->emailLogs->count() }} lượt</span>
+                </div>
+                <div class="p-3">
+                    @forelse($contact->emailLogs as $elog)
+                        <div class="p-2 mb-2 rounded border bg-light-subtle" style="font-size: 0.825rem;">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="fw-semibold text-dark">
+                                    @if($elog->type === 'contact_received')
+                                        <i class="bi bi-envelope-check text-success me-1"></i> Xác nhận tiếp nhận
+                                    @elseif($elog->type === 'admin_new_request')
+                                        <i class="bi bi-bell text-warning me-1"></i> Báo Admin có yêu cầu
+                                    @elseif($elog->type === 'support_reply')
+                                        <i class="bi bi-reply text-primary me-1"></i> Admin phản hồi khách
+                                    @elseif($elog->type === 'support_resolved')
+                                        <i class="bi bi-check2-circle text-success me-1"></i> Báo khách đã giải quyết
+                                    @else
+                                        <i class="bi bi-envelope me-1"></i> {{ $elog->type }}
+                                    @endif
+                                </span>
+                                @if($elog->status === 'sent')
+                                    <span class="badge bg-success-subtle text-success py-0 px-2" style="font-size: 0.75rem;">Đã gửi</span>
+                                @else
+                                    <span class="badge bg-danger-subtle text-danger py-0 px-2" style="font-size: 0.75rem;">Thất bại</span>
+                                @endif
+                            </div>
+                            <div class="text-muted text-truncate" title="{{ $elog->recipient }}">
+                                <i class="bi bi-arrow-right-short"></i> Tới: <span class="text-dark">{{ $elog->recipient }}</span>
+                            </div>
+                            <div class="text-muted d-flex justify-content-between mt-1">
+                                <span>{{ $elog->created_at->format('H:i:s d/m/Y') }}</span>
+                            </div>
+                            @if($elog->error_message)
+                                <div class="text-danger mt-1 p-1 bg-danger-subtle rounded small" style="font-size: 0.75rem; word-break: break-all;">
+                                    Lỗi: {{ $elog->error_message }}
+                                </div>
+                            @endif
+                        </div>
+                    @empty
+                        <p class="text-muted small text-center mb-0 py-2">Chưa có bản ghi gửi email nào.</p>
+                    @endforelse
                 </div>
             </div>
         </div>

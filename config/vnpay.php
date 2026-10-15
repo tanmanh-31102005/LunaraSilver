@@ -29,4 +29,6 @@ return [
     'currency' => 'VND',
 
     'locale' => 'vn',
+
+    'verify_ssl' => env('VNPAY_VERIFY_SSL', null),
 ];

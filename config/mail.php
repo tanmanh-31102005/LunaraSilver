@@ -43,6 +43,7 @@ return [
             'url' => env('MAIL_URL'),
             'host' => env('MAIL_HOST', '127.0.0.1'),
             'port' => env('MAIL_PORT', 2525),
+            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
@@ -111,8 +112,19 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
+        'address' => env('MAIL_FROM_ADDRESS', 'lunaraslivertrangsuc@gmail.com'),
+        'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Lunara Silver')),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Support Notification Email
+    |--------------------------------------------------------------------------
+    |
+    | Destination address where admin notifications for new customer support
+    | tickets are delivered.
+    |
+    */
+    'admin_address' => env('ADMIN_EMAIL', env('MAIL_USERNAME', 'lunaraslivertrangsuc@gmail.com')),
 
 ];
